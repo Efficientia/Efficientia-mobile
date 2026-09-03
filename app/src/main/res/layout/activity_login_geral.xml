@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#072B6E"
+    android:paddingStart="32dp"
+    android:paddingEnd="32dp">
+
+    <!-- Logo Cabeça de Boi -->
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="56dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Logo Efficientia"
+        android:src="@drawable/logo_effi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Texto Efficientia em Vetor -->
+    <ImageView
+        android:id="@+id/imgLogoText"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Efficientia"
+        android:src="@drawable/efficientiatext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+
+    <!-- Texto de Boas-vindas -->
+    <TextView
+        android:id="@+id/txtBoasVindas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:text="Bem vindo(a)!"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogoText" />
+
+    <!-- Subtítulo de Orientação -->
+
+    <!-- Botão Motorista (Azul) -->
+    <TextView
+        android:id="@+id/txtInstrucao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        android:gravity="center"
+        android:text="Selecione o seu cargo na\nsua empresa"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtBoasVindas" />
+
+    <!-- Botão Administrador (Verde) -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnMotorista"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/componente_button_blue"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        android:text="Motorista"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        app:layout_constraintBottom_toTopOf="@id/btnAdministrador"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnAdministrador"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="108dp"
+        android:background="@drawable/componente_button_green"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        android:text="Administrador"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
