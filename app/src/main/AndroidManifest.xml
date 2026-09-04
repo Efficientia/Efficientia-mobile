@@ -20,7 +20,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginGeral"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name=".LoginMotorista"
             android:exported="false">
         </activity>
         <meta-data

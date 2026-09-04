@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#072B6E"
+    android:paddingStart="32dp"
+    android:paddingEnd="32dp">
+
+    <!-- Botão Voltar (Canto superior esquerdo) -->
+    <ImageButton
+        android:id="@+id/btnVoltar"
+        android:layout_width="54dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="24dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Voltar"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Logo Cabeça de Boi -->
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="32dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Logo Efficientia"
+        android:src="@drawable/logo_effi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Texto Efficientia em Vetor -->
+    <ImageView
+        android:id="@+id/imgLogoText"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Efficientia"
+        android:src="@drawable/efficientiatext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+
+    <!-- Título de entrada -->
+    <TextView
+        android:id="@+id/txtBoasVindas"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:gravity="center"
+        android:text="Entre como\nmotorista!"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogoText" />
+
+    <!-- Campo CPF -->
+    <EditText
+        android:id="@+id/edtCpf"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/input_campo"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:hint="CPF"
+        android:inputType="number"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:textColor="#333333"
+        android:textColorHint="#9E9E9E"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtBoasVindas" />
+
+    <!-- Campo Email -->
+    <EditText
+        android:id="@+id/edtEmail"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/input_campo"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:textColor="#333333"
+        android:textColorHint="#9E9E9E"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtCpf" />
+
+    <!-- Campo Senha -->
+    <EditText
+        android:id="@+id/edtSenha"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/input_campo"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:hint="Senha"
+        android:inputType="textPassword"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:textColor="#333333"
+        android:textColorHint="#9E9E9E"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtEmail" />
+
+    <!-- Campo Código da Empresa -->
+    <EditText
+        android:id="@+id/edtCodigoEmpresa"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/input_campo"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:hint="Código da Empresa"
+        android:inputType="text"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:textColor="#333333"
+        android:textColorHint="#9E9E9E"
+        android:textSize="15sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtSenha" />
+
+    <!-- Botão Fazer Login -->
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnFazerLogin"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/componente_button_blue"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:text="Fazer Login"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edtCodigoEmpresa" />
+
+    <!-- Link Esqueci minha senha -->
+    <TextView
+        android:id="@+id/txtEsqueciSenha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:layout_marginBottom="32dp"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:text="Esqueci minha senha"
+        android:textColor="#4CD964"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnFazerLogin"
+        app:layout_constraintVertical_bias="0.2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
