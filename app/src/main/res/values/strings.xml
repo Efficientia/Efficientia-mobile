@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Efficientia-mobile</string>
+    <string name="mostrar_senha">Mostrar senha</string>
+    <string name="ocultar_senha">Ocultar senha</string>
 </resources>

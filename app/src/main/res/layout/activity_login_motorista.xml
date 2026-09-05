@@ -10,20 +10,23 @@
     android:paddingEnd="32dp">
 
     <!-- Botão Voltar (Canto superior esquerdo) -->
+
+    <!-- Logo Cabeça de Boi -->
+
     <ImageButton
         android:id="@+id/btnVoltar"
-        android:layout_width="54dp"
-        android:layout_height="66dp"
-        android:layout_marginTop="24dp"
+        android:layout_width="76dp"
+        android:layout_height="82dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="52dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="Voltar"
         android:padding="8dp"
         android:scaleType="fitCenter"
         android:src="@drawable/ic_arrow_back"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imgLogo"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Logo Cabeça de Boi -->
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="120dp"
@@ -117,13 +120,26 @@
         android:hint="Senha"
         android:inputType="textPassword"
         android:paddingStart="24dp"
-        android:paddingEnd="24dp"
+        android:paddingEnd="56dp"
         android:textColor="#333333"
         android:textColorHint="#9E9E9E"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/edtEmail" />
+
+    <ImageButton
+        android:id="@+id/btnVisibilidadeSenha"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="4dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/mostrar_senha"
+        android:padding="12dp"
+        android:src="@drawable/ic_visibility"
+        app:layout_constraintEnd_toEndOf="@id/edtSenha"
+        app:layout_constraintTop_toTopOf="@id/edtSenha"
+        app:layout_constraintBottom_toBottomOf="@id/edtSenha" />
 
     <!-- Campo Código da Empresa -->
     <EditText
