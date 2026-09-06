@@ -2,4 +2,10 @@
     <string name="app_name">Efficientia-mobile</string>
     <string name="mostrar_senha">Mostrar senha</string>
     <string name="ocultar_senha">Ocultar senha</string>
+    <string name="recuperar_voltar">Voltar para o login</string>
+    <string name="recuperar_logo">Efficientia</string>
+    <string name="recuperar_descricao">Redefina sua senha, ou\nentre com código único</string>
+    <string name="recuperar_selecao">Selecione a ação para\nentrar</string>
+    <string name="recuperar_redefinir">Redefinir</string>
+    <string name="recuperar_enviar_codigo">Enviar código</string>
 </resources>

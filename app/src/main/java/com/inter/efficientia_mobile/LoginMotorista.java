@@ -1,5 +1,7 @@
 package com.inter.efficientia_mobile;
 
+import android.content.Intent;
+
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
@@ -50,10 +52,8 @@ public class LoginMotorista extends AppCompatActivity {
         btnFazerLogin.setOnClickListener(v -> validarELogar());
 
         // Link "Esqueci minha senha"
-        txtEsqueciSenha.setOnClickListener(v -> {
-            Toast.makeText(LoginMotorista.this, "Recuperação de senha clicada", Toast.LENGTH_SHORT).show();
-            // Futuramente: startActivity(new Intent(LoginMotorista.this, EsqueciSenhaActivity.class));
-        });
+        txtEsqueciSenha.setOnClickListener(v ->
+                startActivity(new Intent(LoginMotorista.this, SelecaoRecuperar.class)));
     }
 
     private void configurarCampos() {
