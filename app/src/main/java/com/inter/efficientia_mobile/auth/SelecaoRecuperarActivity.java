@@ -1,11 +1,13 @@
-package com.inter.efficientia_mobile;
+package com.inter.efficientia_mobile.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SelecaoRecuperar extends AppCompatActivity {
+import com.inter.efficientia_mobile.R;
+
+public class SelecaoRecuperarActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,7 +19,7 @@ public class SelecaoRecuperar extends AppCompatActivity {
 
         // Redireciona para a tela de redefinir
         findViewById(R.id.btnRedefinir).setOnClickListener(v -> {
-            Intent intent = new Intent(SelecaoRecuperar.this, RedefinirCampo.class);
+            Intent intent = new Intent(SelecaoRecuperarActivity.this, RedefinirCampoActivity.class);
             startActivity(intent);
         });
 

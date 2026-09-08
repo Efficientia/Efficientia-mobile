@@ -1,4 +1,4 @@
-package com.inter.efficientia_mobile;
+package com.inter.efficientia_mobile.auth;
 
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -7,7 +7,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class RedefinirCampo extends AppCompatActivity {
+import com.inter.efficientia_mobile.R;
+
+public class RedefinirCampoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

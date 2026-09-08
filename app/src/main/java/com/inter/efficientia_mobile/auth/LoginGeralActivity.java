@@ -1,4 +1,4 @@
-package com.inter.efficientia_mobile;
+package com.inter.efficientia_mobile.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class LoginGeral extends AppCompatActivity {
+import com.inter.efficientia_mobile.R;
+
+public class LoginGeralActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +21,13 @@ public class LoginGeral extends AppCompatActivity {
 
         // Direciona para a tela de Login do Motorista
         btnMotorista.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginGeral.this, LoginMotorista.class);
+            Intent intent = new Intent(LoginGeralActivity.this, LoginMotoristaActivity.class);
             startActivity(intent);
         });
 
         // Clique no botão Administrador
         btnAdministrador.setOnClickListener(v -> {
-            Toast.makeText(LoginGeral.this, "Selecionado: Administrador", Toast.LENGTH_SHORT).show();
+            Toast.makeText(LoginGeralActivity.this, "Selecionado: Administrador", Toast.LENGTH_SHORT).show();
         });
     }
 }

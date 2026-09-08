@@ -1,4 +1,4 @@
-package com.inter.efficientia_mobile;
+package com.inter.efficientia_mobile.splash;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -7,8 +7,11 @@ import android.os.Handler;
 import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.auth.LoginGeralActivity;
+
 @SuppressLint("CustomSplashScreen")
-public class Splash extends AppCompatActivity {
+public class MainSplashActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +22,7 @@ public class Splash extends AppCompatActivity {
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(Splash.this, LoginGeral.class));
+                startActivity(new Intent(MainSplashActivity.this, LoginGeralActivity.class));
                 finish();
             }
         }, 2000);
