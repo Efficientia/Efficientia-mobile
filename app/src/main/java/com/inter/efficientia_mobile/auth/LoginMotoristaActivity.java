@@ -1,4 +1,4 @@
-package com.inter.efficientia_mobile;
+package com.inter.efficientia_mobile.auth;
 
 import android.content.Intent;
 
@@ -19,7 +19,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class LoginMotorista extends AppCompatActivity {
+import com.inter.efficientia_mobile.R;
+
+public class LoginMotoristaActivity extends AppCompatActivity {
 
     private ImageButton btnVoltar;
     private EditText edtCpf;
@@ -53,7 +55,7 @@ public class LoginMotorista extends AppCompatActivity {
 
         // Link "Esqueci minha senha"
         txtEsqueciSenha.setOnClickListener(v ->
-                startActivity(new Intent(LoginMotorista.this, SelecaoRecuperar.class)));
+                startActivity(new Intent(LoginMotoristaActivity.this, SelecaoRecuperarActivity.class)));
     }
 
     private void configurarCampos() {

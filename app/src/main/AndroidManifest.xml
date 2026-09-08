@@ -14,7 +14,7 @@
 
         <!-- Tela Inicial / Splash -->
         <activity
-            android:name=".Splash"
+            android:name=".splash.MainSplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,20 +24,20 @@
 
         <!-- Telas de Login -->
         <activity
-            android:name=".LoginGeral"
+            android:name=".auth.LoginGeralActivity"
             android:exported="false" />
 
         <activity
-            android:name=".LoginMotorista"
+            android:name=".auth.LoginMotoristaActivity"
             android:exported="false" />
 
         <!-- Fluxo de Recuperação de Senha -->
         <activity
-            android:name=".SelecaoRecuperar"
+            android:name=".auth.SelecaoRecuperarActivity"
             android:exported="false" />
 
         <activity
-            android:name=".RedefinirCampo"
+            android:name=".auth.RedefinirCampoActivity"
             android:exported="false" />
         <meta-data
             android:name="preloaded_fonts"
