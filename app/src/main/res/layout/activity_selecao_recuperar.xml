@@ -1,123 +1,113 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@drawable/splash_gradient"
+android:fillViewport="true">
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/splash_gradient"
-    android:fillViewport="true">
+    android:layout_height="wrap_content"
+    android:minHeight="640dp">
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="44dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/logo_effi"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+        android:id="@+id/imgLogoText"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:minHeight="640dp">
-
-
-
-        <ImageView
-            android:id="@+id/imgLogo"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="44dp"
-            android:importantForAccessibility="no"
-            android:src="@drawable/logo_effi"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/imgLogoText"
-            android:layout_width="180dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/recuperar_logo"
-            android:src="@drawable/efficientiatext"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imgLogo" />
-
-        <TextView
-            android:id="@+id/txtRecuperarDescricao"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="64dp"
+        android:layout_marginTop="10dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/recuperar_logo"
+        android:src="@drawable/efficientiatext"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+    <TextView
+        android:id="@+id/txtRecuperarDescricao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="64dp"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        android:gravity="center"
+        android:letterSpacing="0.1"
+        android:text="@string/recuperar_descricao"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogoText" />
+    <TextView
+        android:id="@+id/txtRecuperarSelecao"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginTop="48dp"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        android:gravity="center"
+        android:letterSpacing="0.1"
+        android:text="@string/recuperar_selecao"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtRecuperarDescricao" />
+    <ImageButton
+        android:id="@+id/btnVoltar"
+        android:layout_width="76dp"
+        android:layout_height="82dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="52dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Voltar"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintEnd_toStartOf="@+id/imgLogo"
+        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginBottom="64dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtRecuperarSelecao"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.5">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnRedefinir"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/componente_button_blue"
             android:fontFamily="@font/ibm_plex_sans_semibold"
-            android:gravity="center"
-            android:letterSpacing="0.1"
-            android:text="@string/recuperar_descricao"
+            android:text="@string/recuperar_redefinir"
+            android:textAllCaps="false"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/imgLogoText" />
-
-        <TextView
-            android:id="@+id/txtRecuperarSelecao"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="48dp"
-            android:fontFamily="@font/ibm_plex_sans_semibold"
-            android:gravity="center"
-            android:letterSpacing="0.1"
-            android:text="@string/recuperar_selecao"
-            android:textColor="#FFFFFF"
-            android:textSize="18sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtRecuperarDescricao" />
-        <ImageButton
-            android:id="@+id/btnVoltar"
-            android:layout_width="76dp"
-            android:layout_height="82dp"
+            android:textSize="16sp"
+            app:backgroundTint="@null" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnEnviarCodigo"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="52dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Voltar"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_arrow_back"
-            app:layout_constraintEnd_toStartOf="@+id/imgLogo"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginTop="48dp"
-            android:layout_marginBottom="64dp"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/txtRecuperarSelecao"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.5">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnRedefinir"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:background="@drawable/componente_button_blue"
-                android:fontFamily="@font/ibm_plex_sans_semibold"
-                android:text="@string/recuperar_redefinir"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                app:backgroundTint="@null" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnEnviarCodigo"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/componente_button_green"
-                android:fontFamily="@font/ibm_plex_sans_semibold"
-                android:text="@string/recuperar_enviar_codigo"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                app:backgroundTint="@null" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:background="@drawable/componente_button_green"
+            android:fontFamily="@font/ibm_plex_sans_semibold"
+            android:text="@string/recuperar_enviar_codigo"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:backgroundTint="@null" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
