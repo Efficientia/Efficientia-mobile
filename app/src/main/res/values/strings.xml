@@ -8,4 +8,5 @@
     <string name="recuperar_selecao">Selecione a ação para\nentrar</string>
     <string name="recuperar_redefinir">Redefinir</string>
     <string name="recuperar_enviar_codigo">Enviar código</string>
+    <string name="recuperacao_email_enviado">Enviamos um e-mail para o\nendereço %1$s\npara que sua senha seja\nredefinida</string>
 </resources>
