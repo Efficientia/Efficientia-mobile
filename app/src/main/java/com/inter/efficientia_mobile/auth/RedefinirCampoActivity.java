@@ -1,10 +1,10 @@
 package com.inter.efficientia_mobile.auth;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.EditText;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.inter.efficientia_mobile.R;
@@ -35,8 +35,9 @@ public class RedefinirCampoActivity extends AppCompatActivity {
                 }
                 return;
             }
-            Toast.makeText(this, "Instruções enviadas para " + email, Toast.LENGTH_SHORT).show();
-            finish();
+            Intent intent = new Intent(this, EmailRecuperar.class);
+            intent.putExtra(EmailRecuperar.EXTRA_EMAIL, email);
+            startActivity(intent);
         });
     }
 }

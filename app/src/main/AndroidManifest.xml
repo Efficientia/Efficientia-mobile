@@ -39,6 +39,10 @@
         <activity
             android:name=".auth.RedefinirCampoActivity"
             android:exported="false" />
+        <activity
+            android:name=".auth.EmailRecuperar"
+            android:exported="false" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
