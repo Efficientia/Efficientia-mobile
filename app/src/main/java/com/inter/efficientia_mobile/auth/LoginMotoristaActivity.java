@@ -47,7 +47,7 @@ public class LoginMotoristaActivity extends AppCompatActivity {
 
         configurarCampos();
 
-        // Botão voltar (seta verde): fecha a tela e volta para a anterior (LoginGeral)
+        // Botão voltar (seta verde): fecha a tela e volta para a anterior (LoginGeralActivity)
         btnVoltar.setOnClickListener(v -> finish());
 
         // Botão de login com validação simples dos campos

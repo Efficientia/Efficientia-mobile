@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_gradient"
+    android:paddingStart="32dp"
+    android:paddingEnd="32dp">
+
+    <!-- Botão Voltar (Canto superior esquerdo alinhado) -->
+    <ImageButton
+        android:id="@+id/btnVoltar"
+        android:layout_width="76dp"
+        android:layout_height="82dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="52dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Voltar"
+        android:padding="8dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintEnd_toStartOf="@+id/imgLogo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Logo Cabeça de Boi -->
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="48dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Logo Efficientia"
+        android:src="@drawable/logo_effi"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Texto Efficientia -->
+    <ImageView
+        android:id="@+id/imgLogoText"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="Efficientia"
+        android:src="@drawable/efficientiatext"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+
+    <!-- Título: Redefina sua senha! -->
+    <TextView
+        android:id="@+id/txtTitulo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:gravity="center"
+        android:letterSpacing="0.05"
+        android:lineSpacingExtra="4dp"
+        android:text="Entre com um código \núnico"
+        android:textColor="#FFFFFF"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgLogoText" />
+
+    <!-- Subtítulo / Instrução -->
+    <TextView
+        android:id="@+id/txtSubtitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        android:gravity="center"
+        android:lineSpacingExtra="4dp"
+        android:text="Digite seu email para continuar"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txtTitulo" />
+
+    <!-- Campo Email (posicionado na metade inferior) -->
+
+    <!-- Botão Continuar -->
+    <EditText
+        android:id="@+id/edtEmail"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/input_campo"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:textColor="#333333"
+        android:textColorHint="#9E9E9E"
+        android:textSize="15sp"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        app:layout_constraintBottom_toTopOf="@id/btnContinuar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnContinuar"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="132dp"
+        android:background="@drawable/componente_button_blue"
+        android:fontFamily="@font/ibm_plex_sans_semibold"
+        android:text="Continuar"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        app:fontFamily="@font/ibm_plex_sans_semibold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

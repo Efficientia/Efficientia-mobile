@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@drawable/splash_gradient">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp">
+        <!-- Voltar -->
+
+        <ImageButton
+            android:id="@+id/btnVoltar"
+            android:layout_width="76dp"
+            android:layout_height="82dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="52dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Voltar"
+            android:padding="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintEnd_toStartOf="@+id/imgLogo"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:contentDescription="@string/recuperar_logo"
+            android:src="@drawable/logo_effi"
+            android:id="@+id/imgLogo"
+            android:layout_marginTop="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread_inside"
+            app:layout_constraintBottom_toTopOf="@id/imgLogoText" />
+
+        <ImageView
+            android:id="@+id/imgLogoText"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:adjustViewBounds="true"
+            android:importantForAccessibility="no"
+            android:src="@drawable/efficientiatext"
+            app:layout_constraintBottom_toTopOf="@id/txtInstrucao"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.497"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imgLogo" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/codigo_instrucao"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:letterSpacing="0.08"
+            android:fontFamily="@font/ibm_plex_sans_semibold"
+            android:id="@+id/txtInstrucao"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imgLogoText"
+            app:layout_constraintBottom_toTopOf="@id/txtEmail" />
+
+        <!-- Campos do código -->
+
+        <TextView
+            android:id="@+id/txtEmail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/ibm_plex_sans_semibold"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/camposCodigo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtInstrucao" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingHorizontal="16dp"
+            android:orientation="horizontal"
+            android:id="@+id/camposCodigo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/txtEmail"
+            app:layout_constraintBottom_toTopOf="@id/btnFazerLogin">
+
+            <EditText
+                android:id="@+id/edtCodigo1"
+                android:contentDescription="@string/codigo_digito_1"
+                style="@style/CampoCodigoEmail" />
+
+            <EditText
+                android:id="@+id/edtCodigo2"
+                android:contentDescription="@string/codigo_digito_2"
+                style="@style/CampoCodigoEmail" />
+
+            <EditText
+                android:id="@+id/edtCodigo3"
+                android:contentDescription="@string/codigo_digito_3"
+                style="@style/CampoCodigoEmail" />
+
+            <EditText
+                android:id="@+id/edtCodigo4"
+                android:contentDescription="@string/codigo_digito_4"
+                style="@style/CampoCodigoEmail" />
+
+            <EditText
+                android:id="@+id/edtCodigo5"
+                android:contentDescription="@string/codigo_digito_5"
+                style="@style/CampoCodigoEmail" />
+
+            <EditText
+                android:id="@+id/edtCodigo6"
+                android:contentDescription="@string/codigo_digito_6"
+                style="@style/CampoCodigoEmail" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnFazerLogin"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/componente_button_blue"
+            android:fontFamily="@font/ibm_plex_sans_semibold"
+            android:text="@string/codigo_fazer_login"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@id/btnReenviarCodigo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/camposCodigo" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnReenviarCodigo"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginBottom="80dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:letterSpacing="0.08"
+            android:text="@string/codigo_reenviar"
+            android:textAllCaps="false"
+            android:textColor="#37DB70"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.508"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnFazerLogin" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
