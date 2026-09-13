@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.inter.efficientia_mobile.R;
 
-public class EmailRecuperar extends AppCompatActivity {
+public class EmailRecuperarActivity extends AppCompatActivity {
     public static final String EXTRA_EMAIL = "email";
 
     @Override
