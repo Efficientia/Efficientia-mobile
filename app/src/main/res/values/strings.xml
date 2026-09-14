@@ -4,8 +4,8 @@
     <string name="ocultar_senha">Ocultar senha</string>
     <string name="recuperar_voltar">Voltar para o login</string>
     <string name="recuperar_logo">Efficientia</string>
-    <string name="recuperar_descricao">Redefina sua senha, ou\nentre com código único</string>
-    <string name="recuperar_selecao">Selecione a ação para\nentrar</string>
+    <string name="recuperar_descricao">Entre com código único\npara prosseguir</string>
+    <string name="recuperar_selecao">Enviaremos esse código por email</string>
     <string name="recuperar_redefinir">Redefinir</string>
     <string name="recuperar_enviar_codigo">Enviar código</string>
     <string name="recuperacao_email_enviado">Enviamos um e-mail para o\nendereço %1$s\npara que sua senha seja\nredefinida</string>
