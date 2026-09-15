@@ -4,8 +4,21 @@
     <string name="ocultar_senha">Ocultar senha</string>
     <string name="recuperar_voltar">Voltar para o login</string>
     <string name="recuperar_logo">Efficientia</string>
-    <string name="recuperar_descricao">Redefina sua senha, ou\nentre com código único</string>
-    <string name="recuperar_selecao">Selecione a ação para\nentrar</string>
+    <string name="recuperar_descricao">Entre com código único\npara prosseguir</string>
+    <string name="recuperar_selecao">Enviaremos esse código por email</string>
     <string name="recuperar_redefinir">Redefinir</string>
     <string name="recuperar_enviar_codigo">Enviar código</string>
+    <string name="recuperacao_email_enviado">Enviamos um e-mail para o\nendereço %1$s\npara que sua senha seja\nredefinida</string>
+    <string name="codigo_instrucao">Por favor, digite o código\nque enviamos para:</string>
+    <string name="codigo_voltar">Voltar</string>
+    <string name="codigo_fazer_login">Fazer Login</string>
+    <string name="codigo_reenviar">Reenviar código</string>
+    <string name="codigo_incompleto">Informe os seis dígitos do código</string>
+    <string name="codigo_servico_indisponivel">Serviço de código ainda não integrado.</string>
+    <string name="codigo_digito_1">Dígito 1 de 6</string>
+    <string name="codigo_digito_2">Dígito 2 de 6</string>
+    <string name="codigo_digito_3">Dígito 3 de 6</string>
+    <string name="codigo_digito_4">Dígito 4 de 6</string>
+    <string name="codigo_digito_5">Dígito 5 de 6</string>
+    <string name="codigo_digito_6">Dígito 6 de 6</string>
 </resources>

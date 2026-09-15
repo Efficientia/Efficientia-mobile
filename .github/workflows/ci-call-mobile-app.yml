@@ -1,0 +1,23 @@
+# ==============================================================================
+# Caller CI - Mobile App (React Native / Expo / Flutter)
+# Repositório de Destino: mobile-app / Efficientia-mobile
+# Coloque em: .github/workflows/ci-call.yml no repositório mobile
+# ==============================================================================
+
+name: CI Call - Mobile App
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+permissions:
+  contents: read
+
+jobs:
+  call-mobile-ci:
+    name: Executar CI Mobile Centralizado
+    uses: Efficientia/.github/.github/workflows/ci-mobile-flutter.yml@main
+    with:
+      node-version: '20'

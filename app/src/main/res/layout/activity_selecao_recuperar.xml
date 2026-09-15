@@ -86,17 +86,6 @@ android:fillViewport="true">
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.5">
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnRedefinir"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@drawable/componente_button_blue"
-            android:fontFamily="@font/ibm_plex_sans_semibold"
-            android:text="@string/recuperar_redefinir"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            app:backgroundTint="@null" />
-        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnEnviarCodigo"
             android:layout_width="match_parent"
             android:layout_height="48dp"
