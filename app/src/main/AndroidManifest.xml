@@ -12,9 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Efficientiamobile">
         <activity
-            android:name=".main.MainADMActivity"
+            android:name=".pages.PainelADMActivity"
             android:exported="false" />
-        <!-- Tela Inicial / Splash -->
+        <activity
+            android:name=".main.MainADMActivity"
+            android:exported="false" /> <!-- Tela Inicial / Splash -->
         <activity
             android:name=".splash.MainSplashActivity"
             android:exported="true">
