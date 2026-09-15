@@ -25,9 +25,10 @@ public class LoginADMActivity extends AppCompatActivity {
             return insets;
         });
 
-        EditText editTextEmail = findViewById(R.id.et_cnpj);
+        EditText editTextCNPJ = findViewById(R.id.et_cnpj);
         EditText editTextSenha = findViewById(R.id.et_senha);
         Button buttonAvancar = findViewById(R.id.btn_avancar);
+
 
     }
 }
