@@ -11,34 +11,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Efficientiamobile">
-
+        <activity
+            android:name=".main.MainADMActivity"
+            android:exported="false" />
         <!-- Tela Inicial / Splash -->
         <activity
             android:name=".splash.MainSplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Telas de Login -->
+        </activity> <!-- Telas de Login -->
         <activity
             android:name=".auth.LoginGeralActivity"
             android:exported="false" />
-
         <activity
             android:name=".auth.LoginMotoristaActivity"
-            android:exported="false" />
-
-        <!-- Fluxo de Recuperação de Senha -->
+            android:exported="false" /> <!-- Fluxo de Recuperação de Senha -->
         <activity
             android:name=".auth.SelecaoRecuperarActivity"
             android:exported="false" />
-
         <activity
             android:name=".auth.RedefinirCampoActivity"
             android:exported="false" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

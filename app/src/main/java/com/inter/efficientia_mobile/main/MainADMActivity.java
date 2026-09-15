@@ -1,9 +1,6 @@
-package com.inter.efficientia_mobile.auth;
+package com.inter.efficientia_mobile.main;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,26 +10,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.inter.efficientia_mobile.R;
 
-public class LoginADMActivity extends AppCompatActivity {
+public class MainADMActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_login_adm);
+        setContentView(R.layout.activity_main_adm);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-        });
-
-        EditText editTextCNPJ = findViewById(R.id.et_cnpj);
-        EditText editTextSenha = findViewById(R.id.et_senha);
-        Button buttonAvancar = findViewById(R.id.btn_avancar);
-
-        buttonAvancar.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginADMActivity.this, MainActivity.class);
-            startActivity(intent);
         });
     }
 }
