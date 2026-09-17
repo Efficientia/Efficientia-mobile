@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:scrollbars="none"
+    android:id="@+id/main"
+    android:background="@drawable/splash_gradient">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="32dp">
+
+        <!-- Botão Voltar (Seta) -->
+        <ImageView
+            android:id="@+id/btn_voltar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:padding="12dp"
+            android:src="@drawable/ic_arrow_back"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Voltar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Logo Emblem (Símbolo da Efficientia) -->
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_width="138dp"
+            android:layout_height="133dp"
+            android:layout_marginTop="48dp"
+            android:src="@drawable/logo_effi"
+            android:contentDescription="Logo Efficientia"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Logo Texto ("Efficientia") -->
+        <ImageView
+            android:id="@+id/iv_logo_texto"
+            android:layout_width="210dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/efficientiatext"
+            android:contentDescription="Efficientia"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+        <!-- Título da Tela ("Entre como administrador!") -->
+        <TextView
+            android:id="@+id/tv_titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:fontFamily="@font/ibm_plex_sans_semibold"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:text="Entre como administrador!"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_logo_texto" />
+
+        <!-- Campo de Entrada: CNPJ -->
+        <EditText
+            android:id="@+id/et_cnpj"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginTop="48dp"
+            android:background="@drawable/input_campo"
+            android:hint="CNPJ"
+            android:textColorHint="#57000000"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:inputType="number"
+            android:importantForAutofill="no"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_titulo" />
+
+        <!-- Campo de Entrada: Senha (com toggle de visibilidade) -->
+        <FrameLayout
+            android:id="@+id/layout_campo_senha"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginEnd="28dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/et_cnpj">
+
+            <EditText
+                android:id="@+id/et_senha"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/input_campo"
+                android:hint="Senha"
+                android:textColorHint="#57000000"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:paddingStart="24dp"
+                android:paddingEnd="50dp"
+                android:inputType="textPassword"
+                android:importantForAutofill="no" />
+
+            <ImageView
+                android:id="@+id/btn_toggle_senha"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="18dp"
+                android:src="@drawable/ic_visibility"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Alternar visibilidade da senha" />
+        </FrameLayout>
+
+        <!-- Botão Avançar -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_avancar"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/componente_button_blue"
+            app:backgroundTint="@null"
+            android:text="Avançar"
+            android:textColor="#FFF8E1"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textAllCaps="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_campo_senha" />
+
+        <!-- Link: Esqueci minha senha -->
+        <TextView
+            android:id="@+id/tv_esqueci_senha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="32dp"
+            android:text="Esqueci minha senha"
+            android:textColor="#56D867"
+            android:textSize="14sp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_avancar"
+            app:layout_constraintVertical_bias="1.0" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

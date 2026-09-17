@@ -27,7 +27,8 @@ public class LoginGeralActivity extends AppCompatActivity {
 
         // Clique no botão Administrador
         btnAdministrador.setOnClickListener(v -> {
-            Toast.makeText(LoginGeralActivity.this, "Selecionado: Administrador", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(LoginGeralActivity.this, LoginADMActivity.class);
+            startActivity(intent);
         });
     }
 }
