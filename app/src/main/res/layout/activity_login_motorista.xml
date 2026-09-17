@@ -170,7 +170,7 @@
         android:background="@drawable/componente_button_blue"
         android:fontFamily="@font/ibm_plex_sans_semibold"
         app:fontFamily="@font/ibm_plex_sans_semibold"
-        android:text="Fazer Login"
+        android:text="@string/login_fazer"
         android:textAllCaps="false"
         android:textColor="#FFFFFF"
         android:textSize="16sp"

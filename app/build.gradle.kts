@@ -2,6 +2,9 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+val apiBaseUrl = providers.gradleProperty("API_BASE_URL")
+    .getOrElse("https://efficientia-api.onrender.com/")
+
 android {
     namespace = "com.inter.efficientia_mobile"
     compileSdk {
@@ -16,6 +19,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     buildTypes {

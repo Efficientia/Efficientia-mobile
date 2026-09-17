@@ -20,6 +20,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.main.MainActivity;
+import com.inter.efficientia_mobile.network.ApiClient;
 
 public class LoginMotoristaActivity extends AppCompatActivity {
 
@@ -30,6 +32,7 @@ public class LoginMotoristaActivity extends AppCompatActivity {
     private EditText edtCodigoEmpresa;
     private Button btnFazerLogin;
     private TextView txtEsqueciSenha;
+    private boolean loginEmAndamento;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +154,8 @@ public class LoginMotoristaActivity extends AppCompatActivity {
     }
 
     private void validarELogar() {
+        if (loginEmAndamento) return;
+
         String cpf = edtCpf.getText().toString().replaceAll("[^0-9]", "");
         String email = edtEmail.getText().toString().trim();
         String senha = edtSenha.getText().toString();
@@ -192,9 +197,33 @@ public class LoginMotoristaActivity extends AppCompatActivity {
             return;
         }
 
-        // Se todos os campos estiverem preenchidos:
-        Toast.makeText(this, "Processando login do motorista...", Toast.LENGTH_SHORT).show();
+        setLoginEmAndamento(true);
+        ApiClient.login(cpf, email, senha, codigoEmpresa, new ApiClient.LoginCallback() {
+            @Override
+            public void onSuccess(org.json.JSONObject response) {
+                if (isFinishing() || isDestroyed()) return;
+                SessionManager.save(LoginMotoristaActivity.this, response);
+                setLoginEmAndamento(false);
+                Toast.makeText(LoginMotoristaActivity.this,
+                        "Login realizado com sucesso!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(LoginMotoristaActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
 
-        // Aqui entrará a chamada da API / Firebase / Banco de dados
+            @Override
+            public void onError(String message) {
+                if (isFinishing() || isDestroyed()) return;
+                setLoginEmAndamento(false);
+                Toast.makeText(LoginMotoristaActivity.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void setLoginEmAndamento(boolean emAndamento) {
+        loginEmAndamento = emAndamento;
+        btnFazerLogin.setEnabled(!emAndamento);
+        btnFazerLogin.setText(emAndamento
+                ? R.string.login_entrando : R.string.login_fazer);
     }
 }
