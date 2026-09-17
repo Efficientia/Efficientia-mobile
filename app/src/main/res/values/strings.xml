@@ -2,6 +2,9 @@
     <string name="app_name">Efficientia-mobile</string>
     <string name="mostrar_senha">Mostrar senha</string>
     <string name="ocultar_senha">Ocultar senha</string>
+    <string name="login_fazer">Fazer Login</string>
+    <string name="login_entrando">Entrando…</string>
+    <string name="login_area_autenticada">Login realizado. Área autenticada.</string>
     <string name="recuperar_voltar">Voltar para o login</string>
     <string name="recuperar_logo">Efficientia</string>
     <string name="recuperar_descricao">Entre com código único\npara prosseguir</string>
