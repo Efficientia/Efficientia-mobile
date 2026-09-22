@@ -16,7 +16,13 @@ Repositório analisado: `https://github.com/Efficientia/Efficientia-API`
 - `GET /api/v1/documentos` sem JWT: `200 OK` (falha de segurança).
 - `GET /api/v1/relatorios-viagem` sem JWT: `200 OK` (falha de segurança).
 
-Não foi criado usuário de teste no banco público. Portanto, o caminho de sucesso do login ainda precisa ser validado com uma credencial controlada do ambiente Render.
+## Reteste do login em 22/09/2026
+
+- Criado no Render um usuário sintético `motorista`, ID `5`, exclusivamente para homologação do mobile.
+- `POST /api/v1/auth/login`: `200 OK`.
+- Resposta validada com `tokenType=Bearer`, JWT presente e usuário/código interno correspondentes.
+- O fluxo de sucesso do mobile está conectado à persistência da sessão e à abertura da `MainActivity`.
+- A primeira tentativa levou mais de 90 segundos enquanto o serviço estava inativo. Depois do health check responder, signup e login concluíram em poucos segundos.
 
 ## Contrato usado pelo mobile
 
@@ -80,11 +86,15 @@ O OpenAPI marca documentos/exportações com JWT, mas não reflete de forma cons
 
 Adicionar um teste que execute o fluxo completo: signup controlado, login, acesso com Bearer válido, acesso sem token (`401`), role insuficiente (`403`) e token expirado/inválido (`401`). Isso detectará automaticamente a incompatibilidade HS256/JWKS.
 
+### P2 — Reduzir o impacto da inicialização fria do Render
+
+Em 22/09/2026, o primeiro acesso após inatividade demorou mais de 90 segundos. Isso ultrapassava o timeout anterior do mobile. O app passou a aguardar até 120 segundos, mas a correção ideal é manter uma instância adequada para produção ou configurar a hospedagem para evitar suspensão/cold start. Também é recomendável expor métricas de tempo de inicialização e disponibilidade.
+
 ## Ajustes aplicados no mobile
 
 - Base URL padrão HTTPS alterada para `https://efficientia-api.onrender.com/`.
 - Removida a configuração de cleartext/localhost.
-- Timeouts ampliados para suportar inicialização fria do Render.
+- Timeout de leitura ampliado para 120 segundos para suportar a inicialização fria observada no Render.
 - Respostas `502`, `503`, `504`, timeout e resposta de login sem token agora geram mensagens específicas.
 - Token e dados básicos do usuário são persistidos; foi incluído gerador do cabeçalho `Authorization` para as próximas telas.
 - Backup do app foi desativado para não incluir a sessão persistida em backups do Android.

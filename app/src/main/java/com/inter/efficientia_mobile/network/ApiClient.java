@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 public final class ApiClient {
 
     private static final int CONNECT_TIMEOUT_MS = 20_000;
-    private static final int READ_TIMEOUT_MS = 60_000;
+    private static final int READ_TIMEOUT_MS = 120_000;
     private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
     private static final Handler MAIN_HANDLER = new Handler(Looper.getMainLooper());
 
