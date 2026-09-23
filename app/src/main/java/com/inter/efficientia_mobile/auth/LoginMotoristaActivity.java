@@ -21,7 +21,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.main.MainActivity;
-import com.inter.efficientia_mobile.network.ApiClient;
+import com.inter.efficientia_mobile.network.AuthService;
+import com.inter.efficientia_mobile.network.RetrofitClient;
+
+import com.google.gson.JsonObject;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LoginMotoristaActivity extends AppCompatActivity {
 
@@ -198,24 +207,66 @@ public class LoginMotoristaActivity extends AppCompatActivity {
         }
 
         setLoginEmAndamento(true);
-        ApiClient.login(cpf, email, senha, codigoEmpresa, new ApiClient.LoginCallback() {
+        
+        JsonObject request = new JsonObject();
+        request.addProperty("cpf", cpf);
+        request.addProperty("email", email);
+        request.addProperty("senha", senha);
+        request.addProperty("codigoEmpresa", codigoEmpresa);
+
+        AuthService service = RetrofitClient.getInstance().create(AuthService.class);
+        service.login(request).enqueue(new Callback<JsonObject>() {
             @Override
-            public void onSuccess(org.json.JSONObject response) {
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                 if (isFinishing() || isDestroyed()) return;
-                SessionManager.save(LoginMotoristaActivity.this, response);
-                setLoginEmAndamento(false);
-                Toast.makeText(LoginMotoristaActivity.this,
-                        "Login realizado com sucesso!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(LoginMotoristaActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        JSONObject jsonResponse = new JSONObject(response.body().toString());
+                        if (jsonResponse.optString("token").isEmpty()) {
+                            mostrarErro("A API não retornou o token de autenticação.");
+                            return;
+                        }
+                        
+                        SessionManager.save(LoginMotoristaActivity.this, jsonResponse);
+                        setLoginEmAndamento(false);
+                        Toast.makeText(LoginMotoristaActivity.this,
+                                "Login realizado com sucesso!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginMotoristaActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        
+                    } catch (JSONException e) {
+                        mostrarErro("A API retornou uma resposta inválida.");
+                    }
+                } else {
+                    String errorMessage = "Falha no login (HTTP " + response.code() + ").";
+                    if (response.errorBody() != null) {
+                        try {
+                            JSONObject errorJson = new JSONObject(response.errorBody().string());
+                            if (errorJson.has("detail") && !errorJson.getString("detail").isEmpty()) {
+                                errorMessage = errorJson.getString("detail");
+                            } else if (errorJson.has("title") && !errorJson.getString("title").isEmpty()) {
+                                errorMessage = errorJson.getString("title");
+                            } else if (errorJson.has("message") && !errorJson.getString("message").isEmpty()) {
+                                errorMessage = errorJson.getString("message");
+                            }
+                        } catch (Exception ignored) {
+                        }
+                    }
+                    mostrarErro(errorMessage);
+                }
             }
 
             @Override
-            public void onError(String message) {
+            public void onFailure(Call<JsonObject> call, Throwable t) {
                 if (isFinishing() || isDestroyed()) return;
+                mostrarErro("Não foi possível conectar à API. Verifique sua conexão.");
+            }
+            
+            private void mostrarErro(String msg) {
                 setLoginEmAndamento(false);
-                Toast.makeText(LoginMotoristaActivity.this, message, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginMotoristaActivity.this, msg, Toast.LENGTH_LONG).show();
             }
         });
     }
