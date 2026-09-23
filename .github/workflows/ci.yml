@@ -20,4 +20,4 @@ jobs:
     name: Executar CI Mobile Centralizado
     uses: Efficientia/.github/.github/workflows/ci-android-gradle.yml@main
     with:
-      java-version: '17'
+      java-version: '11'
