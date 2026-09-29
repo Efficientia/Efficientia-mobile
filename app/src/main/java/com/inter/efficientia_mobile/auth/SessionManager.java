@@ -41,6 +41,28 @@ public final class SessionManager {
         return (tokenType == null || tokenType.isBlank() ? "Bearer" : tokenType) + " " + token;
     }
 
+    public static String userName(Context context) {
+        String name = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .getString("usuario_nome", "");
+        return name == null ? "" : name.trim();
+    }
+
+    public static String firstName(Context context) {
+        String name = userName(context);
+        if (name.isBlank()) return "Motorista";
+        int separator = name.indexOf(' ');
+        return separator > 0 ? name.substring(0, separator) : name;
+    }
+
+    public static void saveDevelopmentSession(Context context) {
+        context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .edit()
+                .clear()
+                .putString("usuario_nome", "Motorista Teste")
+                .putString("usuario_tipo", "motorista")
+                .apply();
+    }
+
     public static void clear(Context context) {
         context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
                 .edit()

@@ -24,4 +24,20 @@
     <string name="codigo_digito_4">Dígito 4 de 6</string>
     <string name="codigo_digito_5">Dígito 5 de 6</string>
     <string name="codigo_digito_6">Dígito 6 de 6</string>
+    <string name="authenticated_splash_greeting">Olá, %1$s!</string>
+    <string name="authenticated_splash_welcome">Seja bem-vindo!</string>
+    <string name="home_greeting">Olá, %1$s!</string>
+    <string name="home_first_access_location">Primeiro acesso • São Paulo, SP</string>
+    <string name="home_first_route_title">Sua primeira rota\ncomeça aqui</string>
+    <string name="home_first_route_description">Confirme sua assinatura para liberar todas as\nferramentas do aplicativo.</string>
+    <string name="home_verify_subscription">Verificar minha assinatura</string>
+    <string name="home_subscription_pending">Verificação de assinatura será integrada em breve.</string>
+    <string name="home_next_steps">Próximos passos</string>
+    <string name="home_step_one">01  Confirme seus dados e sua assinatura</string>
+    <string name="home_step_two">02  Libere relatórios, rotas e ferramentas</string>
+    <string name="home_step_three">03  Comece sua primeira viagem</string>
+    <string name="home_footer_description">Depois da confirmação, você poderá criar relatórios e\niniciar sua primeira rota.</string>
+    <string name="home_icon_description">Início</string>
+    <string name="notification_icon_description">Notificações</string>
+    <string name="truck_icon_description">Caminhão</string>
 </resources>

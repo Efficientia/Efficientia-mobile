@@ -38,6 +38,9 @@
         <activity
             android:name=".main.MainActivity"
             android:exported="false" />
+        <activity
+            android:name=".splash.AuthenticatedSplashActivity"
+            android:exported="false" />
 
         <!-- Fluxo de Recuperação de Senha -->
         <activity
