@@ -40,4 +40,14 @@
     <string name="home_icon_description">Início</string>
     <string name="notification_icon_description">Notificações</string>
     <string name="truck_icon_description">Caminhão</string>
+    <string name="signature_brand">Efficientia</string>
+    <string name="signature_choose_option">Escolha uma opção</string>
+    <string name="signature_draw_option">Desenhar Assinatura</string>
+    <string name="signature_type_option">Escrever nome</string>
+    <string name="signature_draw_instruction">Desenhe sua assinatura</string>
+    <string name="signature_type_instruction">Escreva seu nome para assinatura</string>
+    <string name="signature_name_hint">Nome completo</string>
+    <string name="signature_finish">Finalizar</string>
+    <string name="signature_required">Informe sua assinatura para continuar.</string>
+    <string name="signature_pen_description">Desenhar assinatura</string>
 </resources>

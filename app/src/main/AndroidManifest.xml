@@ -41,6 +41,13 @@
         <activity
             android:name=".splash.AuthenticatedSplashActivity"
             android:exported="false" />
+        <activity
+            android:name=".signature.SignatureOptionsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".signature.SignatureCaptureActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <!-- Fluxo de Recuperação de Senha -->
         <activity

@@ -52,7 +52,7 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="14dp"
-        android:layout_marginBottom="54dp"
+        android:layout_marginBottom="110dp"
         android:max="100"
         android:progress="0"
         android:progressDrawable="@drawable/authenticated_progress"
