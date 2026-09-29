@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Projeto independente mantido fora do repositório mobile
+/rollout-lab/
