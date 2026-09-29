@@ -8,10 +8,10 @@ public class Usuario {
     private String tipo;
     private String cpf;
     private String email;
-    
+
     @SerializedName("codigoInterno")
     private String codigoInterno;
-    
+
     private String telefone;
 
     public int getId() { return id; }

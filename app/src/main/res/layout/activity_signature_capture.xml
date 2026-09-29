@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/signature_background"
+    android:fillViewport="true"
+    tools:context=".signature.SignatureCaptureActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:minHeight="760dp"
+        android:orientation="vertical"
+        android:paddingStart="18dp"
+        android:paddingTop="48dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="48dp">
+
+        <ImageView
+            android:layout_width="138dp"
+            android:layout_height="133dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/logo_effi" />
+
+        <ImageView
+            android:layout_width="158dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/signature_brand"
+            android:src="@drawable/efficientiatext" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:background="@drawable/signature_card"
+            android:elevation="10dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingStart="18dp"
+            android:paddingTop="28dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="20dp">
+
+            <TextView
+                android:id="@+id/txtSignatureInstruction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:gravity="center"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                tools:text="Desenhe sua assinatura" />
+
+            <FrameLayout
+                android:id="@+id/signatureDrawContainer"
+                android:layout_width="match_parent"
+                android:layout_height="134dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/signature_pad_background">
+
+                <ImageView
+                    android:id="@+id/imgSignaturePenHint"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/signature_pen_description"
+                    android:src="@drawable/ic_signature_pen" />
+
+                <com.inter.efficientia_mobile.signature.SignaturePadView
+                    android:id="@+id/signaturePad"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/signature_pen_description" />
+            </FrameLayout>
+
+            <EditText
+                android:id="@+id/edtSignatureName"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginTop="28dp"
+                android:background="@drawable/signature_input_background"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:hint="@string/signature_name_hint"
+                android:inputType="textPersonName|textCapWords"
+                android:maxLines="1"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#BFD2F2"
+                android:textSize="15sp"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnFinishSignature"
+                android:layout_width="220dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/componente_button_green"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:text="@string/signature_finish"
+                android:textAllCaps="false"
+                android:textColor="#002060"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -19,14 +19,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.inter.efficientia_mobile.BuildConfig;
 import com.inter.efficientia_mobile.R;
-import com.inter.efficientia_mobile.main.MainActivity;
-import com.inter.efficientia_mobile.network.AuthService;
-import com.inter.efficientia_mobile.network.RetrofitClient;
-
 import com.inter.efficientia_mobile.models.LoginRequest;
 import com.inter.efficientia_mobile.models.LoginResponse;
-import org.json.JSONException;
+import com.inter.efficientia_mobile.network.AuthService;
+import com.inter.efficientia_mobile.network.RetrofitClient;
+import com.inter.efficientia_mobile.splash.AuthenticatedSplashActivity;
+
 import org.json.JSONObject;
 
 import retrofit2.Call;
@@ -34,6 +34,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginMotoristaActivity extends AppCompatActivity {
+
+    // Temporário durante a construção das telas. Release sempre autentica na API.
+    private static final boolean BYPASS_AUTHENTICATION_IN_DEBUG = true;
 
     private ImageButton btnVoltar;
     private EditText edtCpf;
@@ -166,6 +169,12 @@ public class LoginMotoristaActivity extends AppCompatActivity {
     private void validarELogar() {
         if (loginEmAndamento) return;
 
+        if (BuildConfig.DEBUG && BYPASS_AUTHENTICATION_IN_DEBUG) {
+            SessionManager.saveDevelopmentSession(this);
+            openPostLoginFlow();
+            return;
+        }
+
         String cpf = edtCpf.getText().toString().replaceAll("[^0-9]", "");
         String email = edtEmail.getText().toString().trim();
         String senha = edtSenha.getText().toString();
@@ -208,7 +217,7 @@ public class LoginMotoristaActivity extends AppCompatActivity {
         }
 
         setLoginEmAndamento(true);
-        
+
         LoginRequest request = new LoginRequest(cpf, email, senha, codigoEmpresa);
 
         AuthService service = RetrofitClient.getInstance().create(AuthService.class);
@@ -216,21 +225,19 @@ public class LoginMotoristaActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (isFinishing() || isDestroyed()) return;
-                
+
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     if (loginResponse.getToken() == null || loginResponse.getToken().isEmpty()) {
                         mostrarErro("A API não retornou o token de autenticação.");
                         return;
                     }
-                    
+
                     SessionManager.save(LoginMotoristaActivity.this, loginResponse);
                     setLoginEmAndamento(false);
                     Toast.makeText(LoginMotoristaActivity.this,
                             "Login realizado com sucesso!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(LoginMotoristaActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
+                    openPostLoginFlow();
                 } else {
                     String errorMessage = "Falha no login (HTTP " + response.code() + ").";
                     if (response.errorBody() != null) {
@@ -256,12 +263,18 @@ public class LoginMotoristaActivity extends AppCompatActivity {
                 if (isFinishing() || isDestroyed()) return;
                 mostrarErro("Não foi possível conectar à API. Verifique sua conexão.");
             }
-            
+
             private void mostrarErro(String msg) {
                 setLoginEmAndamento(false);
                 Toast.makeText(LoginMotoristaActivity.this, msg, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void openPostLoginFlow() {
+        Intent intent = new Intent(this, AuthenticatedSplashActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void setLoginEmAndamento(boolean emAndamento) {

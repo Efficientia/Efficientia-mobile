@@ -18,7 +18,7 @@ public class RetrofitClient {
             if (!baseUrl.endsWith("/")) {
                 baseUrl += "/";
             }
-            
+
             retrofit = new Retrofit.Builder()
                     .baseUrl(baseUrl)
                     .addConverterFactory(GsonConverterFactory.create())
