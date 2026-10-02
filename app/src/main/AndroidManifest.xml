@@ -39,6 +39,9 @@
             android:name=".main.MainActivity"
             android:exported="false" />
         <activity
+            android:name=".main.FirstAccessActivity"
+            android:exported="false" />
+        <activity
             android:name=".splash.AuthenticatedSplashActivity"
             android:exported="false" />
         <activity
