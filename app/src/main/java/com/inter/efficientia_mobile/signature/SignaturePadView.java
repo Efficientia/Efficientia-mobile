@@ -13,6 +13,8 @@ public class SignaturePadView extends View {
 
     private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Path path = new Path();
+    private float lastX;
+    private float lastY;
     private boolean hasSignature;
     private Runnable onSignatureStartedListener;
 
@@ -23,6 +25,7 @@ public class SignaturePadView extends View {
         paint.setStrokeWidth(6f);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeJoin(Paint.Join.ROUND);
+        setPadding(dpToPx(8), dpToPx(8), dpToPx(8), dpToPx(8));
     }
 
     public void setOnSignatureStartedListener(Runnable listener) {
@@ -41,12 +44,15 @@ public class SignaturePadView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
+        float x = clampX(event.getX());
+        float y = clampY(event.getY());
 
-        switch (event.getAction()) {
+        switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
+                getParent().requestDisallowInterceptTouchEvent(true);
                 path.moveTo(x, y);
+                lastX = x;
+                lastY = y;
                 if (!hasSignature && onSignatureStartedListener != null) {
                     onSignatureStartedListener.run();
                 }
@@ -54,15 +60,50 @@ public class SignaturePadView extends View {
                 invalidate();
                 return true;
             case MotionEvent.ACTION_MOVE:
-                path.lineTo(x, y);
+                for (int index = 0; index < event.getHistorySize(); index++) {
+                    addPoint(clampX(event.getHistoricalX(index)), clampY(event.getHistoricalY(index)));
+                }
+                addPoint(x, y);
                 invalidate();
                 return true;
             case MotionEvent.ACTION_UP:
+                addPoint(x, y);
+                getParent().requestDisallowInterceptTouchEvent(false);
                 performClick();
+                invalidate();
+                return true;
+            case MotionEvent.ACTION_CANCEL:
+                getParent().requestDisallowInterceptTouchEvent(false);
                 return true;
             default:
                 return false;
         }
+    }
+
+    private void addPoint(float x, float y) {
+        float middleX = (lastX + x) / 2f;
+        float middleY = (lastY + y) / 2f;
+        path.quadTo(lastX, lastY, middleX, middleY);
+        lastX = x;
+        lastY = y;
+    }
+
+    private float clampX(float x) {
+        float inset = paint.getStrokeWidth() / 2f;
+        float minimum = getPaddingLeft() + inset;
+        float maximum = Math.max(minimum, getWidth() - getPaddingRight() - inset);
+        return Math.max(minimum, Math.min(x, maximum));
+    }
+
+    private float clampY(float y) {
+        float inset = paint.getStrokeWidth() / 2f;
+        float minimum = getPaddingTop() + inset;
+        float maximum = Math.max(minimum, getHeight() - getPaddingBottom() - inset);
+        return Math.max(minimum, Math.min(y, maximum));
+    }
+
+    private int dpToPx(int dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 
     @Override

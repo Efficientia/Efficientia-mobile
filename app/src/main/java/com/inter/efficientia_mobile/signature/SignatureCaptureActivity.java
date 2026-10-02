@@ -2,7 +2,10 @@ package com.inter.efficientia_mobile.signature;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,7 +24,11 @@ public class SignatureCaptureActivity extends AppCompatActivity {
 
     private SignaturePadView signaturePad;
     private EditText signatureName;
+    private View signatureNamePreviewContainer;
+    private View finishButton;
+    private TextView signatureNamePreview;
     private boolean drawMode;
+    private String confirmedSignatureName = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +39,10 @@ public class SignatureCaptureActivity extends AppCompatActivity {
         View drawContainer = findViewById(R.id.signatureDrawContainer);
         signaturePad = findViewById(R.id.signaturePad);
         signatureName = findViewById(R.id.edtSignatureName);
+        signatureNamePreviewContainer = findViewById(R.id.signatureNamePreviewContainer);
+        signatureNamePreview = findViewById(R.id.txtSignatureNamePreview);
+        View confirmNameButton = findViewById(R.id.btnConfirmSignatureName);
+        finishButton = findViewById(R.id.btnFinishSignature);
         ImageView penHint = findViewById(R.id.imgSignaturePenHint);
 
         drawMode = MODE_DRAW.equals(getIntent().getStringExtra(EXTRA_MODE));
@@ -40,19 +51,65 @@ public class SignatureCaptureActivity extends AppCompatActivity {
                 : R.string.signature_type_instruction);
         drawContainer.setVisibility(drawMode ? View.VISIBLE : View.GONE);
         signatureName.setVisibility(drawMode ? View.GONE : View.VISIBLE);
+        confirmNameButton.setVisibility(drawMode ? View.GONE : View.VISIBLE);
+        finishButton.setVisibility(drawMode ? View.VISIBLE : View.GONE);
 
         signaturePad.setOnSignatureStartedListener(
                 () -> penHint.setVisibility(View.GONE)
         );
-        findViewById(R.id.btnFinishSignature).setOnClickListener(
+        confirmNameButton.setOnClickListener(view -> confirmTypedSignature());
+        signatureName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence text, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence text, int start, int before, int count) {
+                if (!drawMode && !confirmedSignatureName.isEmpty()
+                        && !confirmedSignatureName.equals(text.toString().trim())) {
+                    clearTypedSignatureConfirmation();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+        finishButton.setOnClickListener(
                 view -> finishSignature()
         );
+    }
+
+    private void confirmTypedSignature() {
+        String fullName = signatureName.getText().toString().trim();
+        if (fullName.isEmpty()) {
+            Toast.makeText(this, R.string.signature_required, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        confirmedSignatureName = fullName;
+        signatureNamePreview.setText(fullName);
+        signatureNamePreviewContainer.setVisibility(View.VISIBLE);
+        finishButton.setVisibility(View.VISIBLE);
+
+        InputMethodManager keyboard = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (keyboard != null) {
+            keyboard.hideSoftInputFromWindow(signatureName.getWindowToken(), 0);
+        }
+        signatureName.clearFocus();
+    }
+
+    private void clearTypedSignatureConfirmation() {
+        confirmedSignatureName = "";
+        signatureNamePreviewContainer.setVisibility(View.GONE);
+        finishButton.setVisibility(View.GONE);
     }
 
     private void finishSignature() {
         boolean valid = drawMode
                 ? signaturePad.hasSignature()
-                : !signatureName.getText().toString().trim().isEmpty();
+                : !confirmedSignatureName.isEmpty()
+                && confirmedSignatureName.equals(signatureName.getText().toString().trim());
 
         if (!valid) {
             Toast.makeText(this, R.string.signature_required, Toast.LENGTH_SHORT).show();

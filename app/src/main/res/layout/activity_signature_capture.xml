@@ -58,7 +58,7 @@
             <FrameLayout
                 android:id="@+id/signatureDrawContainer"
                 android:layout_width="match_parent"
-                android:layout_height="134dp"
+                android:layout_height="180dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/signature_pad_background">
 
@@ -93,6 +93,50 @@
                 android:textColorHint="#BFD2F2"
                 android:textSize="15sp"
                 android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnConfirmSignatureName"
+                android:layout_width="220dp"
+                android:layout_height="52dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/componente_button_green"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:text="@string/signature_confirm_name"
+                android:textAllCaps="false"
+                android:textColor="#002060"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:id="@+id/signatureNamePreviewContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/ibm_plex_sans_semibold"
+                    android:text="@string/signature_preview_label"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/txtSignatureNamePreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/signature_pad_background"
+                    android:fontFamily="cursive"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="30sp"
+                    tools:text="Ygona Mendes" />
+            </LinearLayout>
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnFinishSignature"
