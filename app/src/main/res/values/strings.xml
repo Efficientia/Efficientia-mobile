@@ -47,6 +47,8 @@
     <string name="signature_draw_instruction">Desenhe sua assinatura</string>
     <string name="signature_type_instruction">Escreva seu nome para assinatura</string>
     <string name="signature_name_hint">Nome completo</string>
+    <string name="signature_confirm_name">Confirmar</string>
+    <string name="signature_preview_label">Prévia da assinatura</string>
     <string name="signature_finish">Finalizar</string>
     <string name="signature_required">Informe sua assinatura para continuar.</string>
     <string name="signature_pen_description">Desenhar assinatura</string>
