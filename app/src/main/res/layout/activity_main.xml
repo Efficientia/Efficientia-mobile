@@ -128,7 +128,7 @@
                 android:layout_marginTop="8dp"
                 android:lineSpacingExtra="5dp"
                 android:text="@string/home_step_one"
-                android:textColor="#DDEBFF"
+                android:textColor="#55DD71"
                 android:textSize="11sp" />
 
             <TextView
@@ -143,7 +143,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/home_step_three"
-                android:textColor="#55DD71"
+                android:textColor="#DDEBFF"
                 android:textSize="11sp" />
         </LinearLayout>
 
