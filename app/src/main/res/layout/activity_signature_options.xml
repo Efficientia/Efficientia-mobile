@@ -70,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/componente_button_blue"
+                android:background="@drawable/signature_button_blue"
                 android:fontFamily="@font/ibm_plex_sans_semibold"
                 android:text="@string/signature_type_option"
                 android:textAllCaps="false"
