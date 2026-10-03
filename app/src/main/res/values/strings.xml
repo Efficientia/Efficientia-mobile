@@ -53,6 +53,8 @@
     <string name="signature_required">Informe sua assinatura para continuar.</string>
     <string name="signature_pen_description">Desenhar assinatura</string>
     <string name="main_home_greeting">Olá, %1$s!</string>
+    <string name="main_home_brand_blue">Efficien</string>
+    <string name="main_home_brand_green">tia</string>
     <string name="main_home_current_route">Em rota • Cascavel, PR</string>
     <string name="main_home_reports">Relatórios +</string>
     <string name="main_home_feedback">Feedback</string>
@@ -73,4 +75,14 @@
     <string name="main_home_assistant_description">Assistente</string>
     <string name="main_home_settings_description">Configurações</string>
     <string name="main_home_feature_pending">Funcionalidade disponível em breve.</string>
+    <string name="main_home_save_pdf">Salvar como PDF</string>
+    <string name="main_home_edit_report">Editar informações</string>
+    <string name="main_home_delete_report">Excluir relatório</string>
+    <string name="main_home_pdf_pending">O download do PDF de %1$s será conectado à API.</string>
+    <string name="main_home_edit_pending">A edição de %1$s será conectada ao formulário.</string>
+    <string name="main_home_delete_title">Excluir relatório?</string>
+    <string name="main_home_delete_message">Deseja realmente excluir o relatório de %1$s? Esta ação não poderá ser desfeita.</string>
+    <string name="main_home_delete_confirm">Excluir</string>
+    <string name="main_home_delete_cancel">Cancelar</string>
+    <string name="main_home_delete_success">Relatório de %1$s removido da lista.</string>
 </resources>

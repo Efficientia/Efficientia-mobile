@@ -29,35 +29,55 @@
             android:paddingEnd="24dp"
             android:paddingBottom="24dp">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:foregroundGravity="center_vertical">
 
                 <ImageButton
                     android:id="@+id/btnHomeNotifications"
                     android:layout_width="44dp"
                     android:layout_height="44dp"
+                    android:layout_gravity="start|center_vertical"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:contentDescription="@string/notification_icon_description"
                     android:padding="10dp"
                     android:src="@drawable/ic_home_notification" />
 
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:text="@string/main_home_brand_blue"
+                        android:textColor="#1552A1"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:text="@string/main_home_brand_green"
+                        android:textColor="#4DDB70"
+                        android:textSize="25sp" />
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/btnHomeProfile"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:layout_gravity="end|center_vertical"
                     android:background="@drawable/main_home_profile_background"
                     android:contentDescription="@string/main_home_profile_description"
                     android:padding="7dp"
                     android:src="@drawable/ic_profile_placeholder" />
-            </LinearLayout>
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -148,6 +168,7 @@
                 android:textSize="18sp" />
 
             <LinearLayout
+                android:id="@+id/cardRouteOne"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="18dp"
@@ -181,15 +202,21 @@
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btnRouteOneMore"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
                     android:contentDescription="@string/main_home_more_options"
+                    android:focusable="true"
+                    android:gravity="center"
                     android:text="•••"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/cardRouteTwo"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="12dp"
@@ -223,15 +250,21 @@
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btnRouteTwoMore"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
                     android:contentDescription="@string/main_home_more_options"
+                    android:focusable="true"
+                    android:gravity="center"
                     android:text="•••"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/cardRouteThree"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="12dp"
@@ -265,15 +298,21 @@
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btnRouteThreeMore"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
                     android:contentDescription="@string/main_home_more_options"
+                    android:focusable="true"
+                    android:gravity="center"
                     android:text="•••"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/cardRouteFour"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="12dp"
@@ -307,9 +346,14 @@
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/btnRouteFourMore"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
                     android:contentDescription="@string/main_home_more_options"
+                    android:focusable="true"
+                    android:gravity="center"
                     android:text="•••"
                     android:textColor="#FFFFFF"
                     android:textSize="22sp" />
