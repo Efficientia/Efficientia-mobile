@@ -48,6 +48,11 @@ public final class SessionManager {
         return name == null ? "" : name.trim();
     }
 
+    public static int userId(Context context) {
+        return context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .getInt("usuario_id", -1);
+    }
+
     public static String firstName(Context context) {
         String name = userName(context);
         if (name.isBlank()) return "Motorista";

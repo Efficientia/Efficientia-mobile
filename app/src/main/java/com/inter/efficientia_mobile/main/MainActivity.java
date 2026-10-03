@@ -1,6 +1,7 @@
 package com.inter.efficientia_mobile.main;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
+import com.inter.efficientia_mobile.feedback.RouteFeedbackActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
                 R.id.btnHomeNotifications,
                 R.id.btnHomeProfile,
                 R.id.btnMainReports,
-                R.id.btnMainFeedback,
                 R.id.btnMainTruck,
                 R.id.btnMainAdd,
                 R.id.navMainProfile,
@@ -60,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
         for (int actionId : pendingActions) {
             findViewById(actionId).setOnClickListener(this::showPendingFeature);
         }
+        findViewById(R.id.btnMainFeedback).setOnClickListener(view ->
+                startActivity(new Intent(this, RouteFeedbackActivity.class))
+        );
 
         configureReportMenu(
                 R.id.btnRouteOneMore,
