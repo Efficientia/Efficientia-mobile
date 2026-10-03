@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "498871460579",
+    "project_id": "efficientia-d37e5",
+    "storage_bucket": "efficientia-d37e5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498871460579:android:7eb97ef1675c0d653ddbd6",
+        "android_client_info": {
+          "package_name": "com.inter.efficientia_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfvs3G6lgAfYxSz1ibCB4ZAt8kaZdwFf8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

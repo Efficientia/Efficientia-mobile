@@ -1,0 +1,51 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /feedbacks_rota/{feedbackId} {
+      allow create: if request.auth != null
+        && request.resource.data.keys().hasAll([
+          'firebaseUid',
+          'motoristaId',
+          'motoristaNome',
+          'localizacaoRota',
+          'avaliacao',
+          'motivos',
+          'comentario',
+          'origem',
+          'criadoEm'
+        ])
+        && request.resource.data.keys().hasOnly([
+          'firebaseUid',
+          'motoristaId',
+          'motoristaNome',
+          'localizacaoRota',
+          'avaliacao',
+          'motivos',
+          'comentario',
+          'origem',
+          'criadoEm'
+        ])
+        && request.resource.data.firebaseUid == request.auth.uid
+        && request.resource.data.motoristaId is string
+        && request.resource.data.motoristaId.size() <= 80
+        && request.resource.data.motoristaNome is string
+        && request.resource.data.motoristaNome.size() <= 120
+        && request.resource.data.localizacaoRota is string
+        && request.resource.data.localizacaoRota.size() <= 120
+        && request.resource.data.avaliacao in ['OTIMA', 'BOA', 'REGULAR', 'RUIM']
+        && request.resource.data.motivos is list
+        && request.resource.data.motivos.size() <= 5
+        && request.resource.data.comentario is string
+        && request.resource.data.comentario.size() <= 1000
+        && request.resource.data.origem == 'android'
+        && request.resource.data.criadoEm == request.time;
+
+      allow read, update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

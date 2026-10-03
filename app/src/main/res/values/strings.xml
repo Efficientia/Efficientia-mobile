@@ -100,6 +100,9 @@
     <string name="feedback_reason_filling">Preenchimento</string>
     <string name="feedback_comment_hint">Conte um pouco mais sobre a experiência...</string>
     <string name="feedback_submit">Enviar feedback</string>
-    <string name="feedback_front_ready">Formulário pronto. A gravação no Firebase será conectada na próxima etapa.</string>
+    <string name="feedback_sending">Enviando...</string>
+    <string name="feedback_send_success">Feedback enviado com sucesso.</string>
+    <string name="feedback_send_error">Não foi possível enviar o feedback. Verifique a conexão e tente novamente.</string>
     <string name="feedback_back_description">Voltar</string>
+    <string name="feedback_route_location">Cascavel, PR</string>
 </resources>
