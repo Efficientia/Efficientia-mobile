@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
-import com.inter.efficientia_mobile.main.MainActivity;
+import com.inter.efficientia_mobile.main.FirstAccessActivity;
 
 public class AuthenticatedSplashActivity extends AppCompatActivity {
 
@@ -21,7 +21,7 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
     private final Handler handler = new Handler(Looper.getMainLooper());
     private final Runnable openHome = () -> {
         if (isFinishing() || isDestroyed()) return;
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, FirstAccessActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
