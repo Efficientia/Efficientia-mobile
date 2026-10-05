@@ -46,6 +46,10 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".route.RouteDiaryStepTwoActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".main.FirstAccessActivity"
             android:exported="false" />
         <activity

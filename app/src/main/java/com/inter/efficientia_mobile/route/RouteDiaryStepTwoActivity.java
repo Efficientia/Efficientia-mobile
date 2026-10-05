@@ -1,7 +1,7 @@
 package com.inter.efficientia_mobile.route;
 
 import android.os.Bundle;
-import android.content.Intent;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,25 +12,21 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.inter.efficientia_mobile.R;
 
-public class RouteDiaryStepOneActivity extends AppCompatActivity {
-
+public class RouteDiaryStepTwoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
                 .setAppearanceLightStatusBars(false);
-        setContentView(R.layout.activity_route_diary_step_one);
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeStepOneRoot), (view, insets) -> {
+        setContentView(R.layout.activity_route_diary_step_two);
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeStepTwoRoot), (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
-
-        findViewById(R.id.btnRouteStepOneBack).setOnClickListener(view -> finish());
-        findViewById(R.id.btnRouteStepOneContinue).setOnClickListener(view ->
-                startActivity(new Intent(this, RouteDiaryStepTwoActivity.class))
-        );
+        findViewById(R.id.btnRouteStepTwoBack).setOnClickListener(view -> finish());
+        findViewById(R.id.btnRouteStepTwoContinue).setOnClickListener(view ->
+                Toast.makeText(this, R.string.main_home_feature_pending, Toast.LENGTH_SHORT).show());
     }
 }

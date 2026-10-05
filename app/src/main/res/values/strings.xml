@@ -119,4 +119,16 @@
     <string name="route_destination_unit">Unidade frigorífica de destino</string>
     <string name="route_continue">Continuar</string>
     <string name="route_back_description">Voltar</string>
+    <string name="route_step_two_count">Etapa 2 de 6</string>
+    <string name="route_step_two_badge">02 / 06</string>
+    <string name="route_step_two_title">Chegada e desembarque</string>
+    <string name="route_arrival_date">Data de chegada à unidade</string>
+    <string name="route_arrival_time">Horário de chegada</string>
+    <string name="route_unloading_time">Horário do desembarque</string>
+    <string name="route_arrival_km">Km na chegada</string>
+    <string name="route_corral_number">Número do curral</string>
+    <string name="route_reverse_alarm">Sirene de ré funcionou?</string>
+    <string name="route_yes">Sim</string>
+    <string name="route_no">Não</string>
+    <string name="route_duration_calculated">Duração calculada automaticamente: 06h 42min</string>
 </resources>
