@@ -1,6 +1,7 @@
 package com.inter.efficientia_mobile.route;
 
 import android.os.Bundle;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
@@ -26,7 +27,7 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
         configureSignature(R.id.signatureManeuverer, R.string.route_maneuverer);
         configureSignature(R.id.signatureCorralWorker, R.string.route_corral_worker);
         findViewById(R.id.btnRouteStepFiveContinue).setOnClickListener(view ->
-                android.widget.Toast.makeText(this, R.string.main_home_feature_pending, android.widget.Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, RouteDiaryStepSixActivity.class)));
     }
 
     private void configureSignature(int containerId, int titleId) {

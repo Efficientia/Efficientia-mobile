@@ -167,4 +167,18 @@
     <string name="route_corral_worker">Curraleiro</string>
     <string name="route_signature_registered">Assinatura registrada</string>
     <string name="route_open_signature">Abrir assinatura</string>
+    <string name="route_step_six_count">Etapa 6 de 6</string>
+    <string name="route_step_six_badge">06 / 06</string>
+    <string name="route_step_six_title">Revisão e lançamento</string>
+    <string name="route_summary_gta">GTA / NF</string><string name="route_summary_gta_value">4820193 • 118422</string>
+    <string name="route_summary_origin">Origem</string><string name="route_summary_origin_value">Fazenda Boa Vista • MS</string>
+    <string name="route_summary_destination">Destino</string><string name="route_summary_destination_value">Unidade Uberaba • MG • Curral C-67</string>
+    <string name="route_summary_animals">Animais</string><string name="route_summary_animals_value">38 (22 M • 14 F • 2 marrucos)</string>
+    <string name="route_summary_arrival">Chegada</string><string name="route_summary_arrival_value">37 em pé • 1 deitado • 0 morto</string>
+    <string name="route_summary_duration">Duração</string><string name="route_summary_duration_value">6h 42min</string>
+    <string name="route_summary_anomalies">Anomalias</string><string name="route_summary_anomalies_value">1 no embarque</string>
+    <string name="route_collected_signatures">Assinaturas coletadas</string>
+    <string name="route_collected_signatures_value">Pecuarista, motorista, manobrista e curraleiro</string>
+    <string name="route_submit">Lançar diário de rota</string>
+    <string name="route_submit_front_only">Tela concluída. O envio será conectado à API na etapa de integração.</string>
 </resources>
