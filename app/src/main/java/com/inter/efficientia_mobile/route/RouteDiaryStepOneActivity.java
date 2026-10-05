@@ -2,6 +2,12 @@ package com.inter.efficientia_mobile.route;
 
 import android.os.Bundle;
 import android.content.Intent;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.widget.EditText;
+
+import java.util.Calendar;
+import java.util.Locale;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,8 +35,31 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnRouteStepOneBack).setOnClickListener(view -> finish());
+        configureDatePicker(findViewById(R.id.inputRouteBoardingDate));
+        configureTimePicker(findViewById(R.id.inputRouteBoardingTime));
+        configureTimePicker(findViewById(R.id.inputRouteDepartureTime));
         findViewById(R.id.btnRouteStepOneContinue).setOnClickListener(view ->
                 startActivity(new Intent(this, RouteDiaryStepTwoActivity.class))
         );
+    }
+
+    private void configureDatePicker(EditText input) {
+        input.setOnClickListener(view -> {
+            Calendar now = Calendar.getInstance();
+            DatePickerDialog dialog = new DatePickerDialog(this, (picker, year, month, day) ->
+                    input.setText(String.format(Locale.getDefault(), "%02d/%02d/%04d", day, month + 1, year)),
+                    now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH));
+            dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
+            dialog.show();
+        });
+    }
+
+    private void configureTimePicker(EditText input) {
+        input.setOnClickListener(view -> {
+            Calendar now = Calendar.getInstance();
+            new TimePickerDialog(this, (picker, hour, minute) ->
+                    input.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute)),
+                    now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true).show();
+        });
     }
 }

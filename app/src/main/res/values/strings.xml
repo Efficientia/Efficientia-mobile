@@ -116,6 +116,10 @@
     <string name="route_boarding_time">Horário do embarque</string>
     <string name="route_departure_time">Saída da propriedade</string>
     <string name="route_departure_km">Km na saída</string>
+    <string name="route_date_hint">DD/MM/AAAA</string>
+    <string name="route_time_hint">HH:MM</string>
+    <string name="route_km_hint">000</string>
+    <string name="route_km_suffix">km</string>
     <string name="route_destination_unit">Unidade frigorífica de destino</string>
     <string name="route_continue">Continuar</string>
     <string name="route_back_description">Voltar</string>
