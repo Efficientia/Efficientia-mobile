@@ -131,4 +131,19 @@
     <string name="route_yes">Sim</string>
     <string name="route_no">Não</string>
     <string name="route_duration_calculated">Duração calculada automaticamente: 06h 42min</string>
+    <string name="route_step_three_count">Etapa 3 de 6</string>
+    <string name="route_step_three_badge">03 / 06</string>
+    <string name="route_step_three_title">Contagem dos animais</string>
+    <string name="route_males">Machos</string>
+    <string name="route_females">Fêmeas</string>
+    <string name="route_marrucos">Marrucos</string>
+    <string name="route_arrival_condition">Condição da chegada</string>
+    <string name="route_standing">Em pé</string>
+    <string name="route_lying">Deitado</string>
+    <string name="route_dead">Mortos</string>
+    <string name="route_emergency">Emergência</string>
+    <string name="route_incident_reason">Motivo de incidente</string>
+    <string name="route_comments">Comentários</string>
+    <string name="route_decrease">Diminuir</string>
+    <string name="route_increase">Aumentar</string>
 </resources>

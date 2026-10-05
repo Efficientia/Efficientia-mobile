@@ -1,7 +1,7 @@
 package com.inter.efficientia_mobile.route;
 
 import android.os.Bundle;
-import android.widget.Toast;
+import android.content.Intent;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +27,6 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
         });
         findViewById(R.id.btnRouteStepTwoBack).setOnClickListener(view -> finish());
         findViewById(R.id.btnRouteStepTwoContinue).setOnClickListener(view ->
-                Toast.makeText(this, R.string.main_home_feature_pending, Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, RouteDiaryStepThreeActivity.class)));
     }
 }
