@@ -158,4 +158,13 @@
     <string name="route_boarding_anomaly">Anomalia no embarque</string>
     <string name="route_animals_involved">Animais envolvidos</string>
     <string name="route_anomaly_description">Descrição</string>
+    <string name="route_step_five_count">Etapa 5 de 6</string>
+    <string name="route_step_five_badge">05 / 06</string>
+    <string name="route_step_five_title">Assinaturas obrigatórias</string>
+    <string name="route_rancher">Pecuarista</string>
+    <string name="route_driver">Motorista</string>
+    <string name="route_maneuverer">Manobrista</string>
+    <string name="route_corral_worker">Curraleiro</string>
+    <string name="route_signature_registered">Assinatura registrada</string>
+    <string name="route_open_signature">Abrir assinatura</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.inter.efficientia_mobile.route;
 
 import android.os.Bundle;
+import android.content.Intent;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,6 +25,6 @@ public class RouteDiaryStepFourActivity extends AppCompatActivity {
         findViewById(R.id.btnAddUnexpectedStop).setOnClickListener(view ->
                 Toast.makeText(this, R.string.route_stop_added, Toast.LENGTH_SHORT).show());
         findViewById(R.id.btnRouteStepFourContinue).setOnClickListener(view ->
-                Toast.makeText(this, R.string.main_home_feature_pending, Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, RouteDiaryStepFiveActivity.class)));
     }
 }
