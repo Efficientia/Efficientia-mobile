@@ -44,15 +44,17 @@
         <activity
             android:name=".route.RouteDiaryStepOneActivity"
             android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.RouteDiary"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".route.RouteDiaryStepTwoActivity"
             android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.RouteDiary"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".route.RouteDiaryStepThreeActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".route.RouteDiaryStepFourActivity" android:exported="false" android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".route.RouteDiaryStepFiveActivity" android:exported="false" />
-        <activity android:name=".route.RouteDiaryStepSixActivity" android:exported="false" />
+        <activity android:name=".route.RouteDiaryStepThreeActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".route.RouteDiaryStepFourActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".route.RouteDiaryStepFiveActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" />
+        <activity android:name=".route.RouteDiaryStepSixActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" />
         <activity
             android:name=".main.FirstAccessActivity"
             android:exported="false" />
