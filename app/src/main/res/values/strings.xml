@@ -105,4 +105,18 @@
     <string name="feedback_send_error">Não foi possível enviar o feedback. Verifique a conexão e tente novamente.</string>
     <string name="feedback_back_description">Voltar</string>
     <string name="feedback_route_location">Cascavel, PR</string>
+    <string name="route_diary_title">Diário de rota</string>
+    <string name="route_step_one_count">Etapa 1 de 6</string>
+    <string name="route_step_one_badge">01 / 06</string>
+    <string name="route_step_one_title">Documentos e embarque</string>
+    <string name="route_gta_number">Nº da GTA</string>
+    <string name="route_invoice_number">Nº da nota fiscal</string>
+    <string name="route_origin_property">Fazenda / propriedade de origem</string>
+    <string name="route_boarding_date">Data do embarque</string>
+    <string name="route_boarding_time">Horário do embarque</string>
+    <string name="route_departure_time">Saída da propriedade</string>
+    <string name="route_departure_km">Km na saída</string>
+    <string name="route_destination_unit">Unidade frigorífica de destino</string>
+    <string name="route_continue">Continuar</string>
+    <string name="route_back_description">Voltar</string>
 </resources>

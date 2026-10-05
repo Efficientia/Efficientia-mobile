@@ -42,6 +42,10 @@
             android:name=".feedback.RouteFeedbackActivity"
             android:exported="false" />
         <activity
+            android:name=".route.RouteDiaryStepOneActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".main.FirstAccessActivity"
             android:exported="false" />
         <activity
