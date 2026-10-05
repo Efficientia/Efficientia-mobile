@@ -46,7 +46,8 @@
                 <include android:id="@+id/counterDead" layout="@layout/view_route_counter_template" />
                 <include android:id="@+id/counterEmergency" layout="@layout/view_route_counter_template" />
             </LinearLayout>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/route_incident_reason" android:textColor="#C7D4EE" android:textSize="13sp" />
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:fontFamily="@font/ibm_plex_sans_semibold" android:text="@string/route_incident_optional_warning" android:textColor="#FF6B6B" android:textSize="12sp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/route_incident_reason" android:textColor="#C7D4EE" android:textSize="13sp" />
             <EditText android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/route_diary_input" android:paddingHorizontal="12dp" android:textColor="#FFFFFF" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:text="@string/route_comments" android:textColor="#C7D4EE" android:textSize="13sp" />
             <EditText android:layout_width="match_parent" android:layout_height="72dp" android:layout_marginTop="6dp" android:background="@drawable/route_diary_input" android:gravity="top" android:inputType="textMultiLine" android:padding="12dp" android:textColor="#FFFFFF" />
