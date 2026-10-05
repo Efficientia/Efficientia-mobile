@@ -14,4 +14,20 @@
         <item name="android:backgroundTint">#FFFFFF</item>
         <item name="android:importantForAutofill">no</item>
     </style>
+    <style name="RouteLabel">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">14dp</item>
+        <item name="android:textColor">#C7D4EE</item>
+        <item name="android:textSize">13sp</item>
+    </style>
+    <style name="RouteInput">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginTop">6dp</item>
+        <item name="android:background">@drawable/route_diary_input</item>
+        <item name="android:paddingHorizontal">12dp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColorHint">#7F91B8</item>
+    </style>
 </resources>

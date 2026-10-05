@@ -1,9 +1,9 @@
 package com.inter.efficientia_mobile.route;
 
 import android.os.Bundle;
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +33,7 @@ public class RouteDiaryStepThreeActivity extends AppCompatActivity {
         configureCounter(R.id.counterDead, R.string.route_dead, 0);
         configureCounter(R.id.counterEmergency, R.string.route_emergency, 0);
         findViewById(R.id.btnRouteStepThreeContinue).setOnClickListener(view ->
-                Toast.makeText(this, R.string.main_home_feature_pending, Toast.LENGTH_SHORT).show());
+                startActivity(new Intent(this, RouteDiaryStepFourActivity.class)));
     }
 
     private void configureCounter(int containerId, int labelId, int initialValue) {

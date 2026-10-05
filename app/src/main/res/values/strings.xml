@@ -146,4 +146,16 @@
     <string name="route_comments">Comentários</string>
     <string name="route_decrease">Diminuir</string>
     <string name="route_increase">Aumentar</string>
+    <string name="route_step_four_count">Etapa 4 de 6</string>
+    <string name="route_step_four_badge">04 / 06</string>
+    <string name="route_step_four_title">Paradas e anomalias</string>
+    <string name="route_unexpected_stop">Parada imprevista</string>
+    <string name="route_stop_reason">Motivo</string>
+    <string name="route_stop_start">Início</string>
+    <string name="route_stop_end">Fim</string>
+    <string name="route_add_stop">+ Adicionar parada</string>
+    <string name="route_stop_added">Parada adicionada ao formulário.</string>
+    <string name="route_boarding_anomaly">Anomalia no embarque</string>
+    <string name="route_animals_involved">Animais envolvidos</string>
+    <string name="route_anomaly_description">Descrição</string>
 </resources>
