@@ -51,6 +51,7 @@
     <string name="signature_preview_label">Prévia da assinatura</string>
     <string name="signature_finish">Finalizar</string>
     <string name="signature_required">Informe sua assinatura para continuar.</string>
+    <string name="signature_save_error">Não foi possível salvar a assinatura. Tente novamente.</string>
     <string name="signature_pen_description">Desenhar assinatura</string>
     <string name="main_home_greeting">Olá, %1$s!</string>
     <string name="main_home_brand_blue">Efficien</string>
@@ -171,6 +172,11 @@
     <string name="route_maneuverer">Manobrista</string>
     <string name="route_corral_worker">Curraleiro</string>
     <string name="route_signature_registered">Assinatura registrada</string>
+    <string name="route_signature_pending">Assinatura pendente</string>
+    <string name="route_sign_action">Assinar</string>
+    <string name="route_resign_action">Refazer</string>
+    <string name="route_signature_preview">Prévia da assinatura</string>
+    <string name="route_signatures_required">Colete as quatro assinaturas antes de continuar.</string>
     <string name="route_open_signature">Abrir assinatura</string>
     <string name="route_step_six_count">Etapa 7 de 7</string>
     <string name="route_step_six_badge">07 / 07</string>

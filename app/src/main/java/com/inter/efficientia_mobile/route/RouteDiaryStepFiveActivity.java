@@ -2,8 +2,13 @@ package com.inter.efficientia_mobile.route;
 
 import android.os.Bundle;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -11,8 +16,29 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.signature.SignatureCaptureActivity;
+import com.inter.efficientia_mobile.signature.SignatureImageStore;
+import com.inter.efficientia_mobile.signature.SignatureOptionsActivity;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class RouteDiaryStepFiveActivity extends AppCompatActivity {
+    private static final String RANCHER = "PECUARISTA";
+    private static final String DRIVER = "MOTORISTA";
+    private static final String MANEUVERER = "MANOBRISTA";
+    private static final String CORRAL_WORKER = "CURRALEIRO";
+    private final Map<String, String> routeSignatures = new HashMap<>();
+    private final ActivityResultLauncher<Intent> signLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() != RESULT_OK || result.getData() == null) return;
+                String role = result.getData().getStringExtra(SignatureCaptureActivity.EXTRA_SIGNER_ROLE);
+                String path = result.getData().getStringExtra(SignatureCaptureActivity.EXTRA_IMAGE_PATH);
+                if (role == null || path == null) return;
+                if (!DRIVER.equals(role)) routeSignatures.put(role, path);
+                renderRoles();
+            });
+
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -22,17 +48,63 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()); view.setPadding(bars.left, bars.top, bars.right, bars.bottom); return insets;
         });
         findViewById(R.id.btnRouteStepFiveBack).setOnClickListener(view -> finish());
-        configureSignature(R.id.signatureRancher, R.string.route_rancher);
-        configureSignature(R.id.signatureDriver, R.string.route_driver);
-        configureSignature(R.id.signatureManeuverer, R.string.route_maneuverer);
-        configureSignature(R.id.signatureCorralWorker, R.string.route_corral_worker);
-        findViewById(R.id.btnRouteStepFiveContinue).setOnClickListener(view ->
-                startActivity(new Intent(this, RouteDiaryStepSixActivity.class)));
+        if (savedInstanceState != null) {
+            for (String role : new String[]{RANCHER, MANEUVERER, CORRAL_WORKER}) {
+                String path = savedInstanceState.getString(role);
+                if (path != null) routeSignatures.put(role, path);
+            }
+        }
+        renderRoles();
+        findViewById(R.id.btnRouteStepFiveContinue).setOnClickListener(view -> {
+            if (!allSigned()) {
+                Toast.makeText(this, R.string.route_signatures_required, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            startActivity(new Intent(this, RouteDiaryStepSixActivity.class));
+        });
     }
 
-    private void configureSignature(int containerId, int titleId) {
+    @Override protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        for (Map.Entry<String, String> entry : routeSignatures.entrySet()) {
+            state.putString(entry.getKey(), entry.getValue());
+        }
+    }
+
+    private void renderRoles() {
+        configureSignature(R.id.signatureRancher, R.string.route_rancher, RANCHER);
+        configureSignature(R.id.signatureDriver, R.string.route_driver, DRIVER);
+        configureSignature(R.id.signatureManeuverer, R.string.route_maneuverer, MANEUVERER);
+        configureSignature(R.id.signatureCorralWorker, R.string.route_corral_worker, CORRAL_WORKER);
+    }
+
+    private boolean allSigned() {
+        if (SignatureImageStore.read(SignatureImageStore.driverPath(this)) == null) return false;
+        for (String role : new String[]{RANCHER, MANEUVERER, CORRAL_WORKER}) {
+            if (SignatureImageStore.read(routeSignatures.get(role)) == null) return false;
+        }
+        return true;
+    }
+
+    private void configureSignature(int containerId, int titleId, String role) {
         View row = findViewById(containerId);
         ((TextView) row.findViewById(R.id.signatureRole)).setText(titleId);
-        row.setOnClickListener(view -> view.setSelected(!view.isSelected()));
+        String path = DRIVER.equals(role)
+                ? SignatureImageStore.driverPath(this) : routeSignatures.get(role);
+        Bitmap image = SignatureImageStore.read(path);
+        boolean signed = image != null;
+        row.setSelected(signed);
+        ((TextView) row.findViewById(R.id.signatureStatus)).setText(signed
+                ? R.string.route_signature_registered : R.string.route_signature_pending);
+        TextView button = row.findViewById(R.id.btnSignRole);
+        button.setText(signed ? R.string.route_resign_action : R.string.route_sign_action);
+        button.setOnClickListener(view -> {
+            Intent intent = new Intent(this, SignatureOptionsActivity.class);
+            intent.putExtra(SignatureCaptureActivity.EXTRA_SIGNER_ROLE, role);
+            signLauncher.launch(intent);
+        });
+        ImageView preview = row.findViewById(R.id.signatureImage);
+        preview.setVisibility(signed ? View.VISIBLE : View.GONE);
+        preview.setImageBitmap(image);
     }
 }

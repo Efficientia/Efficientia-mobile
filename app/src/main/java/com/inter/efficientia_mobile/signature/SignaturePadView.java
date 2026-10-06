@@ -2,9 +2,11 @@ package com.inter.efficientia_mobile.signature;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,6 +36,24 @@ public class SignaturePadView extends View {
 
     public boolean hasSignature() {
         return hasSignature;
+    }
+
+    public Bitmap renderSignature() {
+        RectF bounds = new RectF();
+        path.computeBounds(bounds, true);
+        bounds.inset(-dpToPx(12), -dpToPx(12));
+        float width = Math.max(1f, bounds.width());
+        float height = Math.max(1f, bounds.height());
+        float scale = Math.min(1024f / width, 320f / height);
+        Bitmap image = Bitmap.createBitmap(
+                Math.max(1, (int) Math.ceil(width * scale)),
+                Math.max(1, (int) Math.ceil(height * scale)),
+                Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(image);
+        canvas.scale(scale, scale);
+        canvas.translate(-bounds.left, -bounds.top);
+        canvas.drawPath(path, paint);
+        return image;
     }
 
     @Override

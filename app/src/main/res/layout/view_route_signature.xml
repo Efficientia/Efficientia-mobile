@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent" android:layout_height="76dp"
-    android:layout_marginTop="12dp" android:background="@drawable/route_signature_row" android:clickable="true" android:focusable="true"
-    android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="14dp">
-    <TextView android:layout_width="42dp" android:layout_height="42dp" android:background="@drawable/route_counter_plus" android:gravity="center" android:text="✓" android:textColor="#FFFFFF" android:textSize="20sp"/>
-    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
-        <TextView android:id="@+id/signatureRole" android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/ibm_plex_sans_semibold" android:textColor="#FFFFFF" android:textSize="16sp"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="@string/route_signature_registered" android:textColor="#AFC3E5" android:textSize="12sp"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_marginTop="12dp" android:background="@drawable/route_signature_row"
+    android:orientation="vertical" android:padding="12dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="52dp"
+        android:gravity="center_vertical" android:orientation="horizontal">
+        <ImageView android:layout_width="32dp" android:layout_height="32dp"
+            android:contentDescription="@string/signature_pen_description"
+            android:src="@drawable/ic_signature_pen" />
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+            android:layout_marginStart="10dp" android:layout_weight="1" android:orientation="vertical">
+            <TextView android:id="@+id/signatureRole" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:textColor="#FFFFFF" android:textSize="15sp" />
+            <TextView android:id="@+id/signatureStatus" android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:layout_marginTop="2dp"
+                android:text="@string/route_signature_pending" android:textColor="#AFC3E5"
+                android:textSize="11sp" />
+        </LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSignRole" android:layout_width="82dp" android:layout_height="38dp"
+            android:insetTop="0dp" android:insetBottom="0dp" android:minHeight="0dp"
+            android:paddingHorizontal="4dp" android:backgroundTint="#4DDD70"
+            android:text="@string/route_sign_action" android:textAllCaps="false"
+            android:textColor="#002064" android:textSize="12sp" app:cornerRadius="19dp" />
     </LinearLayout>
-    <TextView android:layout_width="32dp" android:layout_height="match_parent" android:contentDescription="@string/route_open_signature" android:gravity="center" android:text="›" android:textColor="#FFFFFF" android:textSize="30sp"/>
+    <ImageView android:id="@+id/signatureImage" android:layout_width="match_parent"
+        android:layout_height="80dp" android:layout_marginTop="8dp"
+        android:contentDescription="@string/route_signature_preview"
+        android:scaleType="fitCenter" android:visibility="gone" />
 </LinearLayout>
