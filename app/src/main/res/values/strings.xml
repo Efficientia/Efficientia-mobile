@@ -147,7 +147,7 @@
     <string name="route_dead">Mortos</string>
     <string name="route_emergency">Emergência</string>
     <string name="route_incident_reason">Motivo de incidente</string>
-    <string name="route_incident_optional_warning">Não preencha os campos abaixo caso não tenha ocorrido nenhum incidente.</string>
+    <string name="route_incident_optional_warning">Não preencha os campos abaixo caso não tenha ocorrido nenhum incidente, parada ou anomalia.</string>
     <string name="route_comments">Comentários</string>
     <string name="route_decrease">Diminuir</string>
     <string name="route_increase">Aumentar</string>
