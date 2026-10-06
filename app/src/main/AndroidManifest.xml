@@ -53,6 +53,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".route.RouteDiaryStepThreeActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".route.RouteDiaryStepFourActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".route.RouteDiaryArrivalConditionActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" android:windowSoftInputMode="adjustResize" />
         <activity android:name=".route.RouteDiaryStepFiveActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" />
         <activity android:name=".route.RouteDiaryStepSixActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" />
         <activity

@@ -97,9 +97,10 @@
                 android:layout_height="6dp"
                 android:layout_marginTop="14dp"
                 android:orientation="horizontal"
-                android:weightSum="6">
+                android:weightSum="7">
 
                 <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_active" />
+                <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_inactive" />
                 <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_inactive" />
                 <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_inactive" />
                 <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_inactive" />

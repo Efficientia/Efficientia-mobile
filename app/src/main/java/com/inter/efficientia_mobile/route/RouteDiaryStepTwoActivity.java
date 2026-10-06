@@ -36,7 +36,7 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
         configureTimePicker(findViewById(R.id.inputRouteArrivalTime));
         configureTimePicker(findViewById(R.id.inputRouteUnloadingTime));
         findViewById(R.id.btnRouteStepTwoContinue).setOnClickListener(view ->
-                startActivity(new Intent(this, RouteDiaryStepThreeActivity.class)));
+                startActivity(new Intent(this, RouteDiaryArrivalConditionActivity.class)));
     }
 
     private void configureDatePicker(EditText input) {

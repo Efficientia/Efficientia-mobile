@@ -25,6 +25,6 @@ public class RouteDiaryStepFourActivity extends AppCompatActivity {
         findViewById(R.id.btnAddUnexpectedStop).setOnClickListener(view ->
                 Toast.makeText(this, R.string.route_stop_added, Toast.LENGTH_SHORT).show());
         findViewById(R.id.btnRouteStepFourContinue).setOnClickListener(view ->
-                startActivity(new Intent(this, RouteDiaryStepFiveActivity.class)));
+                startActivity(new Intent(this, RouteDiaryStepTwoActivity.class)));
     }
 }

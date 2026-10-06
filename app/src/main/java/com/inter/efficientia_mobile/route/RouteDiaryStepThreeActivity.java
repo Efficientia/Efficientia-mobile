@@ -25,13 +25,9 @@ public class RouteDiaryStepThreeActivity extends AppCompatActivity {
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom); return insets;
         });
         findViewById(R.id.btnRouteStepThreeBack).setOnClickListener(view -> finish());
-        configureCounter(R.id.counterMales, R.string.route_males, 22);
-        configureCounter(R.id.counterFemales, R.string.route_females, 22);
-        configureCounter(R.id.counterMarrucos, R.string.route_marrucos, 22);
-        configureCounter(R.id.counterStanding, R.string.route_standing, 37);
-        configureCounter(R.id.counterLying, R.string.route_lying, 1);
-        configureCounter(R.id.counterDead, R.string.route_dead, 0);
-        configureCounter(R.id.counterEmergency, R.string.route_emergency, 0);
+        configureCounter(R.id.counterMales, R.string.route_males, 0);
+        configureCounter(R.id.counterFemales, R.string.route_females, 0);
+        configureCounter(R.id.counterMarrucos, R.string.route_marrucos, 0);
         findViewById(R.id.btnRouteStepThreeContinue).setOnClickListener(view ->
                 startActivity(new Intent(this, RouteDiaryStepFourActivity.class)));
     }

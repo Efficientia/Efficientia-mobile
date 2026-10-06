@@ -22,10 +22,11 @@
             <TextView android:layout_width="78dp" android:layout_height="38dp" android:background="@drawable/route_diary_badge" android:fontFamily="@font/ibm_plex_sans_semibold" android:gravity="center" android:text="@string/route_step_three_badge" android:textColor="#FFFFFF" android:textSize="13sp" />
         </LinearLayout>
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="6dp" android:layout_marginTop="14dp" android:orientation="horizontal" android:weightSum="6">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="6dp" android:layout_marginTop="14dp" android:orientation="horizontal" android:weightSum="7">
             <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_active" />
             <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_active" />
-            <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_active" />
+            <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_inactive" />
+            <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_inactive" />
             <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_inactive" />
             <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_inactive" />
             <View android:layout_width="0dp" android:layout_height="6dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:background="@drawable/route_progress_inactive" />
@@ -37,20 +38,6 @@
                 <include android:id="@+id/counterFemales" layout="@layout/view_route_counter_template" />
                 <include android:id="@+id/counterMarrucos" layout="@layout/view_route_counter_template" />
             </LinearLayout>
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:fontFamily="@font/ibm_plex_sans_semibold" android:text="@string/route_arrival_condition" android:textColor="#4DDD70" android:textSize="16sp" />
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
-                <include android:id="@+id/counterStanding" layout="@layout/view_route_counter_template" />
-                <include android:id="@+id/counterLying" layout="@layout/view_route_counter_template" />
-            </LinearLayout>
-            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:orientation="horizontal">
-                <include android:id="@+id/counterDead" layout="@layout/view_route_counter_template" />
-                <include android:id="@+id/counterEmergency" layout="@layout/view_route_counter_template" />
-            </LinearLayout>
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" android:fontFamily="@font/ibm_plex_sans_semibold" android:text="@string/route_incident_optional_warning" android:textColor="#FF6B6B" android:textSize="12sp" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="10dp" android:text="@string/route_incident_reason" android:textColor="#C7D4EE" android:textSize="13sp" />
-            <EditText android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="6dp" android:background="@drawable/route_diary_input" android:paddingHorizontal="12dp" android:textColor="#FFFFFF" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:text="@string/route_comments" android:textColor="#C7D4EE" android:textSize="13sp" />
-            <EditText android:layout_width="match_parent" android:layout_height="72dp" android:layout_marginTop="6dp" android:background="@drawable/route_diary_input" android:gravity="top" android:inputType="textMultiLine" android:padding="12dp" android:textColor="#FFFFFF" />
         </LinearLayout>
         <com.google.android.material.button.MaterialButton android:id="@+id/btnRouteStepThreeContinue" android:layout_width="match_parent" android:layout_height="56dp" android:layout_marginStart="20dp" android:layout_marginTop="26dp" android:layout_marginEnd="20dp" android:backgroundTint="#4DDD70" android:fontFamily="@font/ibm_plex_sans_semibold" android:text="@string/route_continue" android:textAllCaps="false" android:textColor="#002064" android:textSize="18sp" app:cornerRadius="28dp" />
     </LinearLayout>

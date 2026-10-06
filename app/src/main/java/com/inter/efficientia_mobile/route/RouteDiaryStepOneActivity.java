@@ -39,7 +39,7 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         configureTimePicker(findViewById(R.id.inputRouteBoardingTime));
         configureTimePicker(findViewById(R.id.inputRouteDepartureTime));
         findViewById(R.id.btnRouteStepOneContinue).setOnClickListener(view ->
-                startActivity(new Intent(this, RouteDiaryStepTwoActivity.class))
+                startActivity(new Intent(this, RouteDiaryStepThreeActivity.class))
         );
     }
 
