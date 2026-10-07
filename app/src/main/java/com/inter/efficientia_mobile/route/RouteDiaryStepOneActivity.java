@@ -19,6 +19,10 @@ import androidx.core.view.WindowInsetsCompat;
 import com.inter.efficientia_mobile.R;
 
 public class RouteDiaryStepOneActivity extends AppCompatActivity {
+    private RouteDiaryDraft draft;
+    private static final int[] FIELDS = {R.id.inputRouteGta, R.id.inputRouteInvoice,
+            R.id.inputRouteOrigin, R.id.inputRouteBoardingDate, R.id.inputRouteBoardingTime,
+            R.id.inputRouteDepartureTime, R.id.inputRouteDepartureKm, R.id.inputRouteDestination};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +31,8 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
                 .setAppearanceLightStatusBars(false);
         setContentView(R.layout.activity_route_diary_step_one);
+        draft = RouteDiaryDraft.open(this, savedInstanceState);
+        draft.restoreText(this, FIELDS);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeStepOneRoot), (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -39,8 +45,18 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         configureTimePicker(findViewById(R.id.inputRouteBoardingTime));
         configureTimePicker(findViewById(R.id.inputRouteDepartureTime));
         findViewById(R.id.btnRouteStepOneContinue).setOnClickListener(view ->
-                startActivity(new Intent(this, RouteDiaryStepThreeActivity.class))
+                startActivity(draft.next(this, RouteDiaryStepThreeActivity.class))
         );
+    }
+
+    @Override protected void onPause() {
+        draft.saveText(this, FIELDS);
+        super.onPause();
+    }
+
+    @Override protected void onSaveInstanceState(Bundle state) {
+        draft.saveInstanceState(state);
+        super.onSaveInstanceState(state);
     }
 
     private void configureDatePicker(EditText input) {

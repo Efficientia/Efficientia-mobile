@@ -19,6 +19,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.inter.efficientia_mobile.R;
 
 public class RouteDiaryStepTwoActivity extends AppCompatActivity {
+    private RouteDiaryDraft draft;
+    private static final int[] FIELDS = {R.id.inputRouteArrivalDate, R.id.inputRouteArrivalTime,
+            R.id.inputRouteUnloadingTime, R.id.inputRouteArrivalKm, R.id.inputRouteCorral};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +29,11 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
                 .setAppearanceLightStatusBars(false);
         setContentView(R.layout.activity_route_diary_step_two);
+        draft = RouteDiaryDraft.open(this, savedInstanceState);
+        draft.restoreText(this, FIELDS);
+        String alarm = draft.get("reverse_alarm");
+        if ("yes".equals(alarm)) findViewById(R.id.btnAlarmYes).performClick();
+        else if ("no".equals(alarm)) findViewById(R.id.btnAlarmNo).performClick();
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeStepTwoRoot), (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
@@ -36,7 +44,20 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
         configureTimePicker(findViewById(R.id.inputRouteArrivalTime));
         configureTimePicker(findViewById(R.id.inputRouteUnloadingTime));
         findViewById(R.id.btnRouteStepTwoContinue).setOnClickListener(view ->
-                startActivity(new Intent(this, RouteDiaryArrivalConditionActivity.class)));
+                startActivity(draft.next(this, RouteDiaryArrivalConditionActivity.class)));
+    }
+
+    @Override protected void onPause() {
+        draft.saveText(this, FIELDS);
+        com.google.android.material.button.MaterialButtonToggleGroup group = findViewById(R.id.alarmToggleGroup);
+        draft.put("reverse_alarm", group.getCheckedButtonId() == R.id.btnAlarmYes ? "yes"
+                : group.getCheckedButtonId() == R.id.btnAlarmNo ? "no" : "");
+        super.onPause();
+    }
+
+    @Override protected void onSaveInstanceState(Bundle state) {
+        draft.saveInstanceState(state);
+        super.onSaveInstanceState(state);
     }
 
     private void configureDatePicker(EditText input) {

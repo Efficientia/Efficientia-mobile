@@ -76,14 +76,14 @@
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_marginTop="10dp" android:text="@string/route_incident_reason"
                 android:textColor="#C7D4EE" android:textSize="13sp" />
-            <EditText android:layout_width="match_parent" android:layout_height="48dp"
+            <EditText android:id="@+id/inputRouteIncidentReason" android:layout_width="match_parent" android:layout_height="48dp"
                 android:layout_marginTop="6dp" android:background="@drawable/route_diary_input"
                 android:inputType="textCapSentences" android:paddingHorizontal="12dp"
                 android:textColor="#FFFFFF" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                 android:layout_marginTop="14dp" android:text="@string/route_comments"
                 android:textColor="#C7D4EE" android:textSize="13sp" />
-            <EditText android:layout_width="match_parent" android:layout_height="72dp"
+            <EditText android:id="@+id/inputRouteArrivalComments" android:layout_width="match_parent" android:layout_height="72dp"
                 android:layout_marginTop="6dp" android:background="@drawable/route_diary_input"
                 android:gravity="top" android:inputType="textMultiLine"
                 android:padding="12dp" android:textColor="#FFFFFF" />

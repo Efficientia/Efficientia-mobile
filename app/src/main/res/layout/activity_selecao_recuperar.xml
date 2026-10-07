@@ -15,6 +15,7 @@ android:fillViewport="true">
         android:layout_marginTop="44dp"
         android:importantForAccessibility="no"
         android:src="@drawable/logo_effi"
+        android:tag="@string/cow_logo_tag"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

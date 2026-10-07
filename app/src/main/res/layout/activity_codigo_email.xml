@@ -33,6 +33,7 @@
             android:layout_height="120dp"
             android:contentDescription="@string/recuperar_logo"
             android:src="@drawable/logo_effi"
+            android:tag="@string/cow_logo_tag"
             android:id="@+id/imgLogo"
             android:layout_marginTop="48dp"
             app:layout_constraintStart_toStartOf="parent"

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Efficientia-mobile</string>
+    <string name="cow_logo_tag" translatable="false">cow_logo</string>
+    <string name="cow_logo_sound_description">Logo Efficientia. Toque para ouvir o mugido.</string>
     <string name="mostrar_senha">Mostrar senha</string>
     <string name="ocultar_senha">Ocultar senha</string>
     <string name="login_fazer">Fazer Login</string>
@@ -185,15 +187,22 @@
     <string name="route_arrival_condition_title">Condição na chegada</string>
     <string name="route_arrival_incident_warning">Não preencha os campos abaixo se não houve incidente na chegada.</string>
     <string name="route_step_six_title">Revisão e lançamento</string>
-    <string name="route_summary_gta">GTA / NF</string><string name="route_summary_gta_value">4820193 • 118422</string>
-    <string name="route_summary_origin">Origem</string><string name="route_summary_origin_value">Fazenda Boa Vista • MS</string>
-    <string name="route_summary_destination">Destino</string><string name="route_summary_destination_value">Unidade Uberaba • MG • Curral C-67</string>
-    <string name="route_summary_animals">Animais</string><string name="route_summary_animals_value">38 (22 M • 14 F • 2 marrucos)</string>
-    <string name="route_summary_arrival">Chegada</string><string name="route_summary_arrival_value">37 em pé • 1 deitado • 0 morto</string>
-    <string name="route_summary_duration">Duração</string><string name="route_summary_duration_value">6h 42min</string>
-    <string name="route_summary_anomalies">Anomalias</string><string name="route_summary_anomalies_value">1 no embarque</string>
+    <string name="route_summary_gta">GTA / NF</string>
+    <string name="route_summary_origin">Origem</string>
+    <string name="route_summary_destination">Destino</string>
+    <string name="route_summary_animals">Animais</string>
+    <string name="route_summary_arrival">Chegada</string>
+    <string name="route_summary_duration">Duração</string>
+    <string name="route_summary_anomalies">Anomalias</string>
+    <string name="route_summary_not_informed">Não informado</string>
+    <string name="route_summary_corral_format">Curral %1$s</string>
+    <string name="route_summary_animals_format">%1$d animais (%2$d machos • %3$d fêmeas • %4$d marrucos)</string>
+    <string name="route_summary_arrival_format">%1$d em pé • %2$d deitados • %3$d mortos • %4$d emergências</string>
+    <string name="route_summary_duration_format">%1$dh %2$02dmin</string>
     <string name="route_collected_signatures">Assinaturas coletadas</string>
-    <string name="route_collected_signatures_value">Pecuarista, motorista, manobrista e curraleiro</string>
     <string name="route_submit">Lançar diário de rota</string>
     <string name="route_submit_front_only">Tela concluída. O envio será conectado à API na etapa de integração.</string>
+    <string name="route_launch_title">Diário de rota concluído!</string>
+    <string name="route_launch_pending_api">O envio à API será disponibilizado em breve.</string>
+    <string name="route_launch_check_description">Etapa concluída</string>
 </resources>

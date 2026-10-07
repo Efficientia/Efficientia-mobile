@@ -22,7 +22,8 @@
             android:layout_width="138dp"
             android:layout_height="133dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/logo_effi" />
+            android:src="@drawable/logo_effi"
+            android:tag="@string/cow_logo_tag" />
 
         <ImageView
             android:layout_width="158dp"

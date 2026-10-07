@@ -15,6 +15,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.inter.efficientia_mobile.R;
 
 public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
+    private RouteDiaryDraft draft;
+    private static final int[] FIELDS = {R.id.inputRouteIncidentReason, R.id.inputRouteArrivalComments};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +24,8 @@ public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
                 .setAppearanceLightStatusBars(false);
         setContentView(R.layout.activity_route_diary_arrival_condition);
+        draft = RouteDiaryDraft.open(this, savedInstanceState);
+        draft.restoreText(this, FIELDS);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeArrivalConditionRoot), (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
@@ -33,8 +37,22 @@ public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
         configureCounter(R.id.counterLying, R.string.route_lying);
         configureCounter(R.id.counterDead, R.string.route_dead);
         configureCounter(R.id.counterEmergency, R.string.route_emergency);
+        for (int id : new int[]{R.id.counterStanding, R.id.counterLying,
+                R.id.counterDead, R.id.counterEmergency}) draft.restoreCounter(this, id);
         findViewById(R.id.btnRouteArrivalConditionContinue).setOnClickListener(view ->
-                startActivity(new Intent(this, RouteDiaryStepFiveActivity.class)));
+                startActivity(draft.next(this, RouteDiaryStepFiveActivity.class)));
+    }
+
+    @Override protected void onPause() {
+        draft.saveText(this, FIELDS);
+        for (int id : new int[]{R.id.counterStanding, R.id.counterLying,
+                R.id.counterDead, R.id.counterEmergency}) draft.saveCounter(this, id);
+        super.onPause();
+    }
+
+    @Override protected void onSaveInstanceState(Bundle state) {
+        draft.saveInstanceState(state);
+        super.onSaveInstanceState(state);
     }
 
     private void configureCounter(int containerId, int labelId) {

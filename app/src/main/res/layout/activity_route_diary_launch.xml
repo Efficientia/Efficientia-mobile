@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="#0E1520" android:padding="12dp">
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+        android:background="@drawable/route_launch_gradient" android:gravity="center"
+        android:orientation="vertical" android:padding="28dp">
+
+        <FrameLayout android:layout_width="108dp" android:layout_height="108dp"
+            android:background="@drawable/route_launch_check_outer">
+            <ImageView android:layout_width="72dp" android:layout_height="72dp"
+                android:layout_gravity="center" android:background="@drawable/route_launch_check_background"
+                android:contentDescription="@string/route_launch_check_description"
+                android:padding="12dp" android:src="@drawable/ic_route_launch_check" />
+        </FrameLayout>
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="28dp" android:fontFamily="@font/ibm_plex_sans_semibold"
+            android:gravity="center" android:text="@string/route_launch_title"
+            android:textColor="#FFFFFF" android:textSize="24sp" />
+
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="10dp" android:gravity="center"
+            android:text="@string/route_launch_pending_api" android:textColor="#D7E7F7"
+            android:textSize="14sp" />
+    </LinearLayout>
+</FrameLayout>

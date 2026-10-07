@@ -16,6 +16,7 @@
         android:layout_marginTop="64dp"
         android:contentDescription="@string/recuperar_logo"
         android:src="@drawable/logo_effi"
+        android:tag="@string/cow_logo_tag"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

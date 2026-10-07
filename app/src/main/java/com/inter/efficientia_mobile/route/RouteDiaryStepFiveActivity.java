@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RouteDiaryStepFiveActivity extends AppCompatActivity {
+    private RouteDiaryDraft draft;
     private static final String RANCHER = "PECUARISTA";
     private static final String DRIVER = "MOTORISTA";
     private static final String MANEUVERER = "MANOBRISTA";
@@ -35,7 +36,10 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
                 String role = result.getData().getStringExtra(SignatureCaptureActivity.EXTRA_SIGNER_ROLE);
                 String path = result.getData().getStringExtra(SignatureCaptureActivity.EXTRA_IMAGE_PATH);
                 if (role == null || path == null) return;
-                if (!DRIVER.equals(role)) routeSignatures.put(role, path);
+                if (!DRIVER.equals(role)) {
+                    routeSignatures.put(role, path);
+                    draft.put("signature_" + role, path);
+                }
                 renderRoles();
             });
 
@@ -44,6 +48,7 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView()).setAppearanceLightStatusBars(false);
         setContentView(R.layout.activity_route_diary_step_five);
+        draft = RouteDiaryDraft.open(this, savedInstanceState);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeStepFiveRoot), (view, insets) -> {
             Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars()); view.setPadding(bars.left, bars.top, bars.right, bars.bottom); return insets;
         });
@@ -54,17 +59,24 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
                 if (path != null) routeSignatures.put(role, path);
             }
         }
+        for (String role : new String[]{RANCHER, MANEUVERER, CORRAL_WORKER}) {
+            if (!routeSignatures.containsKey(role)) {
+                String path = draft.get("signature_" + role);
+                if (!path.isEmpty()) routeSignatures.put(role, path);
+            }
+        }
         renderRoles();
         findViewById(R.id.btnRouteStepFiveContinue).setOnClickListener(view -> {
             if (!allSigned()) {
                 Toast.makeText(this, R.string.route_signatures_required, Toast.LENGTH_SHORT).show();
                 return;
             }
-            startActivity(new Intent(this, RouteDiaryStepSixActivity.class));
+            startActivity(draft.next(this, RouteDiaryStepSixActivity.class));
         });
     }
 
     @Override protected void onSaveInstanceState(Bundle state) {
+        draft.saveInstanceState(state);
         super.onSaveInstanceState(state);
         for (Map.Entry<String, String> entry : routeSignatures.entrySet()) {
             state.putString(entry.getKey(), entry.getValue());
