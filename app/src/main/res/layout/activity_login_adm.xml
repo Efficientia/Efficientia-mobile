@@ -35,6 +35,7 @@
             android:layout_height="133dp"
             android:layout_marginTop="48dp"
             android:src="@drawable/logo_effi"
+            android:tag="@string/cow_logo_tag"
             android:contentDescription="Logo Efficientia"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

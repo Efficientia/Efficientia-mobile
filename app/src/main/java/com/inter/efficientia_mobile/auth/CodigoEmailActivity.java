@@ -20,6 +20,8 @@ public class CodigoEmailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_codigo_email);
+        com.inter.efficientia_mobile.FormKeyboardInsets.install(
+                this, findViewById(R.id.codigoEmailRoot), false);
 
         TextView txtEmail = findViewById(R.id.txtEmail);
         txtEmail.setText(getIntent().getStringExtra(EXTRA_EMAIL));

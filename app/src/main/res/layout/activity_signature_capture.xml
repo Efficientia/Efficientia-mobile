@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signatureCaptureRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/signature_background"
@@ -22,7 +23,8 @@
             android:layout_width="138dp"
             android:layout_height="133dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/logo_effi" />
+            android:src="@drawable/logo_effi"
+            android:tag="@string/cow_logo_tag" />
 
         <ImageView
             android:layout_width="158dp"

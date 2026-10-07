@@ -15,6 +15,8 @@ public class CodigoCampoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_codigo_campo);
+        com.inter.efficientia_mobile.FormKeyboardInsets.install(
+                this, findViewById(R.id.codigoCampoRoot), false);
 
         findViewById(R.id.btnVoltar).setOnClickListener(v -> finish());
 

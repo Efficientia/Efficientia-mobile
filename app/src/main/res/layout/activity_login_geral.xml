@@ -17,6 +17,7 @@
         android:adjustViewBounds="true"
         android:contentDescription="Logo Efficientia"
         android:src="@drawable/logo_effi"
+        android:tag="@string/cow_logo_tag"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

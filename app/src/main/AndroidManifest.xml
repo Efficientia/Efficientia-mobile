@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".EfficientiaApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -33,14 +34,32 @@
             android:exported="false" />
         <activity
             android:name=".auth.LoginMotoristaActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".main.MainActivity"
             android:exported="false" />
         <activity
             android:name=".feedback.RouteFeedbackActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".route.RouteDiaryStepOneActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.RouteDiary"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".route.RouteDiaryStepTwoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.RouteDiary"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".route.RouteDiaryStepThreeActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".route.RouteDiaryStepFourActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".route.RouteDiaryArrivalConditionActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".route.RouteDiaryStepFiveActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" />
+        <activity android:name=".route.RouteDiaryStepSixActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" />
+        <activity android:name=".route.RouteDiaryLaunchActivity" android:exported="false" android:theme="@style/Theme.Efficientiamobile.RouteDiary" />
         <activity
             android:name=".main.FirstAccessActivity"
             android:exported="false" />
@@ -61,7 +80,8 @@
             android:exported="false" />
         <activity
             android:name=".auth.CodigoCampoActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".auth.CodigoEmailActivity"
@@ -70,7 +90,8 @@
 
         <activity
             android:name=".auth.LoginADMActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
 
         <meta-data
             android:name="preloaded_fonts"

@@ -6,4 +6,15 @@
     </style>
 
     <style name="Theme.Efficientiamobile" parent="Base.Theme.Efficientiamobile" />
+
+    <style name="Theme.Efficientiamobile.RouteDiary" parent="Theme.Efficientiamobile">
+        <item name="android:windowAnimationStyle">@style/Animation.Efficientiamobile.RouteDiary</item>
+    </style>
+
+    <style name="Animation.Efficientiamobile.RouteDiary" parent="@android:style/Animation.Activity">
+        <item name="android:activityOpenEnterAnimation">@anim/route_no_transition</item>
+        <item name="android:activityOpenExitAnimation">@anim/route_no_transition</item>
+        <item name="android:activityCloseEnterAnimation">@anim/route_no_transition</item>
+        <item name="android:activityCloseExitAnimation">@anim/route_no_transition</item>
+    </style>
 </resources>

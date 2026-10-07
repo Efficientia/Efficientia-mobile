@@ -49,11 +49,8 @@ public class RouteFeedbackActivity extends AppCompatActivity {
         commentInput = findViewById(R.id.inputFeedbackComment);
         submitButton = findViewById(R.id.btnSubmitFeedback);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.feedbackRoot), (view, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            view.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        com.inter.efficientia_mobile.FormKeyboardInsets.install(
+                this, findViewById(R.id.feedbackRoot), true);
 
         findViewById(R.id.btnFeedbackBack).setOnClickListener(view -> finish());
         findViewById(R.id.navFeedbackHome).setOnClickListener(view -> finish());

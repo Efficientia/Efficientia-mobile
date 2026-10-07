@@ -22,6 +22,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.feedback.RouteFeedbackActivity;
+import com.inter.efficientia_mobile.route.RouteDiaryStepOneActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
         int[] pendingActions = {
                 R.id.btnHomeNotifications,
                 R.id.btnHomeProfile,
-                R.id.btnMainReports,
                 R.id.btnMainTruck,
-                R.id.btnMainAdd,
                 R.id.navMainProfile,
                 R.id.navMainDocuments,
                 R.id.navMainAssistant,
@@ -64,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnMainFeedback).setOnClickListener(view ->
                 startActivity(new Intent(this, RouteFeedbackActivity.class))
         );
+        View.OnClickListener openRouteDiary = view ->
+                startActivity(new Intent(this, RouteDiaryStepOneActivity.class));
+        findViewById(R.id.btnMainReports).setOnClickListener(openRouteDiary);
+        findViewById(R.id.btnMainAdd).setOnClickListener(openRouteDiary);
 
         configureReportMenu(
                 R.id.btnRouteOneMore,
