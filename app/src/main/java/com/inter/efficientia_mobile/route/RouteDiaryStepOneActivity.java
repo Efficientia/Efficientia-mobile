@@ -34,11 +34,8 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         draft = RouteDiaryDraft.open(this, savedInstanceState);
         draft.restoreText(this, FIELDS);
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeStepOneRoot), (view, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
-            return insets;
-        });
+        com.inter.efficientia_mobile.FormKeyboardInsets.install(
+                this, findViewById(R.id.routeStepOneRoot), true);
 
         findViewById(R.id.btnRouteStepOneBack).setOnClickListener(view -> finish());
         configureDatePicker(findViewById(R.id.inputRouteBoardingDate));

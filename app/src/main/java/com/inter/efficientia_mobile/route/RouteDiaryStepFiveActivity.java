@@ -64,6 +64,12 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
                 String path = draft.get("signature_" + role);
                 if (!path.isEmpty()) routeSignatures.put(role, path);
             }
+            String path = routeSignatures.get(role);
+            String persistentPath = SignatureImageStore.keepRouteSignature(this, path);
+            if (persistentPath != null && !persistentPath.equals(path)) {
+                routeSignatures.put(role, persistentPath);
+                draft.put("signature_" + role, persistentPath);
+            }
         }
         renderRoles();
         findViewById(R.id.btnRouteStepFiveContinue).setOnClickListener(view -> {
@@ -73,6 +79,11 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
             }
             startActivity(draft.next(this, RouteDiaryStepSixActivity.class));
         });
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        if (draft != null) renderRoles();
     }
 
     @Override protected void onSaveInstanceState(Bundle state) {

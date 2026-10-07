@@ -26,11 +26,8 @@ public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_route_diary_arrival_condition);
         draft = RouteDiaryDraft.open(this, savedInstanceState);
         draft.restoreText(this, FIELDS);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeArrivalConditionRoot), (view, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
-            return insets;
-        });
+        com.inter.efficientia_mobile.FormKeyboardInsets.install(
+                this, findViewById(R.id.routeArrivalConditionRoot), true);
 
         findViewById(R.id.btnRouteArrivalConditionBack).setOnClickListener(view -> finish());
         configureCounter(R.id.counterStanding, R.string.route_standing);

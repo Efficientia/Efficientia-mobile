@@ -51,6 +51,8 @@ public class LoginMotoristaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_motorista);
+        com.inter.efficientia_mobile.FormKeyboardInsets.install(
+                this, findViewById(R.id.loginMotoristaRoot), false);
 
         // Inicializa os componentes da tela pelo ID
         btnVoltar = findViewById(R.id.btnVoltar);

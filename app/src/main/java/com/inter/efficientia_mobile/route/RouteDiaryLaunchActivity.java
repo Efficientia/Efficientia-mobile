@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +32,15 @@ public class RouteDiaryLaunchActivity extends AppCompatActivity {
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
                 .setAppearanceLightStatusBars(false);
         setContentView(R.layout.activity_route_diary_launch);
+        View check = findViewById(R.id.routeLaunchCheck);
+        check.setScaleX(0.86f);
+        check.setScaleY(0.86f);
+        check.animate().alpha(1f).scaleX(1f).scaleY(1f)
+                .setDuration(750L).setInterpolator(new DecelerateInterpolator()).start();
+        findViewById(R.id.routeLaunchTitle).animate().alpha(1f)
+                .setStartDelay(250L).setDuration(650L).start();
+        findViewById(R.id.routeLaunchCaption).animate().alpha(1f)
+                .setStartDelay(450L).setDuration(650L).start();
     }
 
     @Override protected void onResume() {

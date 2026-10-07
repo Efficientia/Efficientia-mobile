@@ -2,7 +2,11 @@ package com.inter.efficientia_mobile.route;
 
 import android.os.Bundle;
 import android.content.Intent;
+import android.app.TimePickerDialog;
+import android.widget.EditText;
 import android.widget.Toast;
+import java.util.Calendar;
+import java.util.Locale;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -22,10 +26,10 @@ public class RouteDiaryStepFourActivity extends AppCompatActivity {
         setContentView(R.layout.activity_route_diary_step_four);
         draft = RouteDiaryDraft.open(this, savedInstanceState);
         draft.restoreText(this, FIELDS);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeStepFourRoot), (view, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            view.setPadding(bars.left, bars.top, bars.right, bars.bottom); return insets;
-        });
+        com.inter.efficientia_mobile.FormKeyboardInsets.install(
+                this, findViewById(R.id.routeStepFourRoot), true);
+        configureTimePicker(findViewById(R.id.inputRouteStopStart));
+        configureTimePicker(findViewById(R.id.inputRouteStopEnd));
         findViewById(R.id.btnRouteStepFourBack).setOnClickListener(view -> finish());
         findViewById(R.id.btnAddUnexpectedStop).setOnClickListener(view ->
                 Toast.makeText(this, R.string.route_stop_added, Toast.LENGTH_SHORT).show());
@@ -42,4 +46,21 @@ public class RouteDiaryStepFourActivity extends AppCompatActivity {
         draft.saveInstanceState(state);
         super.onSaveInstanceState(state);
     }
+
+    private void configureTimePicker(EditText input) {
+        input.setOnClickListener(view -> {
+            Calendar now = Calendar.getInstance();
+            int hour = now.get(Calendar.HOUR_OF_DAY);
+            int minute = now.get(Calendar.MINUTE);
+            String current = input.getText().toString();
+            if (current.matches("\\d{2}:\\d{2}")) {
+                hour = Integer.parseInt(current.substring(0, 2));
+                minute = Integer.parseInt(current.substring(3, 5));
+            }
+            new TimePickerDialog(this, (picker, selectedHour, selectedMinute) ->
+                    input.setText(String.format(Locale.getDefault(), "%02d:%02d",
+                            selectedHour, selectedMinute)), hour, minute, true).show();
+        });
+    }
+
 }

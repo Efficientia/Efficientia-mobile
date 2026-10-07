@@ -34,11 +34,8 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
         String alarm = draft.get("reverse_alarm");
         if ("yes".equals(alarm)) findViewById(R.id.btnAlarmYes).performClick();
         else if ("no".equals(alarm)) findViewById(R.id.btnAlarmNo).performClick();
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.routeStepTwoRoot), (view, insets) -> {
-            Insets bars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
-            return insets;
-        });
+        com.inter.efficientia_mobile.FormKeyboardInsets.install(
+                this, findViewById(R.id.routeStepTwoRoot), true);
         findViewById(R.id.btnRouteStepTwoBack).setOnClickListener(view -> finish());
         configureDatePicker(findViewById(R.id.inputRouteArrivalDate));
         configureTimePicker(findViewById(R.id.inputRouteArrivalTime));

@@ -27,8 +27,25 @@ public final class SignatureImageStore {
     }
 
     public static String saveRoute(Context context, Bitmap image) throws IOException {
-        File directory = new File(context.getCacheDir(), "route_signatures");
+        File directory = new File(context.getFilesDir(), "route_signatures");
         return writePng(directory, UUID.randomUUID() + ".png", image);
+    }
+
+    /** Moves an older cache-backed signature into private persistent storage when possible. */
+    public static String keepRouteSignature(Context context, String path) {
+        if (path == null || path.isEmpty()) return path;
+        File source = new File(path);
+        File oldDirectory = new File(context.getCacheDir(), "route_signatures");
+        if (!oldDirectory.equals(source.getParentFile())) return path;
+        Bitmap image = read(path);
+        if (image == null) return path;
+        try {
+            return saveRoute(context, image);
+        } catch (IOException ignored) {
+            return path;
+        } finally {
+            image.recycle();
+        }
     }
 
     public static Bitmap read(String path) {

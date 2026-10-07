@@ -41,6 +41,8 @@ public class SignatureCaptureActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signature_capture);
+        com.inter.efficientia_mobile.FormKeyboardInsets.install(
+                this, findViewById(R.id.signatureCaptureRoot), false);
 
         TextView instruction = findViewById(R.id.txtSignatureInstruction);
         View drawContainer = findViewById(R.id.signatureDrawContainer);
