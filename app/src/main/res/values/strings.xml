@@ -205,4 +205,21 @@
     <string name="route_launch_title">Diário de rota concluído!</string>
     <string name="route_launch_pending_api">O envio à API será disponibilizado em breve.</string>
     <string name="route_launch_check_description">Etapa concluída</string>
+    <string name="vehicles_back">Voltar para a home</string>
+    <string name="vehicles_title">Meus veículos</string>
+    <string name="vehicles_subtitle">Selecione o conjunto usado na rota atual</string>
+    <string name="vehicles_truck_icon">Caminhão</string>
+    <string name="vehicles_trailer_icon">Carreta</string>
+    <string name="vehicles_active">ATIVO</string>
+    <string name="vehicles_truck_name">Ford Cargo 816 - 4x2</string>
+    <string name="vehicles_truck_details">Placa FVV-0613 • Boiadeiro 1 piso</string>
+    <string name="vehicles_trailer_name">Carreta - 12</string>
+    <string name="vehicles_trailer_details">Placa TGG-1F56 • Capacidade 140 cabeças</string>
+    <string name="vehicles_summary">Resumo da operação</string>
+    <string name="vehicles_trips_label">Viagens realizadas</string>
+    <string name="vehicles_trips_value">14</string>
+    <string name="vehicles_heads_label">Quantidade de cabeças</string>
+    <string name="vehicles_heads_value">5.678</string>
+    <string name="vehicles_incidents_label">Incidentes</string>
+    <string name="vehicles_incidents_value">23</string>
 </resources>
