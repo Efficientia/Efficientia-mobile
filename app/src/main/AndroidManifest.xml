@@ -41,6 +41,9 @@
             android:name=".main.MainActivity"
             android:exported="false" />
         <activity
+            android:name=".main.MyVehiclesActivity"
+            android:exported="false" />
+        <activity
             android:name=".feedback.RouteFeedbackActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

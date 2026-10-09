@@ -51,7 +51,6 @@ public class MainActivity extends AppCompatActivity {
         int[] pendingActions = {
                 R.id.btnHomeNotifications,
                 R.id.btnHomeProfile,
-                R.id.btnMainTruck,
                 R.id.navMainProfile,
                 R.id.navMainDocuments,
                 R.id.navMainAssistant,
@@ -62,6 +61,9 @@ public class MainActivity extends AppCompatActivity {
         }
         findViewById(R.id.btnMainFeedback).setOnClickListener(view ->
                 startActivity(new Intent(this, RouteFeedbackActivity.class))
+        );
+        findViewById(R.id.btnMainTruck).setOnClickListener(view ->
+                startActivity(new Intent(this, MyVehiclesActivity.class))
         );
         View.OnClickListener openRouteDiary = view ->
                 startActivity(new Intent(this, RouteDiaryStepOneActivity.class));
