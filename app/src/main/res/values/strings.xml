@@ -54,6 +54,10 @@
     <string name="signature_finish">Finalizar</string>
     <string name="signature_required">Informe sua assinatura para continuar.</string>
     <string name="signature_save_error">Não foi possível salvar a assinatura. Tente novamente.</string>
+    <string name="signature_upload_error_title">Erro ao salvar assinatura</string>
+    <string name="signature_upload_error_close">Fechar</string>
+    <string name="signature_upload_error_copy">Copiar erro</string>
+    <string name="signature_upload_error_copied">Erro copiado</string>
     <string name="signature_pen_description">Desenhar assinatura</string>
     <string name="main_home_greeting">Olá, %1$s!</string>
     <string name="main_home_brand_blue">Efficien</string>

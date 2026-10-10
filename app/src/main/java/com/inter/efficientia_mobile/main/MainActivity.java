@@ -21,6 +21,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
+import com.inter.efficientia_mobile.auth.LoginGeralActivity;
+import com.inter.efficientia_mobile.splash.AuthenticatedSplashActivity;
 import com.inter.efficientia_mobile.feedback.RouteFeedbackActivity;
 import com.inter.efficientia_mobile.route.RouteDiaryStepOneActivity;
 
@@ -31,6 +33,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (SessionManager.authorizationHeader(this) == null) {
+            startActivity(new Intent(this, LoginGeralActivity.class));
+            finish();
+            return;
+        }
+        if (!SessionManager.hasRegisteredDriverSignature(this)) {
+            startActivity(new Intent(this, FirstAccessActivity.class));
+            finish();
+            return;
+        }
+        if (!SessionManager.hasVerifiedDriverSignatureThisProcess()) {
+            startActivity(new Intent(this, AuthenticatedSplashActivity.class));
+            finish();
+            return;
+        }
         EdgeToEdge.enable(this);
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
                 .setAppearanceLightStatusBars(true);

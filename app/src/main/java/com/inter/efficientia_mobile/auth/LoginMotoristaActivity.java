@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.inter.efficientia_mobile.BuildConfig;
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.models.LoginRequest;
 import com.inter.efficientia_mobile.models.LoginResponse;
@@ -34,9 +33,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LoginMotoristaActivity extends AppCompatActivity {
-
-    // Temporário durante a construção das telas. Release sempre autentica na API.
-    private static final boolean BYPASS_AUTHENTICATION_IN_DEBUG = true;
 
     private ImageButton btnVoltar;
     private EditText edtCpf;
@@ -171,12 +167,6 @@ public class LoginMotoristaActivity extends AppCompatActivity {
     private void validarELogar() {
         if (loginEmAndamento) return;
 
-        if (BuildConfig.DEBUG && BYPASS_AUTHENTICATION_IN_DEBUG) {
-            SessionManager.saveDevelopmentSession(this);
-            openPostLoginFlow();
-            return;
-        }
-
         String cpf = edtCpf.getText().toString().replaceAll("[^0-9]", "");
         String email = edtEmail.getText().toString().trim();
         String senha = edtSenha.getText().toString();
@@ -275,6 +265,7 @@ public class LoginMotoristaActivity extends AppCompatActivity {
 
     private void openPostLoginFlow() {
         Intent intent = new Intent(this, AuthenticatedSplashActivity.class);
+        intent.putExtra(AuthenticatedSplashActivity.EXTRA_FORCE_SIGNATURE_FLOW, true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

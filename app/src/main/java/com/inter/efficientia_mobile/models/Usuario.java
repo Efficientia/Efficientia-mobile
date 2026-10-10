@@ -13,6 +13,9 @@ public class Usuario {
     private String codigoInterno;
 
     private String telefone;
+    private Boolean assinaturaFixaCadastrada;
+    private String assinaturaFixaId;
+    private String urlAssinaturaGeral;
 
     public int getId() { return id; }
     public String getNome() { return nome; }
@@ -21,4 +24,9 @@ public class Usuario {
     public String getEmail() { return email; }
     public String getCodigoInterno() { return codigoInterno; }
     public String getTelefone() { return telefone; }
+    public boolean isAssinaturaFixaCadastrada() {
+        return Boolean.TRUE.equals(assinaturaFixaCadastrada);
+    }
+    public String getAssinaturaFixaId() { return assinaturaFixaId; }
+    public String getUrlAssinaturaGeral() { return urlAssinaturaGeral; }
 }
