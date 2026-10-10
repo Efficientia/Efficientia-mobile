@@ -33,6 +33,10 @@ public final class DriverSignatureRepository {
         void complete(Bitmap image, String error);
     }
 
+    public interface FetchResult {
+        void complete(Bitmap image, int statusCode, String error);
+    }
+
     private DriverSignatureRepository() { }
 
     public static void upload(Context context, Bitmap image, boolean drawn, String name, Result result) {
@@ -101,31 +105,41 @@ public final class DriverSignatureRepository {
     }
 
     public static void fetch(Context context, Result result) {
+        fetchWithStatus(context, (image, statusCode, error) -> result.complete(image, error));
+    }
+
+    public static void fetchWithStatus(Context context, FetchResult result) {
         String authorization = SessionManager.authorizationHeader(context);
         if (authorization == null) {
-            result.complete(null, "Autenticação necessária para consultar a assinatura.");
+            result.complete(null, 401, "Autenticação necessária para consultar a assinatura.");
             return;
         }
         RetrofitClient.getInstance().create(DriverSignatureService.class)
                 .content(authorization).enqueue(new Callback<ResponseBody>() {
                     @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (!response.isSuccessful() || response.body() == null) {
-                            result.complete(null, "Assinatura não encontrada na API (HTTP " + response.code() + ").");
+                            result.complete(null, response.code(),
+                                    "Não foi possível consultar a assinatura (HTTP " + response.code() + ").");
                             return;
                         }
                         try {
                             byte[] bytes = response.body().bytes();
                             Bitmap image = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                             if (image == null) throw new IOException("PNG inválido");
-                            SignatureImageStore.saveDriver(context, image);
+                            try {
+                                SignatureImageStore.saveDriver(context, image);
+                            } catch (IOException ignored) {
+                                // O PNG já foi confirmado pela API; o arquivo privado é só um cache.
+                            }
                             SessionManager.markDriverSignatureRegistered(context);
-                            result.complete(image, null);
+                            result.complete(image, 200, null);
                         } catch (IOException exception) {
-                            result.complete(null, "Não foi possível ler a assinatura retornada pela API.");
+                            result.complete(null, 200,
+                                    "Não foi possível ler a assinatura retornada pela API.");
                         }
                     }
                     @Override public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                        result.complete(null, "Sem conexão para consultar a assinatura.");
+                        result.complete(null, 0, "Sem conexão para consultar a assinatura.");
                     }
                 });
     }

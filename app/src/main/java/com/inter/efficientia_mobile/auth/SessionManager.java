@@ -74,6 +74,12 @@ public final class SessionManager {
                 .edit().putBoolean("assinatura_fixa_cadastrada", true).apply();
     }
 
+    public static void markDriverSignatureMissing(Context context) {
+        driverSignatureVerifiedThisProcess = false;
+        context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .edit().putBoolean("assinatura_fixa_cadastrada", false).apply();
+    }
+
     public static String firstName(Context context) {
         String name = userName(context);
         if (name.isBlank()) return "Motorista";

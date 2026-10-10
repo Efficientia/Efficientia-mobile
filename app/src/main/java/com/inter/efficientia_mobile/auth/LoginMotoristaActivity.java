@@ -265,7 +265,6 @@ public class LoginMotoristaActivity extends AppCompatActivity {
 
     private void openPostLoginFlow() {
         Intent intent = new Intent(this, AuthenticatedSplashActivity.class);
-        intent.putExtra(AuthenticatedSplashActivity.EXTRA_FORCE_SIGNATURE_FLOW, true);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

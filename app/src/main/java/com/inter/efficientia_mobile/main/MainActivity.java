@@ -38,13 +38,13 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        if (!SessionManager.hasRegisteredDriverSignature(this)) {
-            startActivity(new Intent(this, FirstAccessActivity.class));
+        if (!SessionManager.hasVerifiedDriverSignatureThisProcess()) {
+            startActivity(new Intent(this, AuthenticatedSplashActivity.class));
             finish();
             return;
         }
-        if (!SessionManager.hasVerifiedDriverSignatureThisProcess()) {
-            startActivity(new Intent(this, AuthenticatedSplashActivity.class));
+        if (!SessionManager.hasRegisteredDriverSignature(this)) {
+            startActivity(new Intent(this, FirstAccessActivity.class));
             finish();
             return;
         }
