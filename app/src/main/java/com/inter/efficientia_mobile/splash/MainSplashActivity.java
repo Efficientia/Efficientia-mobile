@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.LoginGeralActivity;
+import com.inter.efficientia_mobile.auth.SessionManager;
 
 @SuppressLint("CustomSplashScreen")
 public class MainSplashActivity extends AppCompatActivity {
@@ -18,11 +19,13 @@ public class MainSplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        // Segura a splash por 2 segundos, depois vai para a tela de login geral
+        // Reutiliza a sessão privada do dispositivo; a API valida o token na próxima tela.
         new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
             @Override
             public void run() {
-                startActivity(new Intent(MainSplashActivity.this, LoginGeralActivity.class));
+                Class<?> destination = SessionManager.authorizationHeader(MainSplashActivity.this) == null
+                        ? LoginGeralActivity.class : AuthenticatedSplashActivity.class;
+                startActivity(new Intent(MainSplashActivity.this, destination));
                 finish();
             }
         }, 2000);

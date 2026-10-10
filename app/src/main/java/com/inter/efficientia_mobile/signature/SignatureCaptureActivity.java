@@ -1,5 +1,8 @@
 package com.inter.efficientia_mobile.signature;
 
+import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -35,6 +38,7 @@ public class SignatureCaptureActivity extends AppCompatActivity {
     private View finishButton;
     private TextView signatureNamePreview;
     private boolean drawMode;
+    private boolean uploadInProgress;
     private String confirmedSignatureName = "";
 
     @Override
@@ -95,6 +99,10 @@ public class SignatureCaptureActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.signature_required, Toast.LENGTH_SHORT).show();
             return;
         }
+        if (fullName.length() > 150) {
+            signatureName.setError("Use até 150 caracteres para a assinatura.");
+            return;
+        }
 
         confirmedSignatureName = fullName;
         signatureNamePreview.setText(fullName);
@@ -115,6 +123,7 @@ public class SignatureCaptureActivity extends AppCompatActivity {
     }
 
     private void finishSignature() {
+        if (uploadInProgress) return;
         boolean valid = drawMode
                 ? signaturePad.hasSignature()
                 : !confirmedSignatureName.isEmpty()
@@ -126,29 +135,65 @@ public class SignatureCaptureActivity extends AppCompatActivity {
         }
 
         Bitmap image = drawMode ? signaturePad.renderSignature() : renderTypedSignature();
+        String role = getIntent().getStringExtra(EXTRA_SIGNER_ROLE);
+        if (role == null || "MOTORISTA".equals(role)) {
+            uploadInProgress = true;
+            finishButton.setEnabled(false);
+            DriverSignatureRepository.upload(this, image, drawMode, confirmedSignatureName,
+                    (saved, error) -> {
+                        uploadInProgress = false;
+                        if (isFinishing() || isDestroyed()) {
+                            image.recycle();
+                            return;
+                        }
+                        finishButton.setEnabled(true);
+                        if (error != null) {
+                            showUploadError(error);
+                        } else if (role != null) {
+                            Toast.makeText(this, "Assinatura salva na API.", Toast.LENGTH_LONG).show();
+                            Intent result = new Intent()
+                                    .putExtra(EXTRA_SIGNER_ROLE, role)
+                                    .putExtra(EXTRA_IMAGE_PATH, SignatureImageStore.driverPath(this));
+                            setResult(RESULT_OK, result);
+                            finish();
+                        } else {
+                            Toast.makeText(this, "Assinatura salva na API.", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                        image.recycle();
+                    });
+            return;
+        }
         try {
-            String role = getIntent().getStringExtra(EXTRA_SIGNER_ROLE);
-            if (role != null) {
-                String path = "MOTORISTA".equals(role)
-                        ? SignatureImageStore.saveDriver(this, image)
-                        : SignatureImageStore.saveRoute(this, image);
-                Intent result = new Intent()
-                        .putExtra(EXTRA_SIGNER_ROLE, role)
-                        .putExtra(EXTRA_IMAGE_PATH, path);
-                setResult(RESULT_OK, result);
-                finish();
-            } else {
-                SignatureImageStore.saveDriver(this, image);
-                Intent intent = new Intent(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
+            String path = SignatureImageStore.saveRoute(this, image);
+            Intent result = new Intent()
+                    .putExtra(EXTRA_SIGNER_ROLE, role)
+                    .putExtra(EXTRA_IMAGE_PATH, path);
+            setResult(RESULT_OK, result);
+            finish();
         } catch (IOException exception) {
             Toast.makeText(this, R.string.signature_save_error, Toast.LENGTH_LONG).show();
         } finally {
             image.recycle();
         }
+    }
+
+    private void showUploadError(String error) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.signature_upload_error_title)
+                .setMessage(error)
+                .setPositiveButton(R.string.signature_upload_error_close, (dialog, which) -> dialog.dismiss())
+                .setNeutralButton(R.string.signature_upload_error_copy, (dialog, which) -> {
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    if (clipboard != null) {
+                        clipboard.setPrimaryClip(ClipData.newPlainText("Erro ao salvar assinatura", error));
+                        Toast.makeText(this, R.string.signature_upload_error_copied, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
     }
 
     private Bitmap renderTypedSignature() {

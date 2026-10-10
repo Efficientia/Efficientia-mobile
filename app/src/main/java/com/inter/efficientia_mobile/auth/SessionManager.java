@@ -9,15 +9,18 @@ import com.inter.efficientia_mobile.models.Usuario;
 public final class SessionManager {
 
     private static final String PREFERENCES = "efficientia_session";
+    private static boolean driverSignatureVerifiedThisProcess;
 
     private SessionManager() {
     }
 
     public static void save(Context context, LoginResponse loginResponse) {
+        driverSignatureVerifiedThisProcess = false;
         Usuario usuario = loginResponse.getUsuario();
         SharedPreferences.Editor editor = context
                 .getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
                 .edit()
+                .clear()
                 .putString("token", loginResponse.getToken())
                 .putString("token_type", loginResponse.getTokenType());
 
@@ -28,7 +31,10 @@ public final class SessionManager {
                     .putString("usuario_cpf", usuario.getCpf())
                     .putString("usuario_email", usuario.getEmail())
                     .putString("usuario_codigo_interno", usuario.getCodigoInterno())
-                    .putString("usuario_telefone", usuario.getTelefone());
+                    .putString("usuario_telefone", usuario.getTelefone())
+                    .putBoolean("assinatura_fixa_cadastrada", usuario.isAssinaturaFixaCadastrada());
+        } else {
+            editor.putBoolean("assinatura_fixa_cadastrada", false);
         }
         editor.apply();
     }
@@ -53,6 +59,27 @@ public final class SessionManager {
                 .getInt("usuario_id", -1);
     }
 
+    public static boolean hasRegisteredDriverSignature(Context context) {
+        return context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .getBoolean("assinatura_fixa_cadastrada", false);
+    }
+
+    public static boolean hasVerifiedDriverSignatureThisProcess() {
+        return driverSignatureVerifiedThisProcess;
+    }
+
+    public static void markDriverSignatureRegistered(Context context) {
+        driverSignatureVerifiedThisProcess = true;
+        context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .edit().putBoolean("assinatura_fixa_cadastrada", true).apply();
+    }
+
+    public static void markDriverSignatureMissing(Context context) {
+        driverSignatureVerifiedThisProcess = false;
+        context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .edit().putBoolean("assinatura_fixa_cadastrada", false).apply();
+    }
+
     public static String firstName(Context context) {
         String name = userName(context);
         if (name.isBlank()) return "Motorista";
@@ -60,16 +87,8 @@ public final class SessionManager {
         return separator > 0 ? name.substring(0, separator) : name;
     }
 
-    public static void saveDevelopmentSession(Context context) {
-        context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
-                .edit()
-                .clear()
-                .putString("usuario_nome", "Motorista Teste")
-                .putString("usuario_tipo", "motorista")
-                .apply();
-    }
-
     public static void clear(Context context) {
+        driverSignatureVerifiedThisProcess = false;
         context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
                 .edit()
                 .clear()

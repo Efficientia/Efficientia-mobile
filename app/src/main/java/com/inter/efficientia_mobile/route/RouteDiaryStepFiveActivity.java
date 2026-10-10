@@ -18,6 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.signature.SignatureCaptureActivity;
 import com.inter.efficientia_mobile.signature.SignatureImageStore;
+import com.inter.efficientia_mobile.signature.DriverSignatureRepository;
+import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.signature.SignatureOptionsActivity;
 
 import java.util.HashMap;
@@ -72,6 +74,13 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
             }
         }
         renderRoles();
+        if (SignatureImageStore.driverPath(this) == null
+                && SessionManager.authorizationHeader(this) != null) {
+            DriverSignatureRepository.fetch(this, (image, error) -> {
+                if (image != null && !isFinishing() && !isDestroyed()) renderRoles();
+                if (image != null) image.recycle();
+            });
+        }
         findViewById(R.id.btnRouteStepFiveContinue).setOnClickListener(view -> {
             if (!allSigned()) {
                 Toast.makeText(this, R.string.route_signatures_required, Toast.LENGTH_SHORT).show();
