@@ -16,6 +16,8 @@ public class Usuario {
     private Boolean assinaturaFixaCadastrada;
     private String assinaturaFixaId;
     private String urlAssinaturaGeral;
+    private String cnhNumero;
+    private String categoriaCnh;
 
     public int getId() { return id; }
     public String getNome() { return nome; }
@@ -29,4 +31,6 @@ public class Usuario {
     }
     public String getAssinaturaFixaId() { return assinaturaFixaId; }
     public String getUrlAssinaturaGeral() { return urlAssinaturaGeral; }
+    public String getCnhNumero() { return cnhNumero; }
+    public String getCategoriaCnh() { return categoriaCnh; }
 }

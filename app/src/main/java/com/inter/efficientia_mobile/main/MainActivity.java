@@ -67,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
 
         int[] pendingActions = {
                 R.id.btnHomeNotifications,
-                R.id.btnHomeProfile,
-                R.id.navMainProfile,
                 R.id.navMainDocuments,
                 R.id.navMainAssistant,
                 R.id.navMainSettings
@@ -76,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
         for (int actionId : pendingActions) {
             findViewById(actionId).setOnClickListener(this::showPendingFeature);
         }
+        View.OnClickListener openProfile = view ->
+                startActivity(new Intent(this, DriverProfileActivity.class));
+        findViewById(R.id.btnHomeProfile).setOnClickListener(openProfile);
+        findViewById(R.id.navMainProfile).setOnClickListener(openProfile);
         findViewById(R.id.btnMainFeedback).setOnClickListener(view ->
                 startActivity(new Intent(this, RouteFeedbackActivity.class))
         );
