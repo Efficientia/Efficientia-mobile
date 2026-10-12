@@ -1,13 +1,19 @@
 package com.inter.efficientia_mobile.main;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
@@ -19,16 +25,42 @@ import com.inter.efficientia_mobile.network.CompanyService;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.splash.MainSplashActivity;
 
+import java.io.File;
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DriverProfileActivity extends AppCompatActivity {
     private Call<CompanyService.CompanyResponse> companyCall;
+    private Uri pendingCameraUri;
+    private File pendingCameraFile;
+    private AlertDialog photoDialog;
+    private ImageView dialogPhoto;
+    private boolean photoBusy;
+
+    private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.TakePicture(), saved -> {
+                if (saved && pendingCameraUri != null) savePhoto(pendingCameraUri);
+                if (pendingCameraFile != null) pendingCameraFile.delete();
+                pendingCameraFile = null;
+                pendingCameraUri = null;
+            });
+    private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(), selected -> {
+                if (selected != null) savePhoto(selected);
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            String uri = savedInstanceState.getString("pending_camera_uri");
+            String path = savedInstanceState.getString("pending_camera_path");
+            if (uri != null) pendingCameraUri = Uri.parse(uri);
+            if (path != null) pendingCameraFile = new File(path);
+        }
         if (SessionManager.authorizationHeader(this) == null) {
             returnToStart();
             return;
@@ -66,6 +98,9 @@ public class DriverProfileActivity extends AppCompatActivity {
         bindField(R.id.profileEmailField, R.string.profile_email,
                 SessionManager.userEmail(this));
         loadCompany();
+        ProfilePhotoRemote.refresh(this, () -> {
+            if (!isFinishing() && !isDestroyed()) refreshPhotos();
+        });
 
         View.OnClickListener goHome = view -> finish();
         findViewById(R.id.btnProfileTopHome).setOnClickListener(goHome);
@@ -74,8 +109,8 @@ public class DriverProfileActivity extends AppCompatActivity {
             SessionManager.clear(this);
             returnToStart();
         });
-        findViewById(R.id.btnEditDriverProfile).setOnClickListener(view ->
-                Toast.makeText(this, R.string.profile_edit_pending, Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btnEditDriverProfile).setOnClickListener(view -> showPhotoDialog());
+        findViewById(R.id.imgDriverProfile).setOnClickListener(view -> showPhotoDialog());
         findViewById(R.id.btnDriverPreferences).setOnClickListener(view ->
                 Toast.makeText(this, R.string.profile_preferences_pending, Toast.LENGTH_SHORT).show());
         int[] pending = {
@@ -88,6 +123,98 @@ public class DriverProfileActivity extends AppCompatActivity {
             findViewById(id).setOnClickListener(view ->
                     Toast.makeText(this, R.string.main_home_feature_pending, Toast.LENGTH_SHORT).show());
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (findViewById(R.id.imgDriverProfile) != null) {
+            ProfilePhotoStore.show(this, findViewById(R.id.imgDriverProfile));
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        if (pendingCameraUri != null) state.putString("pending_camera_uri", pendingCameraUri.toString());
+        if (pendingCameraFile != null) state.putString("pending_camera_path", pendingCameraFile.getAbsolutePath());
+        super.onSaveInstanceState(state);
+    }
+
+    private void showPhotoDialog() {
+        View content = getLayoutInflater().inflate(R.layout.dialog_edit_profile_photo, null);
+        dialogPhoto = content.findViewById(R.id.imgCurrentProfilePhoto);
+        ProfilePhotoStore.show(this, dialogPhoto);
+        photoDialog = new AlertDialog.Builder(this).setView(content).create();
+        content.findViewById(R.id.btnChangeProfilePhoto).setOnClickListener(view ->
+                new AlertDialog.Builder(this)
+                        .setItems(new String[]{getString(R.string.profile_photo_camera),
+                                getString(R.string.profile_photo_gallery)}, (dialog, choice) -> {
+                            if (choice == 0) openCamera();
+                            else galleryLauncher.launch("image/*");
+                        }).show());
+        content.findViewById(R.id.btnRemoveProfilePhoto).setOnClickListener(view -> {
+            if (photoBusy) return;
+            setPhotoBusy(true);
+            ProfilePhotoRemote.remove(this, success -> {
+                if (isFinishing() || isDestroyed()) return;
+                setPhotoBusy(false);
+                if (success) {
+                    refreshPhotos();
+                    photoDialog.dismiss();
+                } else {
+                    Toast.makeText(this, R.string.profile_photo_sync_error, Toast.LENGTH_LONG).show();
+                }
+            });
+        });
+        photoDialog.show();
+    }
+
+    private void openCamera() {
+        try {
+            File directory = new File(getCacheDir(), "profile_camera");
+            if (!directory.exists() && !directory.mkdirs()) throw new IOException("Camera cache unavailable");
+            pendingCameraFile = File.createTempFile("driver_", ".jpg", directory);
+            pendingCameraUri = FileProvider.getUriForFile(this,
+                    getPackageName() + ".profilephotos", pendingCameraFile);
+            cameraLauncher.launch(pendingCameraUri);
+        } catch (IOException | IllegalArgumentException error) {
+            Toast.makeText(this, R.string.profile_photo_camera_unavailable, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void savePhoto(Uri source) {
+        try {
+            if (photoBusy) return;
+            byte[] photo = ProfilePhotoStore.prepare(this, source);
+            setPhotoBusy(true);
+            ProfilePhotoRemote.upload(this, photo, success -> {
+                if (isFinishing() || isDestroyed()) return;
+                setPhotoBusy(false);
+                if (success) {
+                    refreshPhotos();
+                    if (photoDialog != null) photoDialog.dismiss();
+                } else {
+                    Toast.makeText(this, R.string.profile_photo_sync_error, Toast.LENGTH_LONG).show();
+                }
+            });
+        } catch (IOException | RuntimeException error) {
+            Toast.makeText(this, R.string.profile_photo_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void setPhotoBusy(boolean busy) {
+        photoBusy = busy;
+        if (photoDialog != null) {
+            View edit = photoDialog.findViewById(R.id.btnChangeProfilePhoto);
+            View remove = photoDialog.findViewById(R.id.btnRemoveProfilePhoto);
+            if (edit != null) edit.setEnabled(!busy);
+            if (remove != null) remove.setEnabled(!busy);
+        }
+    }
+
+    private void refreshPhotos() {
+        ProfilePhotoStore.show(this, findViewById(R.id.imgDriverProfile));
+        if (dialogPhoto != null) ProfilePhotoStore.show(this, dialogPhoto);
     }
 
     private void bindField(int containerId, int labelId, String value) {

@@ -31,6 +31,14 @@ public class MainActivity extends AppCompatActivity {
     private PopupWindow reportActionsPopup;
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (findViewById(R.id.btnHomeProfile) != null) {
+            ProfilePhotoStore.show(this, findViewById(R.id.btnHomeProfile));
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (SessionManager.authorizationHeader(this) == null) {
@@ -52,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
         WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
                 .setAppearanceLightStatusBars(true);
         setContentView(R.layout.activity_main);
+        ProfilePhotoRemote.refresh(this, () -> {
+            if (!isFinishing() && !isDestroyed()) {
+                ProfilePhotoStore.show(this, findViewById(R.id.btnHomeProfile));
+            }
+        });
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
