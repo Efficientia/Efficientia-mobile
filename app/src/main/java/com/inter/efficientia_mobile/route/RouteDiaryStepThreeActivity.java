@@ -33,8 +33,13 @@ public class RouteDiaryStepThreeActivity extends AppCompatActivity {
         draft.restoreCounter(this, R.id.counterMales);
         draft.restoreCounter(this, R.id.counterFemales);
         draft.restoreCounter(this, R.id.counterMarrucos);
-        findViewById(R.id.btnRouteStepThreeContinue).setOnClickListener(view ->
-                startActivity(draft.next(this, RouteDiaryStepFourActivity.class)));
+        findViewById(R.id.btnRouteStepThreeContinue).setOnClickListener(view -> {
+            draft.saveCounter(this, R.id.counterMales);
+            draft.saveCounter(this, R.id.counterFemales);
+            draft.saveCounter(this, R.id.counterMarrucos);
+            RouteDiarySync.saveAndContinue(this, draft, view,
+                    () -> startActivity(draft.next(this, RouteDiaryStepFourActivity.class)));
+        });
     }
 
     @Override protected void onPause() {

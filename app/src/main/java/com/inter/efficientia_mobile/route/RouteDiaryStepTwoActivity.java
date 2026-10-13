@@ -40,16 +40,23 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
         configureDatePicker(findViewById(R.id.inputRouteArrivalDate));
         configureTimePicker(findViewById(R.id.inputRouteArrivalTime));
         configureTimePicker(findViewById(R.id.inputRouteUnloadingTime));
-        findViewById(R.id.btnRouteStepTwoContinue).setOnClickListener(view ->
-                startActivity(draft.next(this, RouteDiaryArrivalConditionActivity.class)));
+        findViewById(R.id.btnRouteStepTwoContinue).setOnClickListener(view -> {
+            saveForm();
+            RouteDiarySync.saveAndContinue(this, draft, view,
+                    () -> startActivity(draft.next(this, RouteDiaryArrivalConditionActivity.class)));
+        });
     }
 
     @Override protected void onPause() {
+        saveForm();
+        super.onPause();
+    }
+
+    private void saveForm() {
         draft.saveText(this, FIELDS);
         com.google.android.material.button.MaterialButtonToggleGroup group = findViewById(R.id.alarmToggleGroup);
         draft.put("reverse_alarm", group.getCheckedButtonId() == R.id.btnAlarmYes ? "yes"
                 : group.getCheckedButtonId() == R.id.btnAlarmNo ? "no" : "");
-        super.onPause();
     }
 
     @Override protected void onSaveInstanceState(Bundle state) {

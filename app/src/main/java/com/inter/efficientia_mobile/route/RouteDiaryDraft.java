@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.inter.efficientia_mobile.auth.SessionManager;
+
 import java.util.UUID;
 
 /** Local form draft shared by the route diary's separate Activity screens. */
@@ -27,9 +29,18 @@ final class RouteDiaryDraft {
     static RouteDiaryDraft open(Activity activity, Bundle savedState) {
         String id = savedState == null ? null : savedState.getString(EXTRA_ID);
         if (id == null) id = activity.getIntent().getStringExtra(EXTRA_ID);
+        SharedPreferences active = activity.getSharedPreferences("route_diary_active", Context.MODE_PRIVATE);
+        String activeKey = "driver_" + SessionManager.userId(activity);
+        if (id == null) id = active.getString(activeKey, null);
         if (id == null) id = UUID.randomUUID().toString();
+        active.edit().putString(activeKey, id).apply();
         activity.getIntent().putExtra(EXTRA_ID, id);
         return new RouteDiaryDraft(activity, id);
+    }
+
+    void clearActive() {
+        context.getSharedPreferences("route_diary_active", Context.MODE_PRIVATE)
+                .edit().remove("driver_" + SessionManager.userId(context)).apply();
     }
 
     void saveInstanceState(Bundle state) { state.putString(EXTRA_ID, id); }

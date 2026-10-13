@@ -172,6 +172,7 @@
 
             <LinearLayout
                 android:id="@+id/cardRouteOne"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="18dp"
@@ -189,6 +190,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/txtRouteOneDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/main_home_route_one_date"
@@ -196,6 +198,7 @@
                         android:textSize="10sp" />
 
                     <TextView
+                        android:id="@+id/txtRouteOneCity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/ibm_plex_sans_semibold"
@@ -220,6 +223,7 @@
 
             <LinearLayout
                 android:id="@+id/cardRouteTwo"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="12dp"
@@ -237,6 +241,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/txtRouteTwoDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/main_home_route_two_date"
@@ -244,6 +249,7 @@
                         android:textSize="10sp" />
 
                     <TextView
+                        android:id="@+id/txtRouteTwoCity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/ibm_plex_sans_semibold"
@@ -268,6 +274,7 @@
 
             <LinearLayout
                 android:id="@+id/cardRouteThree"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="12dp"
@@ -285,6 +292,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/txtRouteThreeDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/main_home_route_three_date"
@@ -292,6 +300,7 @@
                         android:textSize="10sp" />
 
                     <TextView
+                        android:id="@+id/txtRouteThreeCity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/ibm_plex_sans_semibold"
@@ -316,6 +325,7 @@
 
             <LinearLayout
                 android:id="@+id/cardRouteFour"
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginTop="12dp"
@@ -333,6 +343,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/txtRouteFourDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/main_home_route_four_date"
@@ -340,6 +351,7 @@
                         android:textSize="10sp" />
 
                     <TextView
+                        android:id="@+id/txtRouteFourCity"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/ibm_plex_sans_semibold"
@@ -361,6 +373,14 @@
                     android:textColor="#FFFFFF"
                     android:textSize="22sp" />
             </LinearLayout>
+            <TextView
+                android:id="@+id/txtHomeReportsState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Carregando relatórios…"
+                android:textColor="#36557D"
+                android:textSize="14sp" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

@@ -33,6 +33,18 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_route_diary_step_one);
         draft = RouteDiaryDraft.open(this, savedInstanceState);
         draft.restoreText(this, FIELDS);
+        EditText origin = findViewById(R.id.inputRouteOrigin);
+        EditText destination = findViewById(R.id.inputRouteDestination);
+        origin.setFocusable(false);
+        destination.setFocusable(false);
+        origin.setOnClickListener(view -> RouteLocationPicker.show(this, true, (id, name) -> {
+            origin.setText(name);
+            draft.put("fazenda_id", String.valueOf(id));
+        }));
+        destination.setOnClickListener(view -> RouteLocationPicker.show(this, false, (id, name) -> {
+            destination.setText(name);
+            draft.put("unidade_frigorifica_id", String.valueOf(id));
+        }));
 
         com.inter.efficientia_mobile.FormKeyboardInsets.install(
                 this, findViewById(R.id.routeStepOneRoot), true);
@@ -41,9 +53,11 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         configureDatePicker(findViewById(R.id.inputRouteBoardingDate));
         configureTimePicker(findViewById(R.id.inputRouteBoardingTime));
         configureTimePicker(findViewById(R.id.inputRouteDepartureTime));
-        findViewById(R.id.btnRouteStepOneContinue).setOnClickListener(view ->
-                startActivity(draft.next(this, RouteDiaryStepThreeActivity.class))
-        );
+        findViewById(R.id.btnRouteStepOneContinue).setOnClickListener(view -> {
+            draft.saveText(this, FIELDS);
+            RouteDiarySync.saveAndContinue(this, draft, view,
+                    () -> startActivity(draft.next(this, RouteDiaryStepThreeActivity.class)));
+        });
     }
 
     @Override protected void onPause() {

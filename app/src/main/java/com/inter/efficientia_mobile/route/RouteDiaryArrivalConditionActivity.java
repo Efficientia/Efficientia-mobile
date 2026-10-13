@@ -36,15 +36,22 @@ public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
         configureCounter(R.id.counterEmergency, R.string.route_emergency);
         for (int id : new int[]{R.id.counterStanding, R.id.counterLying,
                 R.id.counterDead, R.id.counterEmergency}) draft.restoreCounter(this, id);
-        findViewById(R.id.btnRouteArrivalConditionContinue).setOnClickListener(view ->
-                startActivity(draft.next(this, RouteDiaryStepFiveActivity.class)));
+        findViewById(R.id.btnRouteArrivalConditionContinue).setOnClickListener(view -> {
+            saveForm();
+            RouteDiarySync.saveAndContinue(this, draft, view,
+                    () -> startActivity(draft.next(this, RouteDiaryStepFiveActivity.class)));
+        });
     }
 
     @Override protected void onPause() {
+        saveForm();
+        super.onPause();
+    }
+
+    private void saveForm() {
         draft.saveText(this, FIELDS);
         for (int id : new int[]{R.id.counterStanding, R.id.counterLying,
                 R.id.counterDead, R.id.counterEmergency}) draft.saveCounter(this, id);
-        super.onPause();
     }
 
     @Override protected void onSaveInstanceState(Bundle state) {

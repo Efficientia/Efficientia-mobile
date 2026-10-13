@@ -36,8 +36,9 @@ public class RouteDiaryStepSixActivity extends AppCompatActivity {
         });
         findViewById(R.id.btnRouteStepSixBack).setOnClickListener(view -> finish());
         renderSummary();
-        findViewById(R.id.btnRouteStepSixSubmit).setOnClickListener(view ->
-                startActivity(new Intent(this, RouteDiaryLaunchActivity.class)));
+        View submit = findViewById(R.id.btnRouteStepSixSubmit);
+        RouteDiarySubmitter submitter = new RouteDiarySubmitter(this, draft, submit);
+        submit.setOnClickListener(view -> submitter.submit());
     }
 
     @Override protected void onSaveInstanceState(Bundle state) {
@@ -79,6 +80,7 @@ public class RouteDiaryStepSixActivity extends AppCompatActivity {
         addDetail(details, R.string.route_arrival_km, distance(R.id.inputRouteArrivalKm));
         addDetail(details, R.string.route_reverse_alarm, alarm());
         addDetail(details, R.string.route_stop_reason, draft.get(R.id.inputRouteStopReason));
+        addDetail(details, R.string.route_stop_date, draft.get(R.id.inputRouteStopDate));
         addDetail(details, R.string.route_stop_start, draft.get(R.id.inputRouteStopStart));
         addDetail(details, R.string.route_stop_end, draft.get(R.id.inputRouteStopEnd));
         addDetail(details, R.string.route_animals_involved, draft.get(R.id.inputRouteAnomalyAnimals));
