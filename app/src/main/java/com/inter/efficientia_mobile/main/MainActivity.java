@@ -17,6 +17,7 @@ import com.google.gson.JsonElement;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
 import com.inter.efficientia_mobile.route.RouteDiaryReportIndex;
+import com.inter.efficientia_mobile.route.RouteDiaryEditor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             findViewById(REPORT_ACTIONS[i]).setOnClickListener(anchor -> {
                 if (position < recentReports.size()) {
                     JsonObject report = recentReports.get(position);
-                    showReportActions(anchor, getReportTitle(report), getReportDate(report));
+                    showReportActions(anchor, report);
                 }
             });
         }
@@ -250,13 +251,14 @@ public class MainActivity extends AppCompatActivity {
                 + (status.isEmpty() ? "" : " · " + status);
     }
 
-    private void showReportActions(View anchor, String route, String date) {
+    private void showReportActions(View anchor, JsonObject report) {
         if (reportActionsPopup != null) {
             reportActionsPopup.dismiss();
         }
 
         View content = LayoutInflater.from(this).inflate(R.layout.popup_report_actions, null);
-        ((TextView) content.findViewById(R.id.txtPopupReportDate)).setText(date);
+        String route = getReportTitle(report);
+        ((TextView) content.findViewById(R.id.txtPopupReportDate)).setText(getReportDate(report));
         ((TextView) content.findViewById(R.id.txtPopupReportRoute)).setText(route);
 
         int popupWidth = dpToPx(300);
@@ -272,19 +274,12 @@ public class MainActivity extends AppCompatActivity {
 
         content.findViewById(R.id.actionSaveReportPdf).setOnClickListener(view -> {
             reportActionsPopup.dismiss();
-            Toast.makeText(
-                    this,
-                    getString(R.string.main_home_pdf_pending, route),
-                    Toast.LENGTH_SHORT
-            ).show();
+            withFreshReport(report, fresh -> RouteReportPdf.open(this, fresh,
+                    SessionManager.authorizationHeader(this)));
         });
         content.findViewById(R.id.actionEditReport).setOnClickListener(view -> {
             reportActionsPopup.dismiss();
-            Toast.makeText(
-                    this,
-                    getString(R.string.main_home_edit_pending, route),
-                    Toast.LENGTH_SHORT
-            ).show();
+            withFreshReport(report, fresh -> RouteDiaryEditor.open(this, fresh));
         });
         content.findViewById(R.id.actionDeleteReport).setOnClickListener(view -> {
             reportActionsPopup.dismiss();
@@ -293,6 +288,33 @@ public class MainActivity extends AppCompatActivity {
 
         int horizontalOffset = anchor.getWidth() - popupWidth;
         reportActionsPopup.showAsDropDown(anchor, horizontalOffset, -dpToPx(8));
+    }
+
+    private void withFreshReport(JsonObject listed, java.util.function.Consumer<JsonObject> action) {
+        String auth = SessionManager.authorizationHeader(this);
+        if (auth == null || !listed.has("id")) {
+            Toast.makeText(this, "Entre novamente para consultar o diário.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Toast.makeText(this, "Carregando diário…", Toast.LENGTH_SHORT).show();
+        RetrofitClient.getInstance().create(RouteDiaryService.class)
+                .get(auth, listed.get("id").getAsInt()).enqueue(new Callback<JsonObject>() {
+                    @Override public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                        if (isFinishing() || isDestroyed()) return;
+                        JsonObject fresh = response.body();
+                        if (response.isSuccessful() && fresh != null
+                                && fresh.has("motoristaId") && !fresh.get("motoristaId").isJsonNull()
+                                && fresh.get("motoristaId").getAsInt() == SessionManager.userId(MainActivity.this))
+                            action.accept(fresh);
+                        else Toast.makeText(MainActivity.this,
+                                "Não foi possível carregar este diário (HTTP " + response.code() + ").",
+                                Toast.LENGTH_LONG).show();
+                    }
+                    @Override public void onFailure(Call<JsonObject> call, Throwable error) {
+                        if (!isFinishing() && !isDestroyed()) Toast.makeText(MainActivity.this,
+                                "Sem conexão para carregar este diário.", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private int dpToPx(int dp) {

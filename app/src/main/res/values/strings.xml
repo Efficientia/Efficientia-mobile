@@ -112,8 +112,6 @@
     <string name="main_home_save_pdf">Salvar como PDF</string>
     <string name="main_home_edit_report">Editar informações</string>
     <string name="main_home_delete_report">Excluir relatório</string>
-    <string name="main_home_pdf_pending">O download do PDF de %1$s será conectado à API.</string>
-    <string name="main_home_edit_pending">A edição de %1$s será conectada ao formulário.</string>
     <string name="main_home_delete_title">Excluir relatório?</string>
     <string name="main_home_delete_message">Deseja realmente excluir o relatório de %1$s? Esta ação não poderá ser desfeita.</string>
     <string name="main_home_delete_confirm">Excluir</string>

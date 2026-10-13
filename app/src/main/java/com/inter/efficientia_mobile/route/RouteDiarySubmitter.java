@@ -11,6 +11,7 @@ import com.google.gson.JsonParser;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
+import com.inter.efficientia_mobile.main.MainActivity;
 
 import java.io.File;
 import java.io.IOException;
@@ -59,6 +60,28 @@ final class RouteDiarySubmitter {
         button.setEnabled(false);
         if (button instanceof TextView) ((TextView) button).setText("Enviando…");
         int reportId = number(draft.get("server_report_id"));
+        if ("1".equals(draft.get("edit_pending"))) {
+            if (reportId <= 0) {
+                fail("Não foi possível identificar o relatório para salvar a edição.");
+                return;
+            }
+            service.update(authorization, reportId, null, RouteDiaryPayload.from(draft, "pendente"))
+                    .enqueue(new Callback<JsonObject>() {
+                        @Override public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            if (!response.isSuccessful() || response.body() == null) { fail(response); return; }
+                            restoreButton();
+                            draft.clearActive();
+                            if (!activity.isFinishing() && !activity.isDestroyed()) {
+                                Intent home = new Intent(activity, MainActivity.class);
+                                home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                                activity.startActivity(home);
+                                activity.finish();
+                            }
+                        }
+                        @Override public void onFailure(Call<JsonObject> call, Throwable error) { fail(error); }
+                    });
+            return;
+        }
         JsonObject body = RouteDiaryPayload.from(draft, "rascunho");
         if (reportId > 0) {
             service.update(authorization, reportId, null, body).enqueue(new Callback<JsonObject>() {
@@ -93,6 +116,10 @@ final class RouteDiarySubmitter {
         }
         String role = ROLES[roleIndex];
         File image = new File(draft.get("signature_" + role));
+        if (!image.isFile() && !draft.get("remote_signature_" + role).isEmpty()) {
+            uploadNext(reportId, roleIndex + 1);
+            return;
+        }
         if (!image.isFile() || image.length() == 0 || image.length() > 1_048_576) {
             fail("A assinatura de " + role.toLowerCase() + " não foi encontrada ou ultrapassa 1 MB.");
             return;

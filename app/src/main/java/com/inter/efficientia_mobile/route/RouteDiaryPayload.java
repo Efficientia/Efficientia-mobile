@@ -2,6 +2,7 @@ package com.inter.efficientia_mobile.route;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonParser;
 import com.inter.efficientia_mobile.R;
 
 import java.time.LocalDate;
@@ -40,30 +41,49 @@ final class RouteDiaryPayload {
         integer(result, "quantidadeEmergencia", draft.get(R.id.counterEmergency));
         string(result, "motivoEmergencia", draft.get(R.id.inputRouteIncidentReason));
         string(result, "comentarios", draft.get(R.id.inputRouteArrivalComments));
-        JsonArray stops = new JsonArray();
+        JsonArray stops = originalArray(draft.get("original_stops"));
         if (hasCompleteStop(draft)) {
-            JsonObject stop = new JsonObject();
-            stop.addProperty("motivo", "outro");
-            stop.addProperty("descricaoMotivo", draft.get(R.id.inputRouteStopReason));
-            String date = isoDate(draft.get(R.id.inputRouteStopDate));
-            String start = draft.get(R.id.inputRouteStopStart);
-            String end = draft.get(R.id.inputRouteStopEnd);
-            stop.addProperty("dataHoraInicio", date + "T" + start + ":00");
-            if (end.compareTo(start) < 0) date = LocalDate.parse(date).plusDays(1).toString();
-            stop.addProperty("dataHoraFim", date + "T" + end + ":00");
-            stops.add(stop);
+            String displayed = draft.get(R.id.inputRouteStopReason) + "|" + draft.get(R.id.inputRouteStopDate)
+                    + "|" + draft.get(R.id.inputRouteStopStart) + "|" + draft.get(R.id.inputRouteStopEnd);
+            if (stops.size() == 0 || !displayed.equals(draft.get("original_stop_display"))) {
+                JsonObject stop = new JsonObject();
+                stop.addProperty("motivo", "outro");
+                stop.addProperty("descricaoMotivo", draft.get(R.id.inputRouteStopReason));
+                String date = isoDate(draft.get(R.id.inputRouteStopDate));
+                String start = draft.get(R.id.inputRouteStopStart);
+                String end = draft.get(R.id.inputRouteStopEnd);
+                stop.addProperty("dataHoraInicio", date + "T" + start + ":00");
+                if (end.compareTo(start) < 0) date = LocalDate.parse(date).plusDays(1).toString();
+                stop.addProperty("dataHoraFim", date + "T" + end + ":00");
+                if (stops.size() == 0) stops.add(stop);
+                else stops.set(0, stop);
+            }
+        } else if (stops.size() > 0) {
+            stops.remove(0);
         }
         result.add("paradasImprevistas", stops);
-        JsonArray anomalies = new JsonArray();
+        JsonArray anomalies = originalArray(draft.get("original_anomalies"));
         if (hasCompleteAnomaly(draft)) {
-            JsonObject anomaly = new JsonObject();
-            anomaly.addProperty("anomalia", "outro");
-            anomaly.addProperty("descricaoOutros", draft.get(R.id.inputRouteAnomalyDescription));
-            anomaly.addProperty("quantidadeAnimais", Integer.parseInt(draft.get(R.id.inputRouteAnomalyAnimals)));
-            anomalies.add(anomaly);
+            String displayed = draft.get(R.id.inputRouteAnomalyAnimals) + "|"
+                    + draft.get(R.id.inputRouteAnomalyDescription);
+            if (anomalies.size() == 0 || !displayed.equals(draft.get("original_anomaly_display"))) {
+                JsonObject anomaly = new JsonObject();
+                anomaly.addProperty("anomalia", "outro");
+                anomaly.addProperty("descricaoOutros", draft.get(R.id.inputRouteAnomalyDescription));
+                anomaly.addProperty("quantidadeAnimais", Integer.parseInt(draft.get(R.id.inputRouteAnomalyAnimals)));
+                if (anomalies.size() == 0) anomalies.add(anomaly);
+                else anomalies.set(0, anomaly);
+            }
+        } else if (anomalies.size() > 0) {
+            anomalies.remove(0);
         }
         result.add("anomaliasEmbarque", anomalies);
         return result;
+    }
+
+    private static JsonArray originalArray(String json) {
+        try { return json.isEmpty() ? new JsonArray() : new JsonParser().parse(json).getAsJsonArray(); }
+        catch (RuntimeException ignored) { return new JsonArray(); }
     }
 
     static boolean hasIncompleteOccurrences(RouteDiaryDraft draft) {

@@ -113,7 +113,8 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
     private boolean allSigned() {
         if (SignatureImageStore.read(SignatureImageStore.driverPath(this)) == null) return false;
         for (String role : new String[]{RANCHER, MANEUVERER, CORRAL_WORKER}) {
-            if (SignatureImageStore.read(routeSignatures.get(role)) == null) return false;
+            if (SignatureImageStore.read(routeSignatures.get(role)) == null
+                    && draft.get("remote_signature_" + role).isEmpty()) return false;
         }
         return true;
     }
@@ -124,7 +125,8 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
         String path = DRIVER.equals(role)
                 ? SignatureImageStore.driverPath(this) : routeSignatures.get(role);
         Bitmap image = SignatureImageStore.read(path);
-        boolean signed = image != null;
+        boolean signed = image != null || (!DRIVER.equals(role)
+                && !draft.get("remote_signature_" + role).isEmpty());
         row.setSelected(signed);
         ((TextView) row.findViewById(R.id.signatureStatus)).setText(signed
                 ? R.string.route_signature_registered : R.string.route_signature_pending);

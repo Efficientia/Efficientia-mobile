@@ -31,7 +31,8 @@ final class RouteDiarySync {
         }
         button.setEnabled(false);
         RouteDiaryService api = RetrofitClient.getInstance().create(RouteDiaryService.class);
-        JsonObject body = RouteDiaryPayload.from(draft, "rascunho");
+        JsonObject body = RouteDiaryPayload.from(draft,
+                "1".equals(draft.get("edit_pending")) ? "pendente" : "rascunho");
         int id = parseId(draft.get("server_report_id"));
         Call<JsonObject> call = id > 0 ? api.update(auth, id, null, body) : api.create(auth, body);
         call.enqueue(new Callback<JsonObject>() {

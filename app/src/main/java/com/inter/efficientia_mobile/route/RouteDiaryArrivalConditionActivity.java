@@ -39,7 +39,8 @@ public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
         findViewById(R.id.btnRouteArrivalConditionContinue).setOnClickListener(view -> {
             saveForm();
             RouteDiarySync.saveAndContinue(this, draft, view,
-                    () -> startActivity(draft.next(this, RouteDiaryStepFiveActivity.class)));
+                    () -> startActivity(draft.next(this, "1".equals(draft.get("edit_pending"))
+                            ? RouteDiaryStepSixActivity.class : RouteDiaryStepFiveActivity.class)));
         });
     }
 
