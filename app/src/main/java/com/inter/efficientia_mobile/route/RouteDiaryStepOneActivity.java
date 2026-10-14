@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.widget.EditText;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -35,14 +37,16 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         draft.restoreText(this, FIELDS);
         EditText origin = findViewById(R.id.inputRouteOrigin);
         EditText destination = findViewById(R.id.inputRouteDestination);
-        origin.setFocusable(false);
-        destination.setFocusable(false);
-        origin.setOnClickListener(view -> RouteLocationPicker.show(this, true, (id, name) -> {
+        clearSelectedIdOnEdit(origin, "fazenda_id");
+        clearSelectedIdOnEdit(destination, "unidade_frigorifica_id");
+        findViewById(R.id.btnSearchRouteOrigin).setOnClickListener(view -> RouteLocationPicker.show(this, true, (id, name) -> {
             origin.setText(name);
+            draft.put(R.id.inputRouteOrigin, name);
             draft.put("fazenda_id", String.valueOf(id));
         }));
-        destination.setOnClickListener(view -> RouteLocationPicker.show(this, false, (id, name) -> {
+        findViewById(R.id.btnSearchRouteDestination).setOnClickListener(view -> RouteLocationPicker.show(this, false, (id, name) -> {
             destination.setText(name);
+            draft.put(R.id.inputRouteDestination, name);
             draft.put("unidade_frigorifica_id", String.valueOf(id));
         }));
 
@@ -57,6 +61,16 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
             draft.saveText(this, FIELDS);
             RouteDiarySync.saveAndContinue(this, draft, view,
                     () -> startActivity(draft.next(this, RouteDiaryStepThreeActivity.class)));
+        });
+    }
+
+    private void clearSelectedIdOnEdit(EditText input, String idKey) {
+        input.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence text, int start, int count, int after) { }
+            @Override public void onTextChanged(CharSequence text, int start, int before, int count) {
+                if (!draft.get(idKey).isEmpty()) draft.put(idKey, "");
+            }
+            @Override public void afterTextChanged(Editable text) { }
         });
     }
 
