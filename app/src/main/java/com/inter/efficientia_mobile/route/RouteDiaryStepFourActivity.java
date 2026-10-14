@@ -3,6 +3,7 @@ package com.inter.efficientia_mobile.route;
 import android.os.Bundle;
 import android.content.Intent;
 import android.app.TimePickerDialog;
+import android.app.DatePickerDialog;
 import android.widget.EditText;
 import android.widget.Toast;
 import java.util.Calendar;
@@ -18,7 +19,8 @@ import com.inter.efficientia_mobile.R;
 public class RouteDiaryStepFourActivity extends AppCompatActivity {
     private RouteDiaryDraft draft;
     private static final int[] FIELDS = {R.id.inputRouteStopReason, R.id.inputRouteStopStart,
-            R.id.inputRouteStopEnd, R.id.inputRouteAnomalyAnimals, R.id.inputRouteAnomalyDescription};
+            R.id.inputRouteStopEnd, R.id.inputRouteStopDate, R.id.inputRouteAnomalyAnimals,
+            R.id.inputRouteAnomalyDescription};
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
@@ -30,11 +32,27 @@ public class RouteDiaryStepFourActivity extends AppCompatActivity {
                 this, findViewById(R.id.routeStepFourRoot), true);
         configureTimePicker(findViewById(R.id.inputRouteStopStart));
         configureTimePicker(findViewById(R.id.inputRouteStopEnd));
+        findViewById(R.id.inputRouteStopDate).setOnClickListener(view -> {
+            Calendar now = Calendar.getInstance();
+            new DatePickerDialog(this, (picker, year, month, day) ->
+                    ((EditText) findViewById(R.id.inputRouteStopDate)).setText(
+                            String.format(Locale.getDefault(), "%02d/%02d/%04d", day, month + 1, year)),
+                    now.get(Calendar.YEAR), now.get(Calendar.MONTH), now.get(Calendar.DAY_OF_MONTH)).show();
+        });
         findViewById(R.id.btnRouteStepFourBack).setOnClickListener(view -> finish());
         findViewById(R.id.btnAddUnexpectedStop).setOnClickListener(view ->
                 Toast.makeText(this, R.string.route_stop_added, Toast.LENGTH_SHORT).show());
-        findViewById(R.id.btnRouteStepFourContinue).setOnClickListener(view ->
-                startActivity(draft.next(this, RouteDiaryStepTwoActivity.class)));
+        findViewById(R.id.btnRouteStepFourContinue).setOnClickListener(view -> {
+            draft.saveText(this, FIELDS);
+            if (RouteDiaryPayload.hasIncompleteOccurrences(draft)) {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setMessage("Se houve parada, informe motivo, data e horários. Se houve anomalia, informe quantidade e descrição. Deixe tudo vazio quando não houve ocorrência.")
+                        .setPositiveButton("Entendi", null).show();
+                return;
+            }
+            RouteDiarySync.saveAndContinue(this, draft, view,
+                    () -> startActivity(draft.next(this, RouteDiaryStepTwoActivity.class)));
+        });
     }
 
     @Override protected void onPause() {
