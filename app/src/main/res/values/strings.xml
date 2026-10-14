@@ -144,6 +144,8 @@
     <string name="route_gta_number">Nº da GTA</string>
     <string name="route_invoice_number">Nº da nota fiscal</string>
     <string name="route_origin_property">Fazenda / propriedade de origem</string>
+    <string name="route_location_hint">Digite o nome ou busque</string>
+    <string name="route_search_location">Buscar</string>
     <string name="route_boarding_date">Data do embarque</string>
     <string name="route_boarding_time">Horário do embarque</string>
     <string name="route_departure_time">Saída da propriedade</string>

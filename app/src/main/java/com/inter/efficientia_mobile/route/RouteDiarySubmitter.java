@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
@@ -49,8 +50,10 @@ final class RouteDiarySubmitter {
             explain("Sua sessão expirou. Entre novamente antes de lançar o diário.");
             return;
         }
-        if (draft.get("fazenda_id").isEmpty() || draft.get("unidade_frigorifica_id").isEmpty()) {
-            explain("O diário continua salvo neste aparelho, mas ainda não foi enviado. A API exige os IDs da fazenda e da unidade frigorífica; falta a seleção desses locais no aplicativo.");
+        if ((draft.get("fazenda_id").isEmpty() && draft.get(R.id.inputRouteOrigin).isBlank())
+                || (draft.get("unidade_frigorifica_id").isEmpty()
+                && draft.get(R.id.inputRouteDestination).isBlank())) {
+            explain("Informe a origem e o destino da viagem: digite o nome ou selecione um local na busca.");
             return;
         }
         if (RouteDiaryPayload.hasIncompleteOccurrences(draft)) {
