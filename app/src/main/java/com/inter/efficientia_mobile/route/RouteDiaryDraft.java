@@ -15,10 +15,16 @@ import com.google.gson.JsonArray;
 import com.inter.efficientia_mobile.R;
 
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /** Local form draft shared by the route diary's separate Activity screens. */
 final class RouteDiaryDraft {
     private static final String EXTRA_ID = "route_diary_draft_id";
+    private static final String ACTIVE_PREFS = "route_diary_active";
+    private static final String INDEX_PREFS = "route_diary_local_index";
     private final Context context;
     private final String id;
     private final SharedPreferences preferences;
@@ -32,11 +38,12 @@ final class RouteDiaryDraft {
     static RouteDiaryDraft open(Activity activity, Bundle savedState) {
         String id = savedState == null ? null : savedState.getString(EXTRA_ID);
         if (id == null) id = activity.getIntent().getStringExtra(EXTRA_ID);
-        SharedPreferences active = activity.getSharedPreferences("route_diary_active", Context.MODE_PRIVATE);
+        SharedPreferences active = activity.getSharedPreferences(ACTIVE_PREFS, Context.MODE_PRIVATE);
         String activeKey = "driver_" + SessionManager.userId(activity);
         if (id == null) id = active.getString(activeKey, null);
         if (id == null) id = UUID.randomUUID().toString();
         active.edit().putString(activeKey, id).apply();
+        remember(activity, id);
         activity.getIntent().putExtra(EXTRA_ID, id);
         return new RouteDiaryDraft(activity, id);
     }
@@ -103,7 +110,77 @@ final class RouteDiaryDraft {
         }
         activity.getSharedPreferences("route_diary_active", Context.MODE_PRIVATE).edit()
                 .putString("driver_" + SessionManager.userId(activity), id).apply();
+        remember(activity, id);
         return draft;
+    }
+
+    static String activeId(Context context) {
+        return context.getSharedPreferences(ACTIVE_PREFS, Context.MODE_PRIVATE)
+                .getString("driver_" + SessionManager.userId(context), null);
+    }
+
+    static RouteDiaryDraft find(Context context, String id) {
+        return new RouteDiaryDraft(context, id);
+    }
+
+    static RouteDiaryDraft startNew(Activity activity) {
+        String previous = activeId(activity);
+        if (previous != null) remember(activity, previous);
+        String id = UUID.randomUUID().toString();
+        activity.getSharedPreferences(ACTIVE_PREFS, Context.MODE_PRIVATE).edit()
+                .putString("driver_" + SessionManager.userId(activity), id).apply();
+        remember(activity, id);
+        RouteDiaryDraft draft = new RouteDiaryDraft(activity, id);
+        draft.put("current_stage", "1");
+        return draft;
+    }
+
+    static List<RouteDiaryDraft> saved(Context context) {
+        Set<String> ids = context.getSharedPreferences(INDEX_PREFS, Context.MODE_PRIVATE)
+                .getStringSet("driver_" + SessionManager.userId(context), new HashSet<>());
+        List<RouteDiaryDraft> drafts = new ArrayList<>();
+        for (String id : ids) drafts.add(new RouteDiaryDraft(context, id));
+        String active = activeId(context);
+        if (active != null && !ids.contains(active)) drafts.add(new RouteDiaryDraft(context, active));
+        return drafts;
+    }
+
+    private static void remember(Context context, String id) {
+        SharedPreferences prefs = context.getSharedPreferences(INDEX_PREFS, Context.MODE_PRIVATE);
+        String key = "driver_" + SessionManager.userId(context);
+        Set<String> ids = new HashSet<>(prefs.getStringSet(key, new HashSet<>()));
+        ids.add(id);
+        prefs.edit().putStringSet(key, ids).apply();
+    }
+
+    String label() {
+        String origin = get(R.id.inputRouteOrigin);
+        String destination = get(R.id.inputRouteDestination);
+        String route = origin.isEmpty() && destination.isEmpty() ? "Rota sem locais informados"
+                : (origin.isEmpty() ? "Origem pendente" : origin) + " → "
+                + (destination.isEmpty() ? "Destino pendente" : destination);
+        return route + (get("server_report_id").isEmpty() ? " · neste aparelho"
+                : " · diário #" + get("server_report_id"));
+    }
+
+    void activate(Activity activity) {
+        activity.getSharedPreferences(ACTIVE_PREFS, Context.MODE_PRIVATE).edit()
+                .putString("driver_" + SessionManager.userId(activity), id).apply();
+    }
+
+    Intent resume(Activity activity) {
+        activate(activity);
+        Class<? extends Activity> target;
+        switch (get("current_stage")) {
+            case "2": target = RouteDiaryStepThreeActivity.class; break;
+            case "3": target = RouteDiaryStepFourActivity.class; break;
+            case "4": target = RouteDiaryStepTwoActivity.class; break;
+            case "5": target = RouteDiaryArrivalConditionActivity.class; break;
+            case "6": target = RouteDiaryStepFiveActivity.class; break;
+            case "7": target = RouteDiaryStepSixActivity.class; break;
+            default: target = RouteDiaryStepOneActivity.class;
+        }
+        return next(activity, target);
     }
 
     private static void counter(RouteDiaryDraft draft, int id, JsonObject report, String field) {
@@ -125,14 +202,26 @@ final class RouteDiaryDraft {
     private static String displayTime(String iso) { return iso.length() >= 5 ? iso.substring(0, 5) : ""; }
 
     void clearActive() {
-        context.getSharedPreferences("route_diary_active", Context.MODE_PRIVATE)
-                .edit().remove("driver_" + SessionManager.userId(context)).apply();
+        String key = "driver_" + SessionManager.userId(context);
+        if (id.equals(activeId(context))) context.getSharedPreferences(ACTIVE_PREFS, Context.MODE_PRIVATE)
+                .edit().remove(key).apply();
+        SharedPreferences index = context.getSharedPreferences(INDEX_PREFS, Context.MODE_PRIVATE);
+        Set<String> ids = new HashSet<>(index.getStringSet(key, new HashSet<>()));
+        ids.remove(id);
+        index.edit().putStringSet(key, ids).apply();
         preferences.edit().clear().apply();
     }
 
     void saveInstanceState(Bundle state) { state.putString(EXTRA_ID, id); }
 
     Intent next(Activity activity, Class<? extends Activity> target) {
+        if (target == RouteDiaryStepOneActivity.class) put("current_stage", "1");
+        else if (target == RouteDiaryStepThreeActivity.class) put("current_stage", "2");
+        else if (target == RouteDiaryStepFourActivity.class) put("current_stage", "3");
+        else if (target == RouteDiaryStepTwoActivity.class) put("current_stage", "4");
+        else if (target == RouteDiaryArrivalConditionActivity.class) put("current_stage", "5");
+        else if (target == RouteDiaryStepFiveActivity.class) put("current_stage", "6");
+        else if (target == RouteDiaryStepSixActivity.class) put("current_stage", "7");
         return new Intent(activity, target).putExtra(EXTRA_ID, id);
     }
 

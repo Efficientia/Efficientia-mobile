@@ -66,7 +66,7 @@
     <string name="main_home_greeting">Olá, %1$s!</string>
     <string name="main_home_brand_blue">Efficient</string>
     <string name="main_home_brand_green">ia</string>
-    <string name="main_home_current_route">Em rota • Cascavel, PR</string>
+    <string name="main_home_current_route">Nenhuma rota em andamento</string>
     <string name="main_home_reports">Relatórios +</string>
     <string name="main_home_feedback">Feedback</string>
     <string name="main_home_truck">Caminhão</string>
@@ -232,7 +232,7 @@
     <string name="route_summary_arrival_format">%1$d em pé • %2$d deitados • %3$d mortos • %4$d emergências</string>
     <string name="route_summary_duration_format">%1$dh %2$02dmin</string>
     <string name="route_collected_signatures">Assinaturas coletadas</string>
-    <string name="route_submit">Lançar diário de rota</string>
+    <string name="route_submit">Encerrar rota e lançar diário</string>
     <string name="route_submit_front_only">Tela concluída. O envio será conectado à API na etapa de integração.</string>
     <string name="route_launch_title">Diário de rota concluído!</string>
     <string name="route_launch_pending_api">O envio à API será disponibilizado em breve.</string>

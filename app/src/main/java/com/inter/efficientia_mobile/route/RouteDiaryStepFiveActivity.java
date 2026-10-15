@@ -92,7 +92,10 @@ public class RouteDiaryStepFiveActivity extends AppCompatActivity {
 
     @Override protected void onResume() {
         super.onResume();
-        if (draft != null) renderRoles();
+        if (draft != null) {
+            draft.put("current_stage", "6");
+            renderRoles();
+        }
     }
 
     @Override protected void onSaveInstanceState(Bundle state) {

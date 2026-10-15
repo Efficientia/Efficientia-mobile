@@ -42,6 +42,11 @@ public class RouteDiaryStepSixActivity extends AppCompatActivity {
         submit.setOnClickListener(view -> submitter.submit());
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        if (draft != null) draft.put("current_stage", "7");
+    }
+
     @Override protected void onSaveInstanceState(Bundle state) {
         draft.saveInstanceState(state);
         super.onSaveInstanceState(state);

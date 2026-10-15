@@ -55,6 +55,11 @@ public class RouteDiaryStepFourActivity extends AppCompatActivity {
         });
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        if (draft != null) draft.put("current_stage", "3");
+    }
+
     @Override protected void onPause() {
         draft.saveText(this, FIELDS);
         super.onPause();

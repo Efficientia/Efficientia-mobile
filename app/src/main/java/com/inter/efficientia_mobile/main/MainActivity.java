@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +41,7 @@ import com.inter.efficientia_mobile.auth.LoginGeralActivity;
 import com.inter.efficientia_mobile.splash.AuthenticatedSplashActivity;
 import com.inter.efficientia_mobile.feedback.RouteFeedbackActivity;
 import com.inter.efficientia_mobile.route.RouteDiaryStepOneActivity;
+import com.inter.efficientia_mobile.route.RouteDiaryFlow;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private final List<JsonObject> recentReports = new ArrayList<>();
     private int reportsLoadGeneration;
     private boolean reportsListUnavailable;
+    private final Handler reportsHandler = new Handler(Looper.getMainLooper());
+    private Call<JsonObject> reportsCall;
+    private Runnable reportsTimeout;
     private static final int[] REPORT_CARDS = {R.id.cardRouteOne, R.id.cardRouteTwo,
             R.id.cardRouteThree, R.id.cardRouteFour};
     private static final int[] REPORT_DATES = {R.id.txtRouteOneDate, R.id.txtRouteTwoDate,
@@ -60,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         if (findViewById(R.id.btnHomeProfile) != null) {
             ProfilePhotoStore.show(this, findViewById(R.id.btnHomeProfile));
+            ((TextView) findViewById(R.id.txtMainHomeCurrentRoute))
+                    .setText(RouteDiaryFlow.currentRouteSummary(this));
             loadRecentReports();
         }
     }
@@ -123,10 +131,10 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btnMainTruck).setOnClickListener(view ->
                 startActivity(new Intent(this, MyVehiclesActivity.class))
         );
-        View.OnClickListener openRouteDiary = view ->
-                startActivity(new Intent(this, RouteDiaryStepOneActivity.class));
-        findViewById(R.id.btnMainReports).setOnClickListener(openRouteDiary);
-        findViewById(R.id.btnMainAdd).setOnClickListener(openRouteDiary);
+        View.OnClickListener startRouteDiary = view -> RouteDiaryFlow.startNew(this);
+        findViewById(R.id.btnMainReports).setOnClickListener(startRouteDiary);
+        findViewById(R.id.btnMainAdd).setOnClickListener(startRouteDiary);
+        findViewById(R.id.txtMainHomeCurrentRoute).setOnClickListener(view -> RouteDiaryFlow.open(this));
 
         for (int i = 0; i < REPORT_ACTIONS.length; i++) {
             final int position = i;
@@ -145,16 +153,33 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadRecentReports() {
         String auth = SessionManager.authorizationHeader(this);
-        if (auth == null) return;
+        if (reportsTimeout != null) reportsHandler.removeCallbacks(reportsTimeout);
+        if (reportsCall != null) reportsCall.cancel();
+        if (auth == null) {
+            showReportState("Entre novamente para consultar seus relatórios.", false);
+            return;
+        }
         recentReports.clear();
         reportsListUnavailable = false;
         int generation = ++reportsLoadGeneration;
         for (int id : REPORT_CARDS) findViewById(id).setVisibility(View.GONE);
-        ((TextView) findViewById(R.id.txtHomeReportsState)).setText("Carregando relatórios…");
+        showReportState("Consultando seus relatórios…", false);
         RouteDiaryService api = RetrofitClient.getInstance().create(RouteDiaryService.class);
-        api.listMine(auth, 0, 4).enqueue(new Callback<JsonObject>() {
+        reportsCall = api.listMine(auth, 0, 4);
+        reportsTimeout = () -> {
+            if (generation != reportsLoadGeneration || reportsCall == null
+                    || !reportsCall.isExecuted()) return;
+            reportsCall.cancel();
+            reportsListUnavailable = true;
+            showReportState("Não foi possível consultar seus relatórios agora. Toque para tentar novamente.", true);
+            loadKnownReport(auth, RouteDiaryReportIndex.ids(MainActivity.this), 0, generation);
+        };
+        reportsHandler.postDelayed(reportsTimeout, 8_000L);
+        reportsCall.enqueue(new Callback<JsonObject>() {
             @Override public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                if (isFinishing() || isDestroyed() || generation != reportsLoadGeneration) return;
+                if (isFinishing() || isDestroyed() || generation != reportsLoadGeneration
+                        || call.isCanceled()) return;
+                reportsHandler.removeCallbacks(reportsTimeout);
                 if (!response.isSuccessful() || response.body() == null) {
                     reportsListUnavailable = true;
                     loadKnownReport(auth, RouteDiaryReportIndex.ids(MainActivity.this), 0, generation);
@@ -173,10 +198,11 @@ public class MainActivity extends AppCompatActivity {
                 renderReports();
             }
             @Override public void onFailure(Call<JsonObject> call, Throwable error) {
-                if (!isFinishing() && !isDestroyed() && generation == reportsLoadGeneration)
-                    reportsListUnavailable = true;
-                if (!isFinishing() && !isDestroyed() && generation == reportsLoadGeneration)
-                    loadKnownReport(auth, RouteDiaryReportIndex.ids(MainActivity.this), 0, generation);
+                if (isFinishing() || isDestroyed() || generation != reportsLoadGeneration
+                        || call.isCanceled()) return;
+                reportsHandler.removeCallbacks(reportsTimeout);
+                reportsListUnavailable = true;
+                loadKnownReport(auth, RouteDiaryReportIndex.ids(MainActivity.this), 0, generation);
             }
         });
     }
@@ -323,6 +349,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        if (reportsTimeout != null) reportsHandler.removeCallbacks(reportsTimeout);
+        if (reportsCall != null) reportsCall.cancel();
         if (reportActionsPopup != null) {
             reportActionsPopup.dismiss();
         }
