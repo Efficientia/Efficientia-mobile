@@ -113,7 +113,6 @@ public class MainActivity extends AppCompatActivity {
         greeting.setText(getString(R.string.main_home_greeting, userName));
 
         int[] pendingActions = {
-                R.id.btnHomeNotifications,
                 R.id.navMainDocuments,
                 R.id.navMainAssistant,
                 R.id.navMainSettings
@@ -121,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
         for (int actionId : pendingActions) {
             findViewById(actionId).setOnClickListener(this::showPendingFeature);
         }
+        findViewById(R.id.btnHomeNotifications).setOnClickListener(view ->
+                startActivity(new Intent(this, DriverNotificationsActivity.class)));
         View.OnClickListener openProfile = view ->
                 startActivity(new Intent(this, DriverProfileActivity.class));
         findViewById(R.id.btnHomeProfile).setOnClickListener(openProfile);

@@ -53,6 +53,9 @@
             android:name=".main.DriverProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".main.DriverNotificationsActivity"
+            android:exported="false" />
+        <activity
             android:name=".main.MyVehiclesActivity"
             android:exported="false" />
         <activity

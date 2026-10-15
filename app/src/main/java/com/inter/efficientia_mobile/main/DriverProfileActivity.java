@@ -113,8 +113,9 @@ public class DriverProfileActivity extends AppCompatActivity {
         findViewById(R.id.imgDriverProfile).setOnClickListener(view -> showPhotoDialog());
         findViewById(R.id.btnDriverPreferences).setOnClickListener(view ->
                 Toast.makeText(this, R.string.profile_preferences_pending, Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btnProfileNotifications).setOnClickListener(view ->
+                startActivity(new Intent(this, DriverNotificationsActivity.class)));
         int[] pending = {
-                R.id.btnProfileNotifications,
                 R.id.navProfileDocuments,
                 R.id.navProfileAssistant,
                 R.id.navProfileSettings
