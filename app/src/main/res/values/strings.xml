@@ -254,4 +254,10 @@
     <string name="vehicles_heads_value">5.678</string>
     <string name="vehicles_incidents_label">Incidentes</string>
     <string name="vehicles_incidents_value">23</string>
+    <string name="notifications_title">Notificações</string>
+    <string name="notifications_empty">Nenhuma notificação por enquanto. O envio de um diário e possíveis falhas aparecerão aqui.</string>
+    <string name="notifications_welcome_title">Bem-vindo!</string>
+    <string name="notifications_welcome_message">Você já pode seguir com seus relatórios de viagem.</string>
+    <string name="notifications_diary_title">Seu diário de rota</string>
+    <string name="notifications_diary_message">Inicie um relatório pela home e retome o preenchimento quando precisar.</string>
 </resources>

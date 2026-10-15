@@ -56,7 +56,8 @@
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="@string/notification_icon_description"
                         android:padding="10dp"
-                        android:src="@drawable/ic_home_notification" />
+                        android:src="@drawable/ic_home_notification"
+                        android:translationY="1dp" />
                 </LinearLayout>
 
                 <ImageView

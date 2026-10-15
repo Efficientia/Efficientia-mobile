@@ -13,6 +13,7 @@ import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
 import com.inter.efficientia_mobile.main.MainActivity;
+import com.inter.efficientia_mobile.main.DriverNotificationStore;
 
 import java.io.File;
 import java.io.IOException;
@@ -149,6 +150,11 @@ final class RouteDiarySubmitter {
                 .enqueue(new Callback<JsonObject>() {
                     @Override public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                         if (response.isSuccessful() && response.body() != null) {
+                            String origin = draft.get(R.id.inputRouteOrigin).trim();
+                            String destination = draft.get(R.id.inputRouteDestination).trim();
+                            DriverNotificationStore.reportSent(activity,
+                                    origin.isEmpty() || destination.isEmpty() ? ""
+                                            : origin + " para " + destination);
                             restoreButton();
                             draft.clearActive();
                             if (!activity.isFinishing() && !activity.isDestroyed())
@@ -177,6 +183,7 @@ final class RouteDiarySubmitter {
     }
 
     private void fail(String message) {
+        DriverNotificationStore.reportFailed(activity, message);
         restoreButton();
         explain(message);
     }
