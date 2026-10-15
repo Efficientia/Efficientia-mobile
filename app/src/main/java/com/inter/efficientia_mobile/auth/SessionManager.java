@@ -98,6 +98,21 @@ public final class SessionManager {
                 .getBoolean("assinatura_fixa_cadastrada", false);
     }
 
+    public static boolean hasUnexpiredToken(Context context) {
+        String token = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .getString("token", "");
+        if (token == null) return false;
+        String[] parts = token.split("\\.");
+        if (parts.length != 3) return false;
+        try {
+            byte[] payload = Base64.decode(parts[1], Base64.URL_SAFE | Base64.NO_WRAP | Base64.NO_PADDING);
+            long expiresAt = new JSONObject(new String(payload, StandardCharsets.UTF_8)).optLong("exp", 0);
+            return expiresAt > System.currentTimeMillis() / 1000 + 60;
+        } catch (IllegalArgumentException | org.json.JSONException ignored) {
+            return false;
+        }
+    }
+
     public static boolean hasVerifiedDriverSignatureThisProcess() {
         return driverSignatureVerifiedThisProcess;
     }
@@ -106,6 +121,10 @@ public final class SessionManager {
         driverSignatureVerifiedThisProcess = true;
         context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
                 .edit().putBoolean("assinatura_fixa_cadastrada", true).apply();
+    }
+
+    public static void markDriverSignatureVerifiedOffline() {
+        driverSignatureVerifiedThisProcess = true;
     }
 
     public static void markDriverSignatureMissing(Context context) {

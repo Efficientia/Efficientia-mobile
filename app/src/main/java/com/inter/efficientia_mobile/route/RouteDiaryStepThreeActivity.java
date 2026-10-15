@@ -42,6 +42,11 @@ public class RouteDiaryStepThreeActivity extends AppCompatActivity {
         });
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        if (draft != null) draft.put("current_stage", "2");
+    }
+
     @Override protected void onPause() {
         draft.saveCounter(this, R.id.counterMales);
         draft.saveCounter(this, R.id.counterFemales);

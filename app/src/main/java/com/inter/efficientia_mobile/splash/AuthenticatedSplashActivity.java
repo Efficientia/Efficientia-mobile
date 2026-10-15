@@ -30,6 +30,7 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
     private boolean navigationStarted;
     private boolean errorDialogShown;
     private int checkAttempt;
+    private String checkError;
     private SignatureState signatureState = SignatureState.CHECKING;
     private Runnable signatureCheckTimeout;
     private final Runnable finishAnimation = () -> {
@@ -45,7 +46,8 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
             errorDialogShown = true;
             new AlertDialog.Builder(this)
                     .setTitle(R.string.signature_check_error_title)
-                    .setMessage(R.string.signature_check_error_message)
+                    .setMessage(checkError == null ? getString(R.string.signature_check_error_message)
+                            : checkError + "\n\nSua assinatura não será apagada nem precisará ser refeita.")
                     .setPositiveButton(R.string.signature_check_retry, (dialog, which) -> {
                         errorDialogShown = false;
                         checkSignature();
@@ -101,15 +103,25 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
     private void checkSignature() {
         final int attempt = ++checkAttempt;
         signatureState = SignatureState.CHECKING;
+        checkError = null;
+        // A assinatura já confirmada pertence à sessão salva. Não bloqueie cada abertura
+        // do app esperando a rede; na primeira entrada, consulte a API normalmente.
+        if (SessionManager.hasRegisteredDriverSignature(this)
+                && SessionManager.hasUnexpiredToken(this)) {
+            SessionManager.markDriverSignatureVerifiedOffline();
+            signatureState = SignatureState.PRESENT;
+            openDestinationIfReady();
+            return;
+        }
         if (signatureCheckTimeout != null) handler.removeCallbacks(signatureCheckTimeout);
         signatureCheckTimeout = () -> {
             if (attempt != checkAttempt || signatureState != SignatureState.CHECKING) return;
             signatureState = SignatureState.ERROR;
+            checkError = "A consulta à API demorou mais de 30 segundos. Confira sua conexão e tente novamente.";
             openDestinationIfReady();
         };
         handler.postDelayed(signatureCheckTimeout, SIGNATURE_CHECK_TIMEOUT_MS);
 
-        // A API é a fonte da verdade, inclusive após novo login ou reinício do app.
         DriverSignatureRepository.fetchWithStatus(this, (image, statusCode, error) -> {
             if (image != null) image.recycle();
             if (isFinishing() || isDestroyed() || attempt != checkAttempt
@@ -124,6 +136,8 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
                 signatureState = SignatureState.SESSION_EXPIRED;
             } else {
                 signatureState = SignatureState.ERROR;
+                checkError = error == null ? "Não foi possível consultar a assinatura (HTTP "
+                        + statusCode + ")." : error;
             }
             openDestinationIfReady();
         });

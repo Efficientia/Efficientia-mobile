@@ -44,6 +44,11 @@ public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
         });
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+        if (draft != null) draft.put("current_stage", "5");
+    }
+
     @Override protected void onPause() {
         saveForm();
         super.onPause();
