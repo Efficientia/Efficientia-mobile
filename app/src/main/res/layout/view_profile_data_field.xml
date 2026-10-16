@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:minHeight="62dp"
     android:background="@drawable/profile_data_card"
-    android:elevation="4dp"
     android:orientation="vertical"
     android:paddingStart="16dp"
     android:paddingTop="10dp"

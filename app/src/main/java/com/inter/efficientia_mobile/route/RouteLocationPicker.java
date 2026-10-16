@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteLocationService;
@@ -39,32 +40,32 @@ final class RouteLocationPicker {
         content.setPadding(padding, padding, padding, padding);
         EditText search = new EditText(activity);
         search.setSingleLine(true);
-        search.setHint("Buscar pelo nome");
+        search.setHint(R.string.location_search_hint);
         search.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
         content.addView(search);
         Button searchButton = new Button(activity);
-        searchButton.setText("Buscar");
+        searchButton.setText(R.string.route_search_location);
         content.addView(searchButton);
         TextView state = new TextView(activity);
-        state.setText("Carregando…");
+        state.setText(R.string.profile_loading);
         content.addView(state);
         ListView list = new ListView(activity);
         content.addView(list, new LinearLayout.LayoutParams(-1, dp(activity, 280)));
         AlertDialog dialog = new AlertDialog.Builder(activity)
-                .setTitle(farm ? "Selecionar fazenda" : "Selecionar unidade frigorífica")
-                .setView(content).setNegativeButton("Cancelar", null).create();
+                .setTitle(farm ? R.string.location_select_farm : R.string.location_select_facility)
+                .setView(content).setNegativeButton(R.string.main_home_delete_cancel, null).create();
         RouteLocationService api = RetrofitClient.getInstance().create(RouteLocationService.class);
         final int[] request = {0};
         Runnable load = () -> {
             int current = ++request[0];
-            state.setText("Buscando…");
+            state.setText(R.string.location_searching);
             Call<JsonObject> call = farm ? api.farms(auth, search.getText().toString(), 0, 50)
                     : api.facilities(auth, search.getText().toString(), 0, 50);
             call.enqueue(new Callback<JsonObject>() {
                 @Override public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     if (current != request[0] || !dialog.isShowing()) return;
                     if (!response.isSuccessful() || response.body() == null) {
-                        state.setText("Não foi possível consultar os locais (HTTP " + response.code() + ").");
+                        state.setText(activity.getString(R.string.location_lookup_error, response.code()));
                         return;
                     }
                     JsonArray items = response.body().getAsJsonArray("itens");
@@ -82,7 +83,7 @@ final class RouteLocationPicker {
                             label += "/" + place.get("uf").getAsString();
                         labels.add(label);
                     }
-                    state.setText(labels.isEmpty() ? "Nenhum local encontrado." : "Toque no local correto:");
+                    state.setText(labels.isEmpty() ? R.string.location_none : R.string.location_select_prompt);
                     list.setAdapter(new ArrayAdapter<>(activity, android.R.layout.simple_list_item_1, labels));
                     list.setOnItemClickListener((parent, view, position, id) -> {
                         JsonObject place = locations.get(position);
@@ -92,7 +93,7 @@ final class RouteLocationPicker {
                 }
                 @Override public void onFailure(Call<JsonObject> call, Throwable error) {
                     if (current == request[0] && dialog.isShowing())
-                        state.setText("Sem conexão para buscar locais. Tente novamente.");
+                        state.setText(R.string.location_offline);
                 }
             });
         };

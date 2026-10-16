@@ -102,7 +102,7 @@ public class DriverProfileActivity extends AppCompatActivity {
             if (!isFinishing() && !isDestroyed()) refreshPhotos();
         });
 
-        View.OnClickListener goHome = view -> finish();
+        View.OnClickListener goHome = view -> ToolbarNavigation.home(this);
         findViewById(R.id.btnProfileTopHome).setOnClickListener(goHome);
         findViewById(R.id.navProfileHome).setOnClickListener(goHome);
         findViewById(R.id.btnDriverLogout).setOnClickListener(view -> {
@@ -112,13 +112,14 @@ public class DriverProfileActivity extends AppCompatActivity {
         findViewById(R.id.btnEditDriverProfile).setOnClickListener(view -> showPhotoDialog());
         findViewById(R.id.imgDriverProfile).setOnClickListener(view -> showPhotoDialog());
         findViewById(R.id.btnDriverPreferences).setOnClickListener(view ->
-                Toast.makeText(this, R.string.profile_preferences_pending, Toast.LENGTH_SHORT).show());
+                ToolbarNavigation.open(this, DriverSettingsActivity.class));
+        findViewById(R.id.navProfileSettings).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DriverSettingsActivity.class));
         findViewById(R.id.btnProfileNotifications).setOnClickListener(view ->
-                startActivity(new Intent(this, DriverNotificationsActivity.class)));
+                ToolbarNavigation.open(this, DriverNotificationsActivity.class));
         int[] pending = {
                 R.id.navProfileDocuments,
-                R.id.navProfileAssistant,
-                R.id.navProfileSettings
+                R.id.navProfileAssistant
         };
         for (int id : pending) {
             findViewById(id).setOnClickListener(view ->

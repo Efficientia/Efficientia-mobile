@@ -37,7 +37,7 @@ public class RouteDiaryStepSixActivity extends AppCompatActivity {
         findViewById(R.id.btnRouteStepSixBack).setOnClickListener(view -> finish());
         renderSummary();
         View submit = findViewById(R.id.btnRouteStepSixSubmit);
-        if ("1".equals(draft.get("edit_pending"))) ((TextView) submit).setText("Salvar alterações");
+        if ("1".equals(draft.get("edit_pending"))) ((TextView) submit).setText(R.string.submit_edit);
         RouteDiarySubmitter submitter = new RouteDiarySubmitter(this, draft, submit);
         submit.setOnClickListener(view -> submitter.submit());
     }

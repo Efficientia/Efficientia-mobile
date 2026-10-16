@@ -8,10 +8,14 @@
     <style name="Theme.Efficientiamobile" parent="Base.Theme.Efficientiamobile" />
 
     <style name="Theme.Efficientiamobile.RouteDiary" parent="Theme.Efficientiamobile">
-        <item name="android:windowAnimationStyle">@style/Animation.Efficientiamobile.RouteDiary</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Efficientiamobile.Instant</item>
     </style>
 
-    <style name="Animation.Efficientiamobile.RouteDiary" parent="@android:style/Animation.Activity">
+    <style name="Theme.Efficientiamobile.Sections" parent="Theme.Efficientiamobile">
+        <item name="android:windowAnimationStyle">@style/Animation.Efficientiamobile.Instant</item>
+    </style>
+
+    <style name="Animation.Efficientiamobile.Instant" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/route_no_transition</item>
         <item name="android:activityOpenExitAnimation">@anim/route_no_transition</item>
         <item name="android:activityCloseEnterAnimation">@anim/route_no_transition</item>

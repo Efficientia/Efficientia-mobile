@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
+import com.inter.efficientia_mobile.main.DriverPreferences;
+
 /** Plays the brand sound only when the user taps a bull logo. */
 public class EfficientiaApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
@@ -16,12 +20,15 @@ public class EfficientiaApplication extends Application implements Application.A
     @Override
     public void onCreate() {
         super.onCreate();
+        AppCompatDelegate.setDefaultNightMode(DriverPreferences.darkBlue(this)
+                ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
         registerActivityLifecycleCallbacks(this);
     }
 
     @Override
     public void onActivityResumed(Activity activity) {
         attachCowLogoClickListeners(activity.getWindow().getDecorView());
+        AppDisplayPreferences.apply(activity);
     }
 
     private void attachCowLogoClickListeners(View view) {

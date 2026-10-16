@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.DriverSignatureService;
 import com.inter.efficientia_mobile.network.RetrofitClient;
@@ -42,17 +43,17 @@ public final class DriverSignatureRepository {
     public static void upload(Context context, Bitmap image, boolean drawn, String name, Result result) {
         String authorization = SessionManager.authorizationHeader(context);
         if (authorization == null) {
-            result.complete(null, "Entre com sua conta de motorista para salvar a assinatura no banco.");
+            result.complete(null, context.getString(R.string.signature_driver_login_required));
             return;
         }
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         if (!image.compress(Bitmap.CompressFormat.PNG, 100, output)) {
-            result.complete(null, "Não foi possível gerar o PNG da assinatura.");
+            result.complete(null, context.getString(R.string.signature_png_error));
             return;
         }
         byte[] bytes = output.toByteArray();
         if (bytes.length > MAX_BYTES) {
-            result.complete(null, "A assinatura ultrapassa o limite de 1 MB da API. Desenhe novamente.");
+            result.complete(null, context.getString(R.string.signature_png_too_large));
             return;
         }
         try {
@@ -82,7 +83,7 @@ public final class DriverSignatureRepository {
                                     context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
                                             .remove(preferenceKey).apply();
                                 }
-                                result.complete(null, uploadError(response));
+                                result.complete(null, uploadError(context, response));
                                 return;
                             }
                             try {
@@ -96,11 +97,11 @@ public final class DriverSignatureRepository {
                             result.complete(image, null);
                         }
                         @Override public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                            result.complete(null, "Sem conexão com a API. Tente novamente para reenviar a assinatura.");
+                            result.complete(null, context.getString(R.string.signature_upload_offline));
                         }
                     });
         } catch (JSONException | NoSuchAlgorithmException exception) {
-            result.complete(null, "Não foi possível preparar a assinatura para envio.");
+            result.complete(null, context.getString(R.string.signature_prepare_error));
         }
     }
 
@@ -111,7 +112,7 @@ public final class DriverSignatureRepository {
     public static void fetchWithStatus(Context context, FetchResult result) {
         String authorization = SessionManager.authorizationHeader(context);
         if (authorization == null) {
-            result.complete(null, 401, "Autenticação necessária para consultar a assinatura.");
+            result.complete(null, 401, context.getString(R.string.signature_auth_required));
             return;
         }
         RetrofitClient.getInstance().create(DriverSignatureService.class)
@@ -119,7 +120,7 @@ public final class DriverSignatureRepository {
                     @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                         if (!response.isSuccessful() || response.body() == null) {
                             result.complete(null, response.code(),
-                                    "Não foi possível consultar a assinatura (HTTP " + response.code() + ").");
+                                    context.getString(R.string.signature_check_http_error, response.code()));
                             return;
                         }
                         try {
@@ -135,11 +136,11 @@ public final class DriverSignatureRepository {
                             result.complete(image, 200, null);
                         } catch (IOException exception) {
                             result.complete(null, 200,
-                                    "Não foi possível ler a assinatura retornada pela API.");
+                                    context.getString(R.string.signature_read_error));
                         }
                     }
                     @Override public void onFailure(Call<ResponseBody> call, Throwable throwable) {
-                        result.complete(null, 0, "Sem conexão para consultar a assinatura.");
+                        result.complete(null, 0, context.getString(R.string.signature_fetch_offline));
                     }
                 });
     }
@@ -153,8 +154,8 @@ public final class DriverSignatureRepository {
         return hex.toString();
     }
 
-    private static String uploadError(Response<ResponseBody> response) {
-        String prefix = "API não salvou a assinatura (HTTP " + response.code() + ").";
+    private static String uploadError(Context context, Response<ResponseBody> response) {
+        String prefix = context.getString(R.string.signature_upload_http_error, response.code());
         if (response.errorBody() == null) return prefix;
         try {
             String body = response.errorBody().string();

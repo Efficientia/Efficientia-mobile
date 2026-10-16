@@ -173,37 +173,37 @@ public class LoginMotoristaActivity extends AppCompatActivity {
         String codigoEmpresa = edtCodigoEmpresa.getText().toString().trim();
 
         if (TextUtils.isEmpty(cpf)) {
-            edtCpf.setError("Informe o CPF");
+            edtCpf.setError(getString(R.string.login_enter_cpf));
             edtCpf.requestFocus();
             return;
         }
 
         if (cpf.length() != 11) {
-            edtCpf.setError("Informe o CPF com 11 dígitos");
+            edtCpf.setError(getString(R.string.login_invalid_cpf));
             edtCpf.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(email)) {
-            edtEmail.setError("Informe o e-mail");
+            edtEmail.setError(getString(R.string.login_enter_email));
             edtEmail.requestFocus();
             return;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            edtEmail.setError("Informe um e-mail válido");
+            edtEmail.setError(getString(R.string.login_invalid_email));
             edtEmail.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(senha)) {
-            edtSenha.setError("Informe a senha");
+            edtSenha.setError(getString(R.string.login_enter_password));
             edtSenha.requestFocus();
             return;
         }
 
         if (TextUtils.isEmpty(codigoEmpresa)) {
-            edtCodigoEmpresa.setError("Informe o código da empresa");
+            edtCodigoEmpresa.setError(getString(R.string.login_enter_company));
             edtCodigoEmpresa.requestFocus();
             return;
         }
@@ -221,17 +221,17 @@ public class LoginMotoristaActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     if (loginResponse.getToken() == null || loginResponse.getToken().isEmpty()) {
-                        mostrarErro("A API não retornou o token de autenticação.");
+                        mostrarErro(getString(R.string.login_missing_token));
                         return;
                     }
 
                     SessionManager.save(LoginMotoristaActivity.this, loginResponse);
                     setLoginEmAndamento(false);
                     Toast.makeText(LoginMotoristaActivity.this,
-                            "Login realizado com sucesso!", Toast.LENGTH_SHORT).show();
+                            R.string.login_success, Toast.LENGTH_SHORT).show();
                     openPostLoginFlow();
                 } else {
-                    String errorMessage = "Falha no login (HTTP " + response.code() + ").";
+                    String errorMessage = getString(R.string.login_http_error, response.code());
                     if (response.errorBody() != null) {
                         try {
                             String errorBodyString = response.errorBody().string();
@@ -253,7 +253,7 @@ public class LoginMotoristaActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 if (isFinishing() || isDestroyed()) return;
-                mostrarErro("Não foi possível conectar à API. Verifique sua conexão.");
+                mostrarErro(getString(R.string.login_connection_error));
             }
 
             private void mostrarErro(String msg) {

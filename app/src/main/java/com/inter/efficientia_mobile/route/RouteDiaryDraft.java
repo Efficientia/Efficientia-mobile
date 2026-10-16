@@ -153,14 +153,16 @@ final class RouteDiaryDraft {
         prefs.edit().putStringSet(key, ids).apply();
     }
 
-    String label() {
+    String label(Context context) {
         String origin = get(R.id.inputRouteOrigin);
         String destination = get(R.id.inputRouteDestination);
-        String route = origin.isEmpty() && destination.isEmpty() ? "Rota sem locais informados"
-                : (origin.isEmpty() ? "Origem pendente" : origin) + " → "
-                + (destination.isEmpty() ? "Destino pendente" : destination);
-        return route + (get("server_report_id").isEmpty() ? " · neste aparelho"
-                : " · diário #" + get("server_report_id"));
+        String route = origin.isEmpty() && destination.isEmpty()
+                ? context.getString(R.string.route_locations_missing)
+                : (origin.isEmpty() ? context.getString(R.string.route_origin_pending) : origin) + " → "
+                + (destination.isEmpty() ? context.getString(R.string.route_destination_pending) : destination);
+        return route + " · " + (get("server_report_id").isEmpty()
+                ? context.getString(R.string.route_on_device)
+                : context.getString(R.string.route_diary_number, get("server_report_id")));
     }
 
     void activate(Activity activity) {

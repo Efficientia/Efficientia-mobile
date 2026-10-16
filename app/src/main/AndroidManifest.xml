@@ -11,6 +11,7 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Efficientiamobile">
@@ -48,19 +49,28 @@
 
         <activity
             android:name=".main.MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.Sections" />
         <activity
             android:name=".main.DriverProfileActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.Sections" />
         <activity
             android:name=".main.DriverNotificationsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.Sections" />
+        <activity
+            android:name=".main.DriverSettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.Sections" />
         <activity
             android:name=".main.MyVehiclesActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.Sections" />
         <activity
             android:name=".feedback.RouteFeedbackActivity"
             android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.Sections"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".route.RouteDiaryStepOneActivity"

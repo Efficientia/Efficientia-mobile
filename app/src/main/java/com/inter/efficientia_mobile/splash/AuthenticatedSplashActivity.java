@@ -47,7 +47,7 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.signature_check_error_title)
                     .setMessage(checkError == null ? getString(R.string.signature_check_error_message)
-                            : checkError + "\n\nSua assinatura não será apagada nem precisará ser refeita.")
+                            : checkError + "\n\n" + getString(R.string.signature_preserved_message))
                     .setPositiveButton(R.string.signature_check_retry, (dialog, which) -> {
                         errorDialogShown = false;
                         checkSignature();
@@ -117,7 +117,7 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
         signatureCheckTimeout = () -> {
             if (attempt != checkAttempt || signatureState != SignatureState.CHECKING) return;
             signatureState = SignatureState.ERROR;
-            checkError = "A consulta à API demorou mais de 30 segundos. Confira sua conexão e tente novamente.";
+            checkError = getString(R.string.signature_check_timeout);
             openDestinationIfReady();
         };
         handler.postDelayed(signatureCheckTimeout, SIGNATURE_CHECK_TIMEOUT_MS);
@@ -136,8 +136,8 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
                 signatureState = SignatureState.SESSION_EXPIRED;
             } else {
                 signatureState = SignatureState.ERROR;
-                checkError = error == null ? "Não foi possível consultar a assinatura (HTTP "
-                        + statusCode + ")." : error;
+                checkError = error == null
+                        ? getString(R.string.signature_check_http_error, statusCode) : error;
             }
             openDestinationIfReady();
         });

@@ -25,14 +25,14 @@ public class CodigoCampoActivity extends AppCompatActivity {
             String email = edtEmail != null && edtEmail.getText() != null ? edtEmail.getText().toString().trim() : "";
             if (TextUtils.isEmpty(email)) {
                 if (edtEmail != null) {
-                    edtEmail.setError("Informe o e-mail");
+                    edtEmail.setError(getString(R.string.login_enter_email));
                     edtEmail.requestFocus();
                 }
                 return;
             }
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 if (edtEmail != null) {
-                    edtEmail.setError("Informe um e-mail válido");
+                    edtEmail.setError(getString(R.string.login_invalid_email));
                     edtEmail.requestFocus();
                 }
                 return;

@@ -1,5 +1,6 @@
 package com.inter.efficientia_mobile.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -26,11 +27,14 @@ public class MyVehiclesActivity extends AppCompatActivity {
             view.setPadding(bars.left, bars.top, bars.right, bars.bottom);
             return insets;
         });
-        findViewById(R.id.btnVehiclesBack).setOnClickListener(view -> finish());
-        findViewById(R.id.navVehiclesHome).setOnClickListener(view -> finish());
+        findViewById(R.id.btnVehiclesBack).setOnClickListener(view -> ToolbarNavigation.back(this));
+        findViewById(R.id.navVehiclesHome).setOnClickListener(view -> ToolbarNavigation.home(this));
+        findViewById(R.id.navVehiclesProfile).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DriverProfileActivity.class));
+        findViewById(R.id.navVehiclesSettings).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DriverSettingsActivity.class));
         int[] pending = {
-                R.id.navVehiclesProfile, R.id.navVehiclesDocuments,
-                R.id.navVehiclesAssistant, R.id.navVehiclesSettings
+                R.id.navVehiclesDocuments, R.id.navVehiclesAssistant
         };
         for (int id : pending) {
             findViewById(id).setOnClickListener(view -> Toast.makeText(

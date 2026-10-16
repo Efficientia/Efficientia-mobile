@@ -19,18 +19,19 @@ public final class RouteDiaryFlow {
             return;
         }
         String[] choices = new String[saved.size() + 1];
-        choices[0] = "Iniciar nova rota";
-        for (int i = 0; i < saved.size(); i++) choices[i + 1] = "Continuar: " + saved.get(i).label();
+        choices[0] = activity.getString(R.string.route_new);
+        for (int i = 0; i < saved.size(); i++)
+            choices[i + 1] = activity.getString(R.string.route_resume, saved.get(i).label(activity));
         new AlertDialog.Builder(activity)
-                .setTitle("Diário de rota")
-                .setMessage("Escolha uma rota. Para encerrá-la, registre o desembarque e lance o diário na última etapa.")
+                .setTitle(R.string.route_diary_title)
+                .setMessage(R.string.route_choose_message)
                 .setItems(choices, (dialog, which) -> {
                     if (which == 0) {
                         new AlertDialog.Builder(activity)
-                                .setTitle("Iniciar outra rota?")
-                                .setMessage("Os rascunhos anteriores continuarão disponíveis para retomada neste aparelho.")
-                                .setNegativeButton("Cancelar", null)
-                                .setPositiveButton("Iniciar nova rota", (confirm, ignored) -> startNew(activity))
+                                .setTitle(R.string.route_start_another_title)
+                                .setMessage(R.string.route_start_another_message)
+                                .setNegativeButton(R.string.main_home_delete_cancel, null)
+                                .setPositiveButton(R.string.route_new, (confirm, ignored) -> startNew(activity))
                                 .show();
                     } else {
                         activity.startActivity(saved.get(which - 1).resume(activity));
@@ -45,12 +46,13 @@ public final class RouteDiaryFlow {
 
     public static String currentRouteSummary(Context context) {
         String id = RouteDiaryDraft.activeId(context);
-        if (id == null) return "Nenhuma rota em andamento";
+        if (id == null) return context.getString(R.string.route_none_in_progress);
         RouteDiaryDraft draft = RouteDiaryDraft.find(context, id);
         String origin = draft.get(R.id.inputRouteOrigin).trim();
         String destination = draft.get(R.id.inputRouteDestination).trim();
-        if (origin.isEmpty() && destination.isEmpty()) return "Nova rota • Informe origem e destino";
-        return "Em rota • " + (origin.isEmpty() ? "Origem pendente" : origin)
-                + " → " + (destination.isEmpty() ? "Destino pendente" : destination);
+        if (origin.isEmpty() && destination.isEmpty()) return context.getString(R.string.route_new_summary);
+        return context.getString(R.string.route_in_progress,
+                origin.isEmpty() ? context.getString(R.string.route_origin_pending) : origin,
+                destination.isEmpty() ? context.getString(R.string.route_destination_pending) : destination);
     }
 }
