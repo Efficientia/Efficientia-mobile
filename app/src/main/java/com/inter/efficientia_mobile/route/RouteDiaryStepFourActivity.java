@@ -46,8 +46,8 @@ public class RouteDiaryStepFourActivity extends AppCompatActivity {
             draft.saveText(this, FIELDS);
             if (RouteDiaryPayload.hasIncompleteOccurrences(draft)) {
                 new androidx.appcompat.app.AlertDialog.Builder(this)
-                        .setMessage("Se houve parada, informe motivo, data e horários. Se houve anomalia, informe quantidade e descrição. Deixe tudo vazio quando não houve ocorrência.")
-                        .setPositiveButton("Entendi", null).show();
+                        .setMessage(R.string.route_occurrences_incomplete)
+                        .setPositiveButton(R.string.dialog_understood, null).show();
                 return;
             }
             RouteDiarySync.saveAndContinue(this, draft, view,

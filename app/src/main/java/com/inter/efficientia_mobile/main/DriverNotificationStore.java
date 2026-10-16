@@ -27,6 +27,7 @@ public final class DriverNotificationStore {
     }
 
     public static void ensureWelcome(Context context) {
+        if (!DriverPreferences.notificationsEnabled(context)) return;
         if (SessionManager.userId(context) <= 0) return;
         SharedPreferences prefs = preferences(context);
         String key = accountKey(context);
@@ -40,7 +41,7 @@ public final class DriverNotificationStore {
                     .put("message", context.getString(R.string.notifications_welcome_message))
                     .put("time", now));
             notifications.put(new JSONObject()
-                    .put("type", "welcome")
+                    .put("type", "welcome_diary")
                     .put("title", context.getString(R.string.notifications_diary_title))
                     .put("message", context.getString(R.string.notifications_diary_message))
                     .put("time", now));
@@ -50,14 +51,14 @@ public final class DriverNotificationStore {
     }
 
     public static void reportSent(Context context, String route) {
-        add(context, "success", "Diário de rota enviado",
-                route.isBlank() ? "Seu diário foi recebido pela API."
-                        : "O diário de " + route + " foi recebido pela API.");
+        add(context, "success", context.getString(R.string.notification_sent_title),
+                route.isBlank() ? context.getString(R.string.notification_sent_generic)
+                        : context.getString(R.string.notification_sent_route, route), route);
     }
 
     public static void reportFailed(Context context, String message) {
-        add(context, "error", "Falha ao enviar diário",
-                message == null || message.isBlank() ? "Confira sua conexão e tente novamente."
+        add(context, "error", context.getString(R.string.notification_failed_title),
+                message == null || message.isBlank() ? context.getString(R.string.notification_failed_generic)
                         : message);
     }
 
@@ -67,6 +68,11 @@ public final class DriverNotificationStore {
     }
 
     private static void add(Context context, String type, String title, String message) {
+        add(context, type, title, message, "");
+    }
+
+    private static void add(Context context, String type, String title, String message, String route) {
+        if (!DriverPreferences.notificationsEnabled(context)) return;
         if (SessionManager.userId(context) <= 0 || title == null || title.isBlank()
                 || message == null || message.isBlank()) return;
         JSONArray existing = list(context);
@@ -76,6 +82,7 @@ public final class DriverNotificationStore {
                     .put("type", type)
                     .put("title", title)
                     .put("message", message)
+                    .put("route", route)
                     .put("time", System.currentTimeMillis()));
             for (int i = 0; i < existing.length() && i < MAX_ITEMS - 1; i++)
                 updated.put(existing.getJSONObject(i));

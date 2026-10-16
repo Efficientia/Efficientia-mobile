@@ -78,6 +78,21 @@
                 android:textColor="#062A68"
                 android:textSize="23sp" />
 
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnDisableNotifications"
+                android:layout_width="wrap_content"
+                android:layout_height="44dp"
+                android:layout_gravity="end"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/settings_option_background"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:paddingStart="18dp"
+                android:paddingEnd="18dp"
+                android:text="@string/notifications_disable_action"
+                android:textAllCaps="false"
+                android:textColor="#062A68"
+                android:textSize="13sp" />
+
             <TextView
                 android:id="@+id/txtNotificationsEmpty"
                 android:layout_width="match_parent"
@@ -88,6 +103,22 @@
                 android:text="@string/notifications_empty"
                 android:textColor="#5D6980"
                 android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnEnableNotifications"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/main_home_action_green"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:text="@string/notifications_enable_action"
+                android:textAllCaps="false"
+                android:textColor="#002060"
+                android:textSize="14sp"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:id="@+id/notificationsList"

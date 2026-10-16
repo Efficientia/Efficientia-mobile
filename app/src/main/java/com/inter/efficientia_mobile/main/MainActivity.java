@@ -114,16 +114,17 @@ public class MainActivity extends AppCompatActivity {
 
         int[] pendingActions = {
                 R.id.navMainDocuments,
-                R.id.navMainAssistant,
-                R.id.navMainSettings
+                R.id.navMainAssistant
         };
         for (int actionId : pendingActions) {
             findViewById(actionId).setOnClickListener(this::showPendingFeature);
         }
         findViewById(R.id.btnHomeNotifications).setOnClickListener(view ->
-                startActivity(new Intent(this, DriverNotificationsActivity.class)));
+                ToolbarNavigation.open(this, DriverNotificationsActivity.class));
+        findViewById(R.id.navMainSettings).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DriverSettingsActivity.class));
         View.OnClickListener openProfile = view ->
-                startActivity(new Intent(this, DriverProfileActivity.class));
+                ToolbarNavigation.open(this, DriverProfileActivity.class);
         findViewById(R.id.btnHomeProfile).setOnClickListener(openProfile);
         findViewById(R.id.navMainProfile).setOnClickListener(openProfile);
         findViewById(R.id.btnMainFeedback).setOnClickListener(view ->
@@ -157,14 +158,14 @@ public class MainActivity extends AppCompatActivity {
         if (reportsTimeout != null) reportsHandler.removeCallbacks(reportsTimeout);
         if (reportsCall != null) reportsCall.cancel();
         if (auth == null) {
-            showReportState("Entre novamente para consultar seus relatórios.", false);
+            showReportState(getString(R.string.reports_login_again), false);
             return;
         }
         recentReports.clear();
         reportsListUnavailable = false;
         int generation = ++reportsLoadGeneration;
         for (int id : REPORT_CARDS) findViewById(id).setVisibility(View.GONE);
-        showReportState("Consultando seus relatórios…", false);
+        showReportState(getString(R.string.reports_consulting), false);
         RouteDiaryService api = RetrofitClient.getInstance().create(RouteDiaryService.class);
         reportsCall = api.listMine(auth, 0, 4);
         reportsTimeout = () -> {
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                     || !reportsCall.isExecuted()) return;
             reportsCall.cancel();
             reportsListUnavailable = true;
-            showReportState("Não foi possível consultar seus relatórios agora. Toque para tentar novamente.", true);
+            showReportState(getString(R.string.reports_retry), true);
             loadKnownReport(auth, RouteDiaryReportIndex.ids(MainActivity.this), 0, generation);
         };
         reportsHandler.postDelayed(reportsTimeout, 8_000L);
@@ -229,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override public void onFailure(Call<JsonObject> call, Throwable error) {
                 if (!isFinishing() && !isDestroyed() && generation == reportsLoadGeneration)
-                    showReportState("Sem conexão para carregar os relatórios. Toque para tentar novamente.", true);
+                    showReportState(getString(R.string.reports_offline_retry), true);
             }
         });
     }
@@ -244,8 +245,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         showReportState(recentReports.isEmpty()
-                ? (reportsListUnavailable ? "Não foi possível consultar seus relatórios na API. Toque para tentar novamente."
-                : "Nenhum relatório encontrado para sua conta.") : "", reportsListUnavailable);
+                ? (reportsListUnavailable ? getString(R.string.reports_api_retry)
+                : getString(R.string.reports_empty)) : "", reportsListUnavailable);
     }
 
     private void showReportState(String message, boolean retry) {
@@ -274,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
         if (!origin.isEmpty() && !destination.isEmpty()) return origin + " – " + destination;
         String gta = value(report, "numeroGta");
         String status = value(report, "status");
-        return (gta.isEmpty() ? "Diário de rota #" + value(report, "id") : gta)
+        return (gta.isEmpty() ? getString(R.string.reports_diary_number, value(report, "id")) : gta)
                 + (status.isEmpty() ? "" : " · " + status);
     }
 
@@ -310,7 +311,7 @@ public class MainActivity extends AppCompatActivity {
         });
         content.findViewById(R.id.actionDeleteReport).setOnClickListener(view -> {
             reportActionsPopup.dismiss();
-            Toast.makeText(this, "Exclusão no servidor ainda indisponível.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.reports_delete_unavailable, Toast.LENGTH_SHORT).show();
         });
 
         int horizontalOffset = anchor.getWidth() - popupWidth;
@@ -320,10 +321,10 @@ public class MainActivity extends AppCompatActivity {
     private void withFreshReport(JsonObject listed, java.util.function.Consumer<JsonObject> action) {
         String auth = SessionManager.authorizationHeader(this);
         if (auth == null || !listed.has("id")) {
-            Toast.makeText(this, "Entre novamente para consultar o diário.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.reports_login_diary, Toast.LENGTH_LONG).show();
             return;
         }
-        Toast.makeText(this, "Carregando diário…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.reports_loading_diary, Toast.LENGTH_SHORT).show();
         RetrofitClient.getInstance().create(RouteDiaryService.class)
                 .get(auth, listed.get("id").getAsInt()).enqueue(new Callback<JsonObject>() {
                     @Override public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -334,12 +335,12 @@ public class MainActivity extends AppCompatActivity {
                                 && fresh.get("motoristaId").getAsInt() == SessionManager.userId(MainActivity.this))
                             action.accept(fresh);
                         else Toast.makeText(MainActivity.this,
-                                "Não foi possível carregar este diário (HTTP " + response.code() + ").",
+                                getString(R.string.reports_loading_error, response.code()),
                                 Toast.LENGTH_LONG).show();
                     }
                     @Override public void onFailure(Call<JsonObject> call, Throwable error) {
                         if (!isFinishing() && !isDestroyed()) Toast.makeText(MainActivity.this,
-                                "Sem conexão para carregar este diário.", Toast.LENGTH_LONG).show();
+                                R.string.reports_loading_offline, Toast.LENGTH_LONG).show();
                     }
                 });
     }

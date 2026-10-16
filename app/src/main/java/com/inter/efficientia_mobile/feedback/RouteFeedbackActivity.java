@@ -1,5 +1,6 @@
 package com.inter.efficientia_mobile.feedback;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -21,6 +22,9 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
+import com.inter.efficientia_mobile.main.DriverSettingsActivity;
+import com.inter.efficientia_mobile.main.DriverProfileActivity;
+import com.inter.efficientia_mobile.main.ToolbarNavigation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,8 +56,12 @@ public class RouteFeedbackActivity extends AppCompatActivity {
         com.inter.efficientia_mobile.FormKeyboardInsets.install(
                 this, findViewById(R.id.feedbackRoot), true);
 
-        findViewById(R.id.btnFeedbackBack).setOnClickListener(view -> finish());
-        findViewById(R.id.navFeedbackHome).setOnClickListener(view -> finish());
+        findViewById(R.id.btnFeedbackBack).setOnClickListener(view -> ToolbarNavigation.back(this));
+        findViewById(R.id.navFeedbackHome).setOnClickListener(view -> ToolbarNavigation.home(this));
+        findViewById(R.id.navFeedbackProfile).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DriverProfileActivity.class));
+        findViewById(R.id.navFeedbackSettings).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DriverSettingsActivity.class));
 
         configureRating(R.id.ratingGreat);
         configureRating(R.id.ratingGood);
@@ -62,10 +70,8 @@ public class RouteFeedbackActivity extends AppCompatActivity {
         selectRating(findViewById(R.id.ratingGreat));
 
         int[] pendingNavigation = {
-                R.id.navFeedbackProfile,
                 R.id.navFeedbackDocuments,
-                R.id.navFeedbackAssistant,
-                R.id.navFeedbackSettings
+                R.id.navFeedbackAssistant
         };
         for (int viewId : pendingNavigation) {
             findViewById(viewId).setOnClickListener(this::showPendingFeature);

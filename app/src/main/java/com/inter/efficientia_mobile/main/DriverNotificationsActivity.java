@@ -46,38 +46,54 @@ public class DriverNotificationsActivity extends AppCompatActivity {
             return insets;
         });
 
-        View.OnClickListener goHome = view -> {
-            Intent home = new Intent(this, MainActivity.class);
-            home.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(home);
-            finish();
-        };
+        View.OnClickListener goHome = view -> ToolbarNavigation.home(this);
         findViewById(R.id.btnNotificationsTopHome).setOnClickListener(goHome);
         findViewById(R.id.navNotificationsHome).setOnClickListener(goHome);
         View.OnClickListener openProfile = view ->
-                startActivity(new Intent(this, DriverProfileActivity.class));
+                ToolbarNavigation.open(this, DriverProfileActivity.class);
         findViewById(R.id.imgNotificationsProfile).setOnClickListener(openProfile);
         findViewById(R.id.navNotificationsProfile).setOnClickListener(openProfile);
         findViewById(R.id.navNotificationsDocuments).setOnClickListener(this::showPendingFeature);
         findViewById(R.id.navNotificationsAssistant).setOnClickListener(this::showPendingFeature);
-        findViewById(R.id.navNotificationsSettings).setOnClickListener(this::showPendingFeature);
+        findViewById(R.id.navNotificationsSettings).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DriverSettingsActivity.class));
+        findViewById(R.id.btnEnableNotifications).setOnClickListener(view -> {
+            DriverPreferences.setNotificationsEnabled(this, true);
+            renderNotifications();
+        });
+        findViewById(R.id.btnDisableNotifications).setOnClickListener(view -> {
+            DriverPreferences.setNotificationsEnabled(this, false);
+            renderNotifications();
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         ImageView photo = findViewById(R.id.imgNotificationsProfile);
-        if (photo != null) {
-            ProfilePhotoStore.show(this, photo);
-            renderNotifications();
-        }
+        if (photo != null) ProfilePhotoStore.show(this, photo);
+        renderNotifications();
     }
 
     private void renderNotifications() {
-        DriverNotificationStore.ensureWelcome(this);
         LinearLayout list = findViewById(R.id.notificationsList);
         TextView empty = findViewById(R.id.txtNotificationsEmpty);
         list.removeAllViews();
+        View enable = findViewById(R.id.btnEnableNotifications);
+        View disable = findViewById(R.id.btnDisableNotifications);
+        if (!DriverPreferences.notificationsEnabled(this)) {
+            list.setVisibility(View.GONE);
+            empty.setText(R.string.notifications_disabled_message);
+            empty.setVisibility(View.VISIBLE);
+            enable.setVisibility(View.VISIBLE);
+            disable.setVisibility(View.GONE);
+            return;
+        }
+        list.setVisibility(View.VISIBLE);
+        enable.setVisibility(View.GONE);
+        disable.setVisibility(View.VISIBLE);
+        empty.setText(R.string.notifications_empty);
+        DriverNotificationStore.ensureWelcome(this);
         JSONArray notifications = DriverNotificationStore.list(this);
         empty.setVisibility(notifications.length() == 0 ? View.VISIBLE : View.GONE);
         for (int i = 0; i < notifications.length(); i++) {
@@ -85,11 +101,28 @@ public class DriverNotificationsActivity extends AppCompatActivity {
             if (item == null) continue;
             View card = getLayoutInflater().inflate(R.layout.item_driver_notification, list, false);
             String type = item.optString("type");
+            String savedTitle = item.optString("title");
+            boolean diaryTip = "welcome_diary".equals(type)
+                    || ("welcome".equals(type) && ("Seu diário de rota".equals(savedTitle)
+                    || "Your route diary".equals(savedTitle)));
             View dot = card.findViewById(R.id.notificationDot);
             dot.setBackgroundTintList(android.content.res.ColorStateList.valueOf(
                     getColor("error".equals(type) ? R.color.notification_error : R.color.notification_blue)));
-            ((TextView) card.findViewById(R.id.txtNotificationTitle)).setText(item.optString("title"));
-            ((TextView) card.findViewById(R.id.txtNotificationMessage)).setText(item.optString("message"));
+            TextView title = card.findViewById(R.id.txtNotificationTitle);
+            if (diaryTip) title.setText(R.string.notifications_diary_title);
+            else if ("welcome".equals(type)) title.setText(R.string.notifications_welcome_title);
+            else if ("success".equals(type)) title.setText(R.string.notification_sent_title);
+            else if ("error".equals(type)) title.setText(R.string.notification_failed_title);
+            else title.setText(savedTitle);
+            String message = item.optString("message");
+            if (diaryTip) message = getString(R.string.notifications_diary_message);
+            else if ("welcome".equals(type)) message = getString(R.string.notifications_welcome_message);
+            else if ("success".equals(type)) {
+                String route = item.optString("route");
+                message = route.isBlank() ? getString(R.string.notification_sent_generic)
+                        : getString(R.string.notification_sent_route, route);
+            }
+            ((TextView) card.findViewById(R.id.txtNotificationMessage)).setText(message);
             long time = item.optLong("time");
             ((TextView) card.findViewById(R.id.txtNotificationTime)).setText(
                     time > 0 ? DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)

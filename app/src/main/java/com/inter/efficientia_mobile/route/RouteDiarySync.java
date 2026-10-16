@@ -7,6 +7,7 @@ import android.view.View;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
+import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
@@ -26,7 +27,7 @@ final class RouteDiarySync {
                                 Runnable continueFlow) {
         String auth = SessionManager.authorizationHeader(activity);
         if (auth == null) {
-            syncError(activity, "Sessão expirada. Entre novamente para salvar o diário na API.",
+            syncError(activity, activity.getString(R.string.draft_session_expired),
                     () -> saveAndContinue(activity, draft, button, continueFlow));
             return;
         }
@@ -48,17 +49,17 @@ final class RouteDiarySync {
                 } else {
                     if (id > 0 && response.code() == 404
                             && !"1".equals(draft.get("edit_pending"))) {
-                        new AlertDialog.Builder(activity).setTitle("Rascunho não encontrado")
-                                .setMessage("O diário #" + id + " não está mais disponível na API. Os dados preenchidos continuam neste aparelho. Deseja salvá-los como um novo diário?")
-                                .setPositiveButton("Salvar como novo", (dialog, which) -> {
+                        new AlertDialog.Builder(activity).setTitle(R.string.draft_not_found_title)
+                                .setMessage(activity.getString(R.string.draft_not_found_message, id))
+                                .setPositiveButton(R.string.draft_save_as_new, (dialog, which) -> {
                                     draft.put("server_report_id", "");
                                     draft.put("submission_key", "");
                                     saveAndContinue(activity, draft, button, continueFlow);
                                 })
-                                .setNegativeButton("Cancelar", null)
+                                .setNegativeButton(R.string.main_home_delete_cancel, null)
                                 .show();
                     } else {
-                        syncError(activity, error(response, id > 0),
+                        syncError(activity, error(activity, response, id > 0),
                                 () -> saveAndContinue(activity, draft, button, continueFlow));
                     }
                 }
@@ -67,25 +68,25 @@ final class RouteDiarySync {
                 button.setEnabled(true);
                 if (!activity.isFinishing() && !activity.isDestroyed())
                     syncError(activity,
-                            "Sem conexão com a API. O preenchimento permanece neste aparelho, mas ainda não foi salvo no servidor.",
+                            activity.getString(R.string.draft_offline),
                             () -> saveAndContinue(activity, draft, button, continueFlow));
             }
         });
     }
 
     private static void syncError(Activity activity, String message, Runnable retry) {
-        new AlertDialog.Builder(activity).setTitle("Rascunho não sincronizado")
-                .setMessage(message + "\n\nNão é possível avançar até a API confirmar o salvamento.")
-                .setPositiveButton("Tentar novamente", (dialog, which) -> retry.run())
-                .setNegativeButton("Voltar ao formulário", null)
+        new AlertDialog.Builder(activity).setTitle(R.string.draft_not_synced_title)
+                .setMessage(message + "\n\n" + activity.getString(R.string.draft_cannot_advance))
+                .setPositiveButton(R.string.draft_try_again, (dialog, which) -> retry.run())
+                .setNegativeButton(R.string.draft_back_to_form, null)
                 .show();
     }
 
-    private static String error(Response<?> response, boolean updating) {
-        String message = "API recusou " + (updating ? "a atualização" : "a criação")
-                + " do rascunho (HTTP " + response.code() + ").";
+    private static String error(Activity activity, Response<?> response, boolean updating) {
+        String message = activity.getString(updating ? R.string.draft_api_rejected_update
+                : R.string.draft_api_rejected_create, response.code());
         if (response.code() == 404 && !updating)
-            message += " Confira se a versão atual da API foi implantada.";
+            message += " " + activity.getString(R.string.draft_check_api_version);
         ResponseBody body = response.errorBody();
         if (body != null) try {
             String raw = body.string().trim();
@@ -114,9 +115,9 @@ final class RouteDiarySync {
                 message += "\n" + (details.length() > 800 ? details.substring(0, 800) + "…" : details);
             }
         } catch (IOException ignored) { }
-        if (response.code() == 400 && message.equals("API recusou "
-                + (updating ? "a atualização" : "a criação") + " do rascunho (HTTP 400)."))
-            message += " A API não informou qual campo foi rejeitado. Confira se a versão que aceita rascunhos parciais e locais digitados já foi implantada.";
+        if (response.code() == 400 && message.equals(activity.getString(updating
+                ? R.string.draft_api_rejected_update : R.string.draft_api_rejected_create, 400)))
+            message += " " + activity.getString(R.string.draft_no_field_error);
         return message;
     }
 

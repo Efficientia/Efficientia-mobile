@@ -16,6 +16,7 @@ import androidx.core.content.FileProvider;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
 
@@ -38,7 +39,7 @@ final class RouteReportPdf {
     private RouteReportPdf() { }
 
     static void open(Activity activity, JsonObject report, String authorization) {
-        Toast.makeText(activity, "Preparando PDF do diário…", Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, R.string.pdf_preparing, Toast.LENGTH_SHORT).show();
         RouteDiaryService api = RetrofitClient.getInstance().create(RouteDiaryService.class);
         Map<String, Bitmap> signatures = new HashMap<>();
         fetchSignature(activity, api, report, authorization, signatures, 0);
@@ -54,12 +55,12 @@ final class RouteReportPdf {
                 Intent view = new Intent(Intent.ACTION_VIEW);
                 view.setDataAndType(uri, "application/pdf");
                 view.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                activity.startActivity(Intent.createChooser(view, "Abrir diário em PDF"));
+                activity.startActivity(Intent.createChooser(view, activity.getString(R.string.pdf_open_chooser)));
             } catch (IOException | RuntimeException error) {
                 if (!activity.isFinishing()) new AlertDialog.Builder(activity)
-                        .setTitle("Não foi possível abrir o PDF")
-                        .setMessage("Tente novamente ou instale um leitor de PDF no aparelho.")
-                        .setPositiveButton("Entendi", null).show();
+                        .setTitle(R.string.pdf_open_error_title)
+                        .setMessage(R.string.pdf_open_error_message)
+                        .setPositiveButton(R.string.dialog_understood, null).show();
             } finally {
                 for (Bitmap bitmap : images.values()) bitmap.recycle();
             }
@@ -97,61 +98,64 @@ final class RouteReportPdf {
         File directory = new File(activity.getCacheDir(), "route_reports");
         if (!directory.isDirectory() && !directory.mkdirs()) throw new IOException("Pasta de PDF indisponível.");
         File output = new File(directory, "diario-rota-" + report.get("id").getAsInt() + ".pdf");
+        boolean english = "en".equals(activity.getResources().getConfiguration()
+                .getLocales().get(0).getLanguage());
         PdfDocument pdf = new PdfDocument();
         try {
-            Writer writer = new Writer(pdf, report.get("id").getAsInt());
-            writer.section("Dados da viagem");
-            writer.row("Situação", value(report, "status"));
-            writer.row("Origem", value(report, "nomeOrigem"));
-            writer.row("Destino", value(report, "nomeDestino"));
+            Writer writer = new Writer(pdf, report.get("id").getAsInt(), english);
+            writer.section(tr(english, "Dados da viagem", "Trip details"));
+            writer.row(tr(english, "Situação", "Status"), value(report, "status"));
+            writer.row(tr(english, "Origem", "Origin"), value(report, "nomeOrigem"));
+            writer.row(tr(english, "Destino", "Destination"), value(report, "nomeDestino"));
             writer.row("GTA", value(report, "numeroGta"));
-            writer.row("Nota fiscal", value(report, "numeroNotaFiscal"));
-            writer.row("Data de embarque", value(report, "dataEmbarque"));
-            writer.row("Horário de embarque", value(report, "horarioEmbarque"));
-            writer.row("Saída da propriedade", value(report, "horarioSaidaPropriedade"));
-            writer.row("Quilometragem de saída", value(report, "kmSaidaEmbarcadouro"));
-            writer.row("Data de chegada", value(report, "dataChegadaUnidade"));
-            writer.row("Horário de chegada", value(report, "horarioChegadaUnidade"));
-            writer.row("Desembarque", value(report, "horarioDesembarque"));
-            writer.row("Quilometragem de chegada", value(report, "kmChegadaDesembarcadouro"));
-            writer.row("Curral", value(report, "numeroCurral"));
-            writer.row("Sirene de ré funcionou", bool(report, "sireneReFuncionou"));
-            writer.section("Animais");
-            writer.row("Machos", value(report, "quantidadeMachos"));
-            writer.row("Fêmeas", value(report, "quantidadeFemeas"));
-            writer.row("Marrucos", value(report, "quantidadeMarrucos"));
-            writer.row("Em pé", value(report, "quantidadeEmPe"));
-            writer.row("Deitados", value(report, "quantidadeDeitado"));
-            writer.row("Mortos", value(report, "quantidadeMorto"));
-            writer.row("Emergência", value(report, "quantidadeEmergencia"));
-            writer.row("Motivo de emergência", value(report, "motivoEmergencia"));
-            writer.section("Ocorrências");
+            writer.row(tr(english, "Nota fiscal", "Invoice"), value(report, "numeroNotaFiscal"));
+            writer.row(tr(english, "Data de embarque", "Loading date"), value(report, "dataEmbarque"));
+            writer.row(tr(english, "Horário de embarque", "Loading time"), value(report, "horarioEmbarque"));
+            writer.row(tr(english, "Saída da propriedade", "Departure from property"), value(report, "horarioSaidaPropriedade"));
+            writer.row(tr(english, "Quilometragem de saída", "Km at departure"), value(report, "kmSaidaEmbarcadouro"));
+            writer.row(tr(english, "Data de chegada", "Arrival date"), value(report, "dataChegadaUnidade"));
+            writer.row(tr(english, "Horário de chegada", "Arrival time"), value(report, "horarioChegadaUnidade"));
+            writer.row(tr(english, "Desembarque", "Unloading"), value(report, "horarioDesembarque"));
+            writer.row(tr(english, "Quilometragem de chegada", "Km at arrival"), value(report, "kmChegadaDesembarcadouro"));
+            writer.row(tr(english, "Curral", "Corral"), value(report, "numeroCurral"));
+            writer.row(tr(english, "Sirene de ré funcionou", "Reverse alarm worked"), bool(report, "sireneReFuncionou", english));
+            writer.section(tr(english, "Animais", "Animals"));
+            writer.row(tr(english, "Machos", "Males"), value(report, "quantidadeMachos"));
+            writer.row(tr(english, "Fêmeas", "Females"), value(report, "quantidadeFemeas"));
+            writer.row(tr(english, "Marrucos", "Breeding bulls"), value(report, "quantidadeMarrucos"));
+            writer.row(tr(english, "Em pé", "Standing"), value(report, "quantidadeEmPe"));
+            writer.row(tr(english, "Deitados", "Lying down"), value(report, "quantidadeDeitado"));
+            writer.row(tr(english, "Mortos", "Dead"), value(report, "quantidadeMorto"));
+            writer.row(tr(english, "Emergência", "Emergency"), value(report, "quantidadeEmergencia"));
+            writer.row(tr(english, "Motivo de emergência", "Emergency reason"), value(report, "motivoEmergencia"));
+            writer.section(tr(english, "Ocorrências", "Occurrences"));
             JsonArray stops = array(report, "paradasImprevistas");
             for (int i = 0; i < stops.size(); i++) {
                 JsonObject stop = stops.get(i).getAsJsonObject();
-                writer.row("Parada " + (i + 1), first(value(stop, "descricaoMotivo"), value(stop, "motivo")));
-                writer.row("Início / fim", value(stop, "dataHoraInicio") + " / " + value(stop, "dataHoraFim"));
+                writer.row(tr(english, "Parada ", "Stop ") + (i + 1), first(value(stop, "descricaoMotivo"), value(stop, "motivo")));
+                writer.row(tr(english, "Início / fim", "Start / end"), value(stop, "dataHoraInicio") + " / " + value(stop, "dataHoraFim"));
             }
             JsonArray embark = array(report, "anomaliasEmbarque");
             for (int i = 0; i < embark.size(); i++) {
                 JsonObject item = embark.get(i).getAsJsonObject();
-                writer.row("Anomalia no embarque " + (i + 1),
+                writer.row(tr(english, "Anomalia no embarque ", "Loading anomaly ") + (i + 1),
                         first(value(item, "descricaoOutros"), value(item, "anomalia"))
-                                + " - " + value(item, "quantidadeAnimais") + " animais");
+                                + " - " + value(item, "quantidadeAnimais") + tr(english, " animais", " animals"));
             }
             JsonArray unloading = array(report, "anomaliasDesembarque");
             for (int i = 0; i < unloading.size(); i++) {
                 JsonObject item = unloading.get(i).getAsJsonObject();
-                writer.row("Anomalia no desembarque " + (i + 1),
+                writer.row(tr(english, "Anomalia no desembarque ", "Unloading anomaly ") + (i + 1),
                         first(value(item, "descricaoOutros"), value(item, "anomalia"))
-                                + " - " + value(item, "quantidadeAnimais") + " animais");
+                                + " - " + value(item, "quantidadeAnimais") + tr(english, " animais", " animals"));
             }
-            writer.row("Comentários", value(report, "comentarios"));
-            writer.section("Assinaturas");
+            writer.row(tr(english, "Comentários", "Comments"), value(report, "comentarios"));
+            writer.section(tr(english, "Assinaturas", "Signatures"));
+            String[] englishRoles = {"Rancher", "Driver", "Yard driver", "Corral worker"};
             for (int i = 0; i < ROLES.length; i++) {
                 String role = ROLES[i];
                 String field = "urlAssinatura" + Character.toUpperCase(role.charAt(0)) + role.substring(1);
-                writer.signature(LABELS[i], value(report, field), images.get(role));
+                writer.signature(english ? englishRoles[i] : LABELS[i], value(report, field), images.get(role));
             }
             writer.finish();
             try (FileOutputStream stream = new FileOutputStream(output)) { pdf.writeTo(stream); }
@@ -168,23 +172,29 @@ final class RouteReportPdf {
     private static JsonArray array(JsonObject object, String key) {
         return object.has(key) && object.get(key).isJsonArray() ? object.getAsJsonArray(key) : new JsonArray();
     }
-    private static String bool(JsonObject object, String key) {
+    private static String bool(JsonObject object, String key, boolean english) {
         if (!object.has(key) || object.get(key).isJsonNull()) return "";
-        return object.get(key).getAsBoolean() ? "Sim" : "Não";
+        return object.get(key).getAsBoolean() ? tr(english, "Sim", "Yes") : tr(english, "Não", "No");
+    }
+
+    private static String tr(boolean english, String portuguese, String translation) {
+        return english ? translation : portuguese;
     }
 
     private static final class Writer {
         private final PdfDocument document;
         private final int reportId;
+        private final boolean english;
         private PdfDocument.Page page;
         private Canvas canvas;
         private int number;
         private float y;
         private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-        Writer(PdfDocument document, int reportId) {
+        Writer(PdfDocument document, int reportId, boolean english) {
             this.document = document;
             this.reportId = reportId;
+            this.english = english;
             newPage();
         }
 
@@ -208,7 +218,7 @@ final class RouteReportPdf {
 
         void signature(String label, String url, Bitmap bitmap) {
             ensure(112);
-            line(label + (url.isBlank() ? ": não registrada" : ":"));
+            line(label + (url.isBlank() ? tr(english, ": não registrada", ": not recorded") : ":"));
             if (bitmap != null) {
                 float scale = Math.min(160f / bitmap.getWidth(), 72f / bitmap.getHeight());
                 float width = bitmap.getWidth() * scale;
@@ -217,7 +227,8 @@ final class RouteReportPdf {
                         new android.graphics.RectF(47, y, 47 + width, y + height), paint);
                 y += height + 13;
             } else if (!url.isBlank()) {
-                line("Imagem indisponível para visualização offline.");
+                line(tr(english, "Imagem indisponível para visualização offline.",
+                        "Image unavailable for offline viewing."));
             }
         }
 
@@ -251,9 +262,10 @@ final class RouteReportPdf {
             paint.setColor(Color.rgb(8, 52, 123));
             paint.setTypeface(android.graphics.Typeface.create("sans-serif-bold", 0));
             paint.setTextSize(18);
-            canvas.drawText("Efficientia - Diário de rota", 40, 47, paint);
+            canvas.drawText(tr(english, "Efficientia - Diário de rota", "Efficientia - Route diary"), 40, 47, paint);
             paint.setTextSize(9);
-            canvas.drawText("Relatório #" + reportId + "  |  Página " + number, 40, 815, paint);
+            canvas.drawText(tr(english, "Relatório #", "Report #") + reportId + "  |  "
+                    + tr(english, "Página ", "Page ") + number, 40, 815, paint);
             y = 72;
         }
 

@@ -48,25 +48,25 @@ final class RouteDiarySubmitter {
 
     void submit() {
         if (authorization == null) {
-            explain("Sua sessão expirou. Entre novamente antes de lançar o diário.");
+            explain(activity.getString(R.string.submit_session_expired));
             return;
         }
         if ((draft.get("fazenda_id").isEmpty() && draft.get(R.id.inputRouteOrigin).isBlank())
                 || (draft.get("unidade_frigorifica_id").isEmpty()
                 && draft.get(R.id.inputRouteDestination).isBlank())) {
-            explain("Informe a origem e o destino da viagem: digite o nome ou selecione um local na busca.");
+            explain(activity.getString(R.string.submit_missing_locations));
             return;
         }
         if (RouteDiaryPayload.hasIncompleteOccurrences(draft)) {
-            explain("Complete a data, os horários e o motivo da parada; e a quantidade e descrição da anomalia, se houver. O diário continua salvo neste aparelho.");
+            explain(activity.getString(R.string.submit_incomplete_occurrences));
             return;
         }
         button.setEnabled(false);
-        if (button instanceof TextView) ((TextView) button).setText("Enviando…");
+        if (button instanceof TextView) ((TextView) button).setText(R.string.submit_sending);
         int reportId = number(draft.get("server_report_id"));
         if ("1".equals(draft.get("edit_pending"))) {
             if (reportId <= 0) {
-                fail("Não foi possível identificar o relatório para salvar a edição.");
+                fail(activity.getString(R.string.submit_missing_report));
                 return;
             }
             service.update(authorization, reportId, null, RouteDiaryPayload.from(draft, "pendente"))
@@ -125,7 +125,9 @@ final class RouteDiarySubmitter {
             return;
         }
         if (!image.isFile() || image.length() == 0 || image.length() > 1_048_576) {
-            fail("A assinatura de " + role.toLowerCase() + " não foi encontrada ou ultrapassa 1 MB.");
+            int roleLabel = roleIndex == 0 ? R.string.route_rancher
+                    : roleIndex == 1 ? R.string.route_maneuverer : R.string.route_corral_worker;
+            fail(activity.getString(R.string.submit_missing_signature, activity.getString(roleLabel)));
             return;
         }
         RequestBody body = RequestBody.create(MediaType.parse("image/png"), image);
@@ -154,7 +156,7 @@ final class RouteDiarySubmitter {
                             String destination = draft.get(R.id.inputRouteDestination).trim();
                             DriverNotificationStore.reportSent(activity,
                                     origin.isEmpty() || destination.isEmpty() ? ""
-                                            : origin + " para " + destination);
+                                            : origin + " → " + destination);
                             restoreButton();
                             draft.clearActive();
                             if (!activity.isFinishing() && !activity.isDestroyed())
@@ -166,7 +168,7 @@ final class RouteDiarySubmitter {
     }
 
     private void fail(Response<?> response) {
-        String message = "A API recusou o diário (HTTP " + response.code() + ").";
+        String message = activity.getString(R.string.submit_api_rejected, response.code());
         ResponseBody body = response.errorBody();
         if (body != null) {
             try {
@@ -179,7 +181,7 @@ final class RouteDiarySubmitter {
     }
 
     private void fail(Throwable error) {
-        fail("Não foi possível conectar à API. O diário permanece neste aparelho para tentar novamente.");
+        fail(activity.getString(R.string.submit_offline));
     }
 
     private void fail(String message) {
@@ -196,8 +198,8 @@ final class RouteDiarySubmitter {
 
     private void explain(String message) {
         if (!activity.isFinishing() && !activity.isDestroyed())
-            new AlertDialog.Builder(activity).setTitle("Diário não lançado")
-                    .setMessage(message).setPositiveButton("Entendi", null).show();
+            new AlertDialog.Builder(activity).setTitle(R.string.submit_failed_title)
+                    .setMessage(message).setPositiveButton(R.string.dialog_understood, null).show();
     }
 
     private static int number(String value) {

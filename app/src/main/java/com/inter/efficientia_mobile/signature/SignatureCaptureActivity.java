@@ -100,7 +100,7 @@ public class SignatureCaptureActivity extends AppCompatActivity {
             return;
         }
         if (fullName.length() > 150) {
-            signatureName.setError("Use até 150 caracteres para a assinatura.");
+            signatureName.setError(getString(R.string.signature_name_too_long));
             return;
         }
 
@@ -150,14 +150,14 @@ public class SignatureCaptureActivity extends AppCompatActivity {
                         if (error != null) {
                             showUploadError(error);
                         } else if (role != null) {
-                            Toast.makeText(this, "Assinatura salva na API.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, R.string.signature_saved_api, Toast.LENGTH_LONG).show();
                             Intent result = new Intent()
                                     .putExtra(EXTRA_SIGNER_ROLE, role)
                                     .putExtra(EXTRA_IMAGE_PATH, SignatureImageStore.driverPath(this));
                             setResult(RESULT_OK, result);
                             finish();
                         } else {
-                            Toast.makeText(this, "Assinatura salva na API.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, R.string.signature_saved_api, Toast.LENGTH_LONG).show();
                             Intent intent = new Intent(this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
