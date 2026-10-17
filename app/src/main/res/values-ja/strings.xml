@@ -396,4 +396,17 @@
     <string name="pdf_open_chooser">日誌の PDF を開く</string>
     <string name="pdf_open_error_title">PDF を開けませんでした</string>
     <string name="pdf_open_error_message">再試行するか、この端末に PDF リーダーをインストールしてください。</string>
+    <string name="cinttia_title">CinttIA</string>
+    <string name="cinttia_subtitle">ドライバー向けAIサポート</string>
+    <string name="cinttia_welcome">こんにちは、CinttIAです。運行について何をお手伝いしましょうか？</string>
+    <string name="cinttia_hint">メッセージを入力</string>
+    <string name="cinttia_send">送信</string>
+    <string name="cinttia_thinking">CinttIAが回答中…</string>
+    <string name="cinttia_unconfigured">CinttIAの接続先がまだ設定されていません。</string>
+    <string name="cinttia_http_error">CinttIAが応答しませんでした（HTTP %1$d）。再試行してください。</string>
+    <string name="cinttia_invalid_response">CinttIAから無効な応答が届きました。再試行してください。</string>
+    <string name="cinttia_network_error">CinttIAに接続できません。通信状態を確認してください。</string>
+    <string name="cinttia_clear_action">消去</string>
+    <string name="cinttia_clear_title">会話を消去しますか？</string>
+    <string name="cinttia_clear_confirmation">この端末に保存されたメッセージを削除し、新しい会話を開始します。</string>
 </resources>

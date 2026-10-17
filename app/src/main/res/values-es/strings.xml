@@ -396,4 +396,17 @@
     <string name="pdf_open_chooser">Abrir PDF del diario</string>
     <string name="pdf_open_error_title">No se pudo abrir el PDF</string>
     <string name="pdf_open_error_message">Inténtalo de nuevo o instala un lector de PDF en este dispositivo.</string>
+    <string name="cinttia_title">CinttIA</string>
+    <string name="cinttia_subtitle">Asistencia inteligente para conductores</string>
+    <string name="cinttia_welcome">¡Hola! Soy CinttIA. ¿Cómo puedo ayudarte en tu ruta?</string>
+    <string name="cinttia_hint">Escribe tu mensaje</string>
+    <string name="cinttia_send">Enviar</string>
+    <string name="cinttia_thinking">CinttIA está respondiendo…</string>
+    <string name="cinttia_unconfigured">La dirección de CinttIA aún no está configurada en esta app.</string>
+    <string name="cinttia_http_error">CinttIA no respondió (HTTP %1$d). Inténtalo de nuevo.</string>
+    <string name="cinttia_invalid_response">CinttIA devolvió una respuesta inválida. Inténtalo de nuevo.</string>
+    <string name="cinttia_network_error">No se pudo conectar con CinttIA. Revisa tu conexión.</string>
+    <string name="cinttia_clear_action">Borrar</string>
+    <string name="cinttia_clear_title">¿Borrar la conversación?</string>
+    <string name="cinttia_clear_confirmation">Se borrarán los mensajes guardados en este dispositivo y comenzará una nueva conversación.</string>
 </resources>

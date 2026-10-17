@@ -396,4 +396,17 @@
     <string name="pdf_open_chooser">Ouvrir le PDF du carnet</string>
     <string name="pdf_open_error_title">Impossible d’ouvrir le PDF</string>
     <string name="pdf_open_error_message">Réessayez ou installez un lecteur PDF sur cet appareil.</string>
+    <string name="cinttia_title">CinttIA</string>
+    <string name="cinttia_subtitle">Assistance intelligente pour les conducteurs</string>
+    <string name="cinttia_welcome">Bonjour ! Je suis CinttIA. Comment puis-je vous aider sur votre trajet ?</string>
+    <string name="cinttia_hint">Écrivez votre message</string>
+    <string name="cinttia_send">Envoyer</string>
+    <string name="cinttia_thinking">CinttIA répond…</string>
+    <string name="cinttia_unconfigured">L’adresse de CinttIA n’est pas encore configurée dans l’application.</string>
+    <string name="cinttia_http_error">CinttIA n’a pas répondu (HTTP %1$d). Réessayez.</string>
+    <string name="cinttia_invalid_response">CinttIA a renvoyé une réponse invalide. Réessayez.</string>
+    <string name="cinttia_network_error">Connexion à CinttIA impossible. Vérifiez votre connexion.</string>
+    <string name="cinttia_clear_action">Effacer</string>
+    <string name="cinttia_clear_title">Effacer la conversation ?</string>
+    <string name="cinttia_clear_confirmation">Les messages enregistrés sur cet appareil seront supprimés et une nouvelle conversation commencera.</string>
 </resources>

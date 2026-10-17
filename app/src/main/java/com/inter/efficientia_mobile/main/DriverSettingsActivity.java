@@ -58,7 +58,8 @@ public class DriverSettingsActivity extends AppCompatActivity {
         findViewById(R.id.navSettingsProfile).setOnClickListener(view -> openProfile());
         findViewById(R.id.navSettingsDocuments).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DocumentsActivity.class));
-        findViewById(R.id.navSettingsAssistant).setOnClickListener(this::showPendingFeature);
+        findViewById(R.id.navSettingsAssistant).setOnClickListener(view ->
+                ToolbarNavigation.open(this, CinttiaActivity.class));
 
         bindOption(R.id.settingNotifications, R.string.settings_notifications,
                 DriverPreferences.notificationsEnabled(this) ? R.string.settings_enabled : R.string.settings_disabled,

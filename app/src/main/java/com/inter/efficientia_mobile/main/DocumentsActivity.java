@@ -76,7 +76,7 @@ public class DocumentsActivity extends AppCompatActivity {
         findViewById(R.id.navDocumentsSettings).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DriverSettingsActivity.class));
         findViewById(R.id.navDocumentsAssistant).setOnClickListener(view ->
-                Toast.makeText(this, R.string.main_home_feature_pending, Toast.LENGTH_SHORT).show());
+                ToolbarNavigation.open(this, CinttiaActivity.class));
         View.OnClickListener startNew = view -> RouteDiaryFlow.startNew(this);
         findViewById(R.id.btnDocumentsNew).setOnClickListener(startNew);
         findViewById(R.id.btnDocumentsAdd).setOnClickListener(startNew);

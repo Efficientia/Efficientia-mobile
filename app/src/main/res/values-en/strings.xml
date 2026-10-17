@@ -396,4 +396,17 @@
     <string name="pdf_open_chooser">Open diary PDF</string>
     <string name="pdf_open_error_title">Could not open the PDF</string>
     <string name="pdf_open_error_message">Try again or install a PDF reader on this device.</string>
+    <string name="cinttia_title">CinttIA</string>
+    <string name="cinttia_subtitle">Smart support for drivers</string>
+    <string name="cinttia_welcome">Hello! I’m CinttIA. How can I help with your route?</string>
+    <string name="cinttia_hint">Write your message</string>
+    <string name="cinttia_send">Send</string>
+    <string name="cinttia_thinking">CinttIA is replying…</string>
+    <string name="cinttia_unconfigured">The CinttIA service address is not configured in this app yet.</string>
+    <string name="cinttia_http_error">CinttIA did not reply (HTTP %1$d). Please try again.</string>
+    <string name="cinttia_invalid_response">CinttIA returned an invalid response. Please try again.</string>
+    <string name="cinttia_network_error">Could not connect to CinttIA. Check your connection and try again.</string>
+    <string name="cinttia_clear_action">Clear</string>
+    <string name="cinttia_clear_title">Clear conversation?</string>
+    <string name="cinttia_clear_confirmation">Messages saved on this device will be removed and a new conversation will begin.</string>
 </resources>
