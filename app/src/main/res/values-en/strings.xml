@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Efficientia-mobile</string>
+    <string name="documents_title">My documents</string>
+    <string name="documents_subtitle">All reports created by you</string>
+    <string name="documents_history">Complete history</string>
     <string name="cow_logo_sound_description">Efficientia logo. Tap to hear the cow moo.</string>
     <string name="mostrar_senha">Show password</string>
     <string name="ocultar_senha">Hide password</string>

@@ -52,6 +52,10 @@
             android:exported="false"
             android:theme="@style/Theme.Efficientiamobile.Sections" />
         <activity
+            android:name=".main.DocumentsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.Sections" />
+        <activity
             android:name=".main.DriverProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.Efficientiamobile.Sections" />

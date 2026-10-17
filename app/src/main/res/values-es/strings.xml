@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Efficientia-mobile</string>
+    <string name="documents_title">Mis documentos</string>
+    <string name="documents_subtitle">Todos los informes creados por ti</string>
+    <string name="documents_history">Historial completo</string>
     <string name="cow_logo_sound_description">Logotipo de Efficientia. Toca para oír el mugido.</string>
     <string name="mostrar_senha">Mostrar contraseña</string>
     <string name="ocultar_senha">Ocultar contraseña</string>

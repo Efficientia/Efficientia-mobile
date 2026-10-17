@@ -145,6 +145,13 @@ final class RouteDiaryDraft {
         return drafts;
     }
 
+    public static void clearForReport(Context context, int reportId) {
+        String serverId = String.valueOf(reportId);
+        for (RouteDiaryDraft draft : saved(context)) {
+            if (serverId.equals(draft.get("server_report_id"))) draft.clearActive();
+        }
+    }
+
     private static void remember(Context context, String id) {
         SharedPreferences prefs = context.getSharedPreferences(INDEX_PREFS, Context.MODE_PRIVATE);
         String key = "driver_" + SessionManager.userId(context);

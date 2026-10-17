@@ -33,6 +33,17 @@ public final class RouteDiaryReportIndex {
         preferences(context).edit().putString(key(context), value.toString()).apply();
     }
 
+    public static void forget(Context context, int id) {
+        List<Integer> ids = ids(context);
+        if (!ids.remove(Integer.valueOf(id))) return;
+        StringBuilder value = new StringBuilder();
+        for (int entry : ids) {
+            if (value.length() > 0) value.append(',');
+            value.append(entry);
+        }
+        preferences(context).edit().putString(key(context), value.toString()).apply();
+    }
+
     public static List<Integer> ids(Context context) {
         List<Integer> result = new ArrayList<>();
         String raw = preferences(context).getString(key(context), "");

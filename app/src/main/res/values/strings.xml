@@ -68,6 +68,9 @@
     <string name="main_home_brand_green">ia</string>
     <string name="main_home_current_route">Nenhuma rota em andamento</string>
     <string name="main_home_reports">Relatórios +</string>
+    <string name="documents_title">Meus documentos</string>
+    <string name="documents_subtitle">Todos os relatórios criados por você</string>
+    <string name="documents_history">Histórico completo</string>
     <string name="main_home_feedback">Feedback</string>
     <string name="main_home_truck">Caminhão</string>
     <string name="main_home_recent_routes">Rotas e relatórios recentes</string>
@@ -308,7 +311,12 @@
     <string name="reports_api_retry">Não foi possível consultar seus relatórios na API. Toque para tentar novamente.</string>
     <string name="reports_empty">Nenhum relatório encontrado para sua conta.</string>
     <string name="reports_diary_number">Diário de rota #%1$s</string>
-    <string name="reports_delete_unavailable">Exclusão no servidor ainda indisponível.</string>
+    <string name="reports_delete_error">Não foi possível excluir o rascunho na API (HTTP %1$d). Ele foi mantido.</string>
+    <string name="reports_delete_offline">Sem conexão para excluir o rascunho. Ele foi mantido.</string>
+    <string name="reports_delete_only_draft">Somente rascunhos podem ser excluídos por aqui.</string>
+    <string name="reports_delete_missing_id">Não foi possível identificar este rascunho para exclusão.</string>
+    <string name="route_delete_draft">Excluir rascunho: %1$s</string>
+    <string name="route_delete_local_success">Rascunho removido deste aparelho.</string>
     <string name="reports_login_diary">Entre novamente para consultar o diário.</string>
     <string name="reports_loading_diary">Carregando diário…</string>
     <string name="reports_loading_error">Não foi possível carregar este diário (HTTP %1$d).</string>
