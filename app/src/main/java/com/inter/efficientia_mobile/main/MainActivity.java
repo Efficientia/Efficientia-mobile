@@ -20,6 +20,7 @@ import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
 import com.inter.efficientia_mobile.route.RouteDiaryReportIndex;
 import com.inter.efficientia_mobile.route.RouteDiaryEditor;
+import com.inter.efficientia_mobile.route.RouteDiaryDeletion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,12 +114,13 @@ public class MainActivity extends AppCompatActivity {
         greeting.setText(getString(R.string.main_home_greeting, userName));
 
         int[] pendingActions = {
-                R.id.navMainDocuments,
                 R.id.navMainAssistant
         };
         for (int actionId : pendingActions) {
             findViewById(actionId).setOnClickListener(this::showPendingFeature);
         }
+        findViewById(R.id.navMainDocuments).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DocumentsActivity.class));
         findViewById(R.id.btnHomeNotifications).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DriverNotificationsActivity.class));
         findViewById(R.id.navMainSettings).setOnClickListener(view ->
@@ -311,7 +313,16 @@ public class MainActivity extends AppCompatActivity {
         });
         content.findViewById(R.id.actionDeleteReport).setOnClickListener(view -> {
             reportActionsPopup.dismiss();
-            Toast.makeText(this, R.string.reports_delete_unavailable, Toast.LENGTH_SHORT).show();
+            if (!"rascunho".equalsIgnoreCase(value(report, "status"))) {
+                Toast.makeText(this, R.string.reports_delete_only_draft, Toast.LENGTH_LONG).show();
+                return;
+            }
+            if (!report.has("id") || report.get("id").isJsonNull()) {
+                Toast.makeText(this, R.string.reports_delete_missing_id, Toast.LENGTH_LONG).show();
+                return;
+            }
+            RouteDiaryDeletion.confirmServerDraft(this, report.get("id").getAsInt(), route,
+                    this::loadRecentReports);
         });
 
         int horizontalOffset = anchor.getWidth() - popupWidth;

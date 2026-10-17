@@ -24,6 +24,7 @@ import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.main.DriverSettingsActivity;
 import com.inter.efficientia_mobile.main.DriverProfileActivity;
+import com.inter.efficientia_mobile.main.DocumentsActivity;
 import com.inter.efficientia_mobile.main.ToolbarNavigation;
 
 import java.util.ArrayList;
@@ -70,12 +71,13 @@ public class RouteFeedbackActivity extends AppCompatActivity {
         selectRating(findViewById(R.id.ratingGreat));
 
         int[] pendingNavigation = {
-                R.id.navFeedbackDocuments,
                 R.id.navFeedbackAssistant
         };
         for (int viewId : pendingNavigation) {
             findViewById(viewId).setOnClickListener(this::showPendingFeature);
         }
+        findViewById(R.id.navFeedbackDocuments).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DocumentsActivity.class));
 
         submitButton.setOnClickListener(view -> submitFeedback());
     }

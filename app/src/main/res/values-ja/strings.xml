@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Efficientia-mobile</string>
+    <string name="documents_title">マイドキュメント</string>
+    <string name="documents_subtitle">作成したすべてのレポート</string>
+    <string name="documents_history">すべての履歴</string>
     <string name="cow_logo_sound_description">Efficientia のロゴ。タップすると牛の鳴き声が聞こえます。</string>
     <string name="mostrar_senha">パスワードを表示</string>
     <string name="ocultar_senha">パスワードを隠す</string>

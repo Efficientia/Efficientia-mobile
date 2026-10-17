@@ -56,7 +56,8 @@ public class DriverSettingsActivity extends AppCompatActivity {
                 ToolbarNavigation.open(this, DriverNotificationsActivity.class));
         findViewById(R.id.imgSettingsProfile).setOnClickListener(view -> openProfile());
         findViewById(R.id.navSettingsProfile).setOnClickListener(view -> openProfile());
-        findViewById(R.id.navSettingsDocuments).setOnClickListener(this::showPendingFeature);
+        findViewById(R.id.navSettingsDocuments).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DocumentsActivity.class));
         findViewById(R.id.navSettingsAssistant).setOnClickListener(this::showPendingFeature);
 
         bindOption(R.id.settingNotifications, R.string.settings_notifications,

@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Efficientia-mobile</string>
+    <string name="documents_title">我的文档</string>
+    <string name="documents_subtitle">您创建的所有报告</string>
+    <string name="documents_history">完整历史记录</string>
     <string name="cow_logo_sound_description">Efficientia 标志。点击可听牛叫声。</string>
     <string name="mostrar_senha">显示密码</string>
     <string name="ocultar_senha">隐藏密码</string>

@@ -53,7 +53,8 @@ public class DriverNotificationsActivity extends AppCompatActivity {
                 ToolbarNavigation.open(this, DriverProfileActivity.class);
         findViewById(R.id.imgNotificationsProfile).setOnClickListener(openProfile);
         findViewById(R.id.navNotificationsProfile).setOnClickListener(openProfile);
-        findViewById(R.id.navNotificationsDocuments).setOnClickListener(this::showPendingFeature);
+        findViewById(R.id.navNotificationsDocuments).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DocumentsActivity.class));
         findViewById(R.id.navNotificationsAssistant).setOnClickListener(this::showPendingFeature);
         findViewById(R.id.navNotificationsSettings).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DriverSettingsActivity.class));
