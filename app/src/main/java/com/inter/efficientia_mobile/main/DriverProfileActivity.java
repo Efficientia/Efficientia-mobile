@@ -117,13 +117,8 @@ public class DriverProfileActivity extends AppCompatActivity {
                 ToolbarNavigation.open(this, DriverSettingsActivity.class));
         findViewById(R.id.btnProfileNotifications).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DriverNotificationsActivity.class));
-        int[] pending = {
-                R.id.navProfileAssistant
-        };
-        for (int id : pending) {
-            findViewById(id).setOnClickListener(view ->
-                    Toast.makeText(this, R.string.main_home_feature_pending, Toast.LENGTH_SHORT).show());
-        }
+        findViewById(R.id.navProfileAssistant).setOnClickListener(view ->
+                ToolbarNavigation.open(this, CinttiaActivity.class));
         findViewById(R.id.navProfileDocuments).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DocumentsActivity.class));
     }

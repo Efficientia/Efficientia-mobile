@@ -142,6 +142,7 @@ public final class SessionManager {
 
     public static void clear(Context context) {
         driverSignatureVerifiedThisProcess = false;
+        context.getSharedPreferences("cinttia_chat", Context.MODE_PRIVATE).edit().clear().apply();
         context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
                 .edit()
                 .clear()

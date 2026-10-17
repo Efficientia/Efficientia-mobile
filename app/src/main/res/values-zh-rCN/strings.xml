@@ -396,4 +396,17 @@
     <string name="pdf_open_chooser">打开日志 PDF</string>
     <string name="pdf_open_error_title">无法打开 PDF</string>
     <string name="pdf_open_error_message">请重试，或在此设备上安装 PDF 阅读器。</string>
+    <string name="cinttia_title">CinttIA</string>
+    <string name="cinttia_subtitle">司机智能支持</string>
+    <string name="cinttia_welcome">你好！我是 CinttIA。你的行程需要什么帮助？</string>
+    <string name="cinttia_hint">输入消息</string>
+    <string name="cinttia_send">发送</string>
+    <string name="cinttia_thinking">CinttIA 正在回复…</string>
+    <string name="cinttia_unconfigured">此应用尚未配置 CinttIA 服务地址。</string>
+    <string name="cinttia_http_error">CinttIA 未响应（HTTP %1$d）。请重试。</string>
+    <string name="cinttia_invalid_response">CinttIA 返回了无效响应。请重试。</string>
+    <string name="cinttia_network_error">无法连接 CinttIA。请检查网络连接。</string>
+    <string name="cinttia_clear_action">清除</string>
+    <string name="cinttia_clear_title">清除对话？</string>
+    <string name="cinttia_clear_confirmation">此设备上保存的消息将被清除，并开始新的对话。</string>
 </resources>

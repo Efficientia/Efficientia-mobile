@@ -113,12 +113,8 @@ public class MainActivity extends AppCompatActivity {
         TextView greeting = findViewById(R.id.txtMainHomeGreeting);
         greeting.setText(getString(R.string.main_home_greeting, userName));
 
-        int[] pendingActions = {
-                R.id.navMainAssistant
-        };
-        for (int actionId : pendingActions) {
-            findViewById(actionId).setOnClickListener(this::showPendingFeature);
-        }
+        findViewById(R.id.navMainAssistant).setOnClickListener(view ->
+                ToolbarNavigation.open(this, CinttiaActivity.class));
         findViewById(R.id.navMainDocuments).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DocumentsActivity.class));
         findViewById(R.id.btnHomeNotifications).setOnClickListener(view ->

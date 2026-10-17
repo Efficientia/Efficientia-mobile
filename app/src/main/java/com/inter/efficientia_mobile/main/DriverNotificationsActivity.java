@@ -55,7 +55,8 @@ public class DriverNotificationsActivity extends AppCompatActivity {
         findViewById(R.id.navNotificationsProfile).setOnClickListener(openProfile);
         findViewById(R.id.navNotificationsDocuments).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DocumentsActivity.class));
-        findViewById(R.id.navNotificationsAssistant).setOnClickListener(this::showPendingFeature);
+        findViewById(R.id.navNotificationsAssistant).setOnClickListener(view ->
+                ToolbarNavigation.open(this, CinttiaActivity.class));
         findViewById(R.id.navNotificationsSettings).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DriverSettingsActivity.class));
         findViewById(R.id.btnEnableNotifications).setOnClickListener(view -> {

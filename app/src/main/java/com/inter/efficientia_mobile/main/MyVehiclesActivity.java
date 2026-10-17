@@ -33,13 +33,8 @@ public class MyVehiclesActivity extends AppCompatActivity {
                 ToolbarNavigation.open(this, DriverProfileActivity.class));
         findViewById(R.id.navVehiclesSettings).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DriverSettingsActivity.class));
-        int[] pending = {
-                R.id.navVehiclesAssistant
-        };
-        for (int id : pending) {
-            findViewById(id).setOnClickListener(view -> Toast.makeText(
-                    this, R.string.main_home_feature_pending, Toast.LENGTH_SHORT).show());
-        }
+        findViewById(R.id.navVehiclesAssistant).setOnClickListener(view ->
+                ToolbarNavigation.open(this, CinttiaActivity.class));
         findViewById(R.id.navVehiclesDocuments).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DocumentsActivity.class));
     }

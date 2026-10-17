@@ -5,6 +5,8 @@ plugins {
 
 val apiBaseUrl = providers.gradleProperty("API_BASE_URL")
     .getOrElse("https://efficientia-api.onrender.com/")
+val aiBaseUrl = providers.gradleProperty("CINTTIA_BASE_URL")
+    .getOrElse("https://ia-desktop.onrender.com/")
 
 android {
     namespace = "com.inter.efficientia_mobile"
@@ -21,6 +23,7 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
+        buildConfigField("String", "CINTTIA_BASE_URL", "\"$aiBaseUrl\"")
     }
 
     buildFeatures {

@@ -56,6 +56,11 @@
             android:exported="false"
             android:theme="@style/Theme.Efficientiamobile.Sections" />
         <activity
+            android:name=".main.CinttiaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.Sections"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".main.DriverProfileActivity"
             android:exported="false"
             android:theme="@style/Theme.Efficientiamobile.Sections" />
