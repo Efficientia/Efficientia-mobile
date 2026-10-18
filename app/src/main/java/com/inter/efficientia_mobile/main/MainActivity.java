@@ -66,9 +66,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (findViewById(R.id.btnHomeProfile) != null) {
+            findViewById(R.id.btnHomeGps).setVisibility(
+                    DriverPreferences.gpsShortcutVisible(this) ? View.VISIBLE : View.GONE);
             ProfilePhotoStore.show(this, findViewById(R.id.btnHomeProfile));
             ((TextView) findViewById(R.id.txtMainHomeCurrentRoute))
                     .setText(RouteDiaryFlow.currentRouteSummary(this));
+            TextView gpsDestination = findViewById(R.id.txtMainHomeGpsDestination);
+            String lastDestination = DriverPreferences.gpsLastDestination(this);
+            boolean showGpsDestination = DriverPreferences.gpsShortcutVisible(this)
+                    && !lastDestination.isBlank();
+            gpsDestination.setVisibility(showGpsDestination ? View.VISIBLE : View.GONE);
+            if (showGpsDestination) {
+                gpsDestination.setText(getString(R.string.gps_home_last_destination, lastDestination));
+            }
             loadRecentReports();
         }
     }
@@ -124,6 +134,8 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener openProfile = view ->
                 ToolbarNavigation.open(this, DriverProfileActivity.class);
         findViewById(R.id.btnHomeProfile).setOnClickListener(openProfile);
+        findViewById(R.id.btnHomeGps).setOnClickListener(view ->
+                ToolbarNavigation.open(this, DriverGpsActivity.class));
         findViewById(R.id.navMainProfile).setOnClickListener(openProfile);
         findViewById(R.id.btnMainFeedback).setOnClickListener(view ->
                 startActivity(new Intent(this, RouteFeedbackActivity.class))

@@ -409,4 +409,22 @@
     <string name="cinttia_clear_action">Borrar</string>
     <string name="cinttia_clear_title">¿Borrar la conversación?</string>
     <string name="cinttia_clear_confirmation">Se borrarán los mensajes guardados en este dispositivo y comenzará una nueva conversación.</string>
+    <string name="gps_open">Abrir guía GPS</string>
+    <string name="gps_home_last_destination">Último destino en GPS: %1$s</string>
+    <string name="gps_home_toggle_title">Acceso GPS en inicio</string>
+    <string name="gps_home_toggle_subtitle">Mostrar el botón del mapa en la tarjeta inicial</string>
+    <string name="gps_back">Volver</string>
+    <string name="gps_search_hint">Buscar lugar o dirección</string>
+    <string name="gps_loading">Cargando mapa…</string>
+    <string name="gps_key_missing">Configura MAPS_API_KEY en local.properties para usar el mapa.</string>
+    <string name="gps_searching">Buscando lugar…</string>
+    <string name="gps_search_failed">No se encontró el lugar. Inténtalo de nuevo.</string>
+    <string name="gps_my_location">Mi ubicación</string>
+    <string name="gps_locating">Buscando tu ubicación actual…</string>
+    <string name="gps_permission_denied">Permite acceso a la ubicación para centrar el mapa. La búsqueda sigue disponible.</string>
+    <string name="gps_location_unavailable">No se pudo obtener la ubicación. Revisa el GPS e inténtalo de nuevo.</string>
+    <string name="gps_selected_point">Punto seleccionado</string>
+    <string name="gps_directions">Abrir indicaciones</string>
+    <string name="gps_directions_unavailable">No hay una app de mapas disponible para abrir indicaciones.</string>
+    <string name="gps_directions_note">La guía externa puede no considerar restricciones para camiones.</string>
 </resources>

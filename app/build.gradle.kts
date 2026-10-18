@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.google.services)
@@ -7,6 +9,12 @@ val apiBaseUrl = providers.gradleProperty("API_BASE_URL")
     .getOrElse("https://efficientia-api.onrender.com/")
 val aiBaseUrl = providers.gradleProperty("CINTTIA_BASE_URL")
     .getOrElse("https://ia-desktop.onrender.com/")
+val localSettings = Properties().apply {
+    val settingsFile = rootProject.file("local.properties")
+    if (settingsFile.exists()) settingsFile.inputStream().use { load(it) }
+}
+val mapsApiKey = providers.gradleProperty("MAPS_API_KEY")
+    .getOrElse(localSettings.getProperty("MAPS_API_KEY", ""))
 
 android {
     namespace = "com.inter.efficientia_mobile"
@@ -24,6 +32,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_BASE_URL", "\"$apiBaseUrl\"")
         buildConfigField("String", "CINTTIA_BASE_URL", "\"$aiBaseUrl\"")
+        buildConfigField("String", "MAPS_API_KEY", "\"$mapsApiKey\"")
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
     }
 
     buildFeatures {
@@ -52,6 +62,9 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation("com.google.android.gms:play-services-maps:20.0.0")
+    implementation("com.google.android.gms:play-services-location:21.4.0")
+    implementation("com.google.android.libraries.places:places:5.3.0")
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)

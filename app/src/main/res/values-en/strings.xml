@@ -409,4 +409,22 @@
     <string name="cinttia_clear_action">Clear</string>
     <string name="cinttia_clear_title">Clear conversation?</string>
     <string name="cinttia_clear_confirmation">Messages saved on this device will be removed and a new conversation will begin.</string>
+    <string name="gps_open">Open GPS guide</string>
+    <string name="gps_home_last_destination">Last GPS destination: %1$s</string>
+    <string name="gps_home_toggle_title">GPS shortcut on home</string>
+    <string name="gps_home_toggle_subtitle">Show the map button on the welcome card</string>
+    <string name="gps_back">Back</string>
+    <string name="gps_search_hint">Search for a place or address</string>
+    <string name="gps_loading">Loading map…</string>
+    <string name="gps_key_missing">Set MAPS_API_KEY in local.properties to use the map.</string>
+    <string name="gps_searching">Searching for place…</string>
+    <string name="gps_search_failed">Could not find that place. Try again.</string>
+    <string name="gps_my_location">My location</string>
+    <string name="gps_locating">Finding your current location…</string>
+    <string name="gps_permission_denied">Allow location access to center the map. Search remains available.</string>
+    <string name="gps_location_unavailable">Could not get your location now. Check GPS and try again.</string>
+    <string name="gps_selected_point">Selected point</string>
+    <string name="gps_directions">Open directions</string>
+    <string name="gps_directions_unavailable">No maps app is available to open directions.</string>
+    <string name="gps_directions_note">External guidance may not account for truck restrictions.</string>
 </resources>
