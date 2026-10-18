@@ -409,4 +409,22 @@
     <string name="cinttia_clear_action">消去</string>
     <string name="cinttia_clear_title">会話を消去しますか？</string>
     <string name="cinttia_clear_confirmation">この端末に保存されたメッセージを削除し、新しい会話を開始します。</string>
+    <string name="gps_open">GPSガイドを開く</string>
+    <string name="gps_home_last_destination">GPSの最後の目的地: %1$s</string>
+    <string name="gps_home_toggle_title">ホームのGPSショートカット</string>
+    <string name="gps_home_toggle_subtitle">最初のカードに地図ボタンを表示</string>
+    <string name="gps_back">戻る</string>
+    <string name="gps_search_hint">場所や住所を検索</string>
+    <string name="gps_loading">地図を読み込み中…</string>
+    <string name="gps_key_missing">地図を使うにはlocal.propertiesにMAPS_API_KEYを設定してください。</string>
+    <string name="gps_searching">場所を検索中…</string>
+    <string name="gps_search_failed">場所が見つかりません。再試行してください。</string>
+    <string name="gps_my_location">現在地</string>
+    <string name="gps_locating">現在地を取得中…</string>
+    <string name="gps_permission_denied">地図を現在地に移動するには位置情報を許可してください。検索は使用できます。</string>
+    <string name="gps_location_unavailable">現在地を取得できません。GPSを確認してください。</string>
+    <string name="gps_selected_point">選択した地点</string>
+    <string name="gps_directions">経路を開く</string>
+    <string name="gps_directions_unavailable">経路を開ける地図アプリがありません。</string>
+    <string name="gps_directions_note">外部ナビはトラックの通行制限を考慮しない場合があります。</string>
 </resources>

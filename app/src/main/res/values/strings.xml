@@ -415,4 +415,23 @@
     <string name="cinttia_clear_action">Limpar</string>
     <string name="cinttia_clear_title">Limpar conversa?</string>
     <string name="cinttia_clear_confirmation">As mensagens salvas neste aparelho serão removidas e uma nova conversa será iniciada.</string>
+    <string name="gps_open">Abrir guia GPS</string>
+    <string name="gps_label">GPS</string>
+    <string name="gps_home_last_destination">Último destino no GPS: %1$s</string>
+    <string name="gps_home_toggle_title">Atalho do GPS na home</string>
+    <string name="gps_home_toggle_subtitle">Mostrar o botão de mapa no card inicial</string>
+    <string name="gps_back">Voltar</string>
+    <string name="gps_search_hint">Pesquisar local ou endereço</string>
+    <string name="gps_loading">Carregando mapa…</string>
+    <string name="gps_key_missing">Configure MAPS_API_KEY no local.properties para usar o mapa.</string>
+    <string name="gps_searching">Buscando local…</string>
+    <string name="gps_search_failed">Não foi possível encontrar esse local. Tente novamente.</string>
+    <string name="gps_my_location">Minha localização</string>
+    <string name="gps_locating">Buscando sua localização atual…</string>
+    <string name="gps_permission_denied">Permita o acesso à localização para centralizar o mapa. A busca continua disponível.</string>
+    <string name="gps_location_unavailable">Não foi possível obter a localização agora. Verifique o GPS e tente novamente.</string>
+    <string name="gps_selected_point">Ponto selecionado</string>
+    <string name="gps_directions">Abrir direções</string>
+    <string name="gps_directions_unavailable">Nenhum aplicativo de mapas disponível para abrir direções.</string>
+    <string name="gps_directions_note">Guia externo indicativo; pode não considerar restrições para caminhões.</string>
 </resources>

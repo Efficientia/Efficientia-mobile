@@ -15,6 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.splash.MainSplashActivity;
@@ -67,6 +68,10 @@ public class DriverNotificationsActivity extends AppCompatActivity {
             DriverPreferences.setNotificationsEnabled(this, false);
             renderNotifications();
         });
+        MaterialSwitch gpsShortcut = findViewById(R.id.switchHomeGps);
+        gpsShortcut.setChecked(DriverPreferences.gpsShortcutVisible(this));
+        gpsShortcut.setOnCheckedChangeListener((button, checked) ->
+                DriverPreferences.setGpsShortcutVisible(this, checked));
     }
 
     @Override

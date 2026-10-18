@@ -10,6 +10,8 @@ public final class DriverPreferences {
     private static final String HIGH_CONTRAST = "high_contrast";
     private static final String DARK_BLUE = "dark_blue";
     private static final String LARGE_TEXT = "large_text";
+    private static final String GPS_SHORTCUT = "gps_shortcut_visible";
+    private static final String GPS_LAST_DESTINATION = "gps_last_destination";
 
     private DriverPreferences() { }
 
@@ -19,6 +21,22 @@ public final class DriverPreferences {
 
     public static void setNotificationsEnabled(Context context, boolean enabled) {
         preferences(context).edit().putBoolean(NOTIFICATIONS, enabled).apply();
+    }
+
+    public static boolean gpsShortcutVisible(Context context) {
+        return preferences(context).getBoolean(GPS_SHORTCUT, true);
+    }
+
+    public static void setGpsShortcutVisible(Context context, boolean visible) {
+        preferences(context).edit().putBoolean(GPS_SHORTCUT, visible).apply();
+    }
+
+    public static String gpsLastDestination(Context context) {
+        return preferences(context).getString(GPS_LAST_DESTINATION, "");
+    }
+
+    public static void setGpsLastDestination(Context context, String destination) {
+        preferences(context).edit().putString(GPS_LAST_DESTINATION, destination).apply();
     }
 
     public static boolean highContrast(Context context) {

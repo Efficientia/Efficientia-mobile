@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".EfficientiaApplication"
@@ -15,6 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Efficientiamobile">
+        <meta-data android:name="com.google.android.geo.API_KEY" android:value="${MAPS_API_KEY}" />
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.profilephotos"
@@ -60,6 +63,10 @@
             android:exported="false"
             android:theme="@style/Theme.Efficientiamobile.Sections"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".main.DriverGpsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Efficientiamobile.Sections" />
         <activity
             android:name=".main.DriverProfileActivity"
             android:exported="false"
