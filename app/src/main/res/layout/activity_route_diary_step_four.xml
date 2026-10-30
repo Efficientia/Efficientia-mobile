@@ -7,7 +7,7 @@
         <LinearLayout android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:orientation="horizontal">
             <ImageButton android:id="@+id/btnRouteStepFourBack" android:layout_width="42dp" android:layout_height="42dp" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/route_back_description" android:padding="8dp" android:src="@drawable/ic_route_back" />
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/ibm_plex_sans_semibold" android:text="@string/route_diary_title" android:textColor="#FFFFFF" android:textSize="16sp" />
-        </LinearLayout>
+        <Space android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" /><ImageView android:layout_width="48dp" android:layout_height="48dp" android:src="@drawable/logo_effi" android:tag="@string/cow_logo_tag" android:contentDescription="@string/cow_logo_sound_description" android:padding="3dp" /></LinearLayout>
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="14dp" android:gravity="center_vertical" android:orientation="horizontal">
             <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:fontFamily="@font/ibm_plex_sans_semibold" android:text="@string/route_step_four_count" android:textColor="#4DDD70" android:textSize="14sp" />

@@ -10,6 +10,9 @@ public final class DriverPreferences {
     private static final String HIGH_CONTRAST = "high_contrast";
     private static final String DARK_BLUE = "dark_blue";
     private static final String LARGE_TEXT = "large_text";
+    private static final String DYSLEXIA_READING = "dyslexia_reading";
+    private static final String DYSLEXIA_BACKGROUND = "dyslexia_background";
+    private static final String READ_ALOUD = "read_aloud";
     private static final String GPS_SHORTCUT = "gps_shortcut_visible";
     private static final String GPS_LAST_DESTINATION = "gps_last_destination";
 
@@ -61,6 +64,30 @@ public final class DriverPreferences {
 
     public static void setLargeText(Context context, boolean enabled) {
         preferences(context).edit().putBoolean(LARGE_TEXT, enabled).apply();
+    }
+
+    public static boolean dyslexiaReading(Context context) {
+        return preferences(context).getBoolean(DYSLEXIA_READING, false);
+    }
+
+    public static void setDyslexiaReading(Context context, boolean enabled) {
+        preferences(context).edit().putBoolean(DYSLEXIA_READING, enabled).apply();
+    }
+
+    public static int dyslexiaBackground(Context context) {
+        return preferences(context).getInt(DYSLEXIA_BACKGROUND, 0);
+    }
+
+    public static void setDyslexiaBackground(Context context, int choice) {
+        preferences(context).edit().putInt(DYSLEXIA_BACKGROUND, choice).apply();
+    }
+
+    public static boolean readAloud(Context context) {
+        return preferences(context).getBoolean(READ_ALOUD, false);
+    }
+
+    public static void setReadAloud(Context context, boolean enabled) {
+        preferences(context).edit().putBoolean(READ_ALOUD, enabled).apply();
     }
 
     private static SharedPreferences preferences(Context context) {

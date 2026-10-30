@@ -288,6 +288,13 @@
     <string name="settings_high_contrast">高コントラスト</string>
     <string name="settings_dark_blue">ダークブルーモード</string>
     <string name="settings_large_text">文字を大きくする</string>
+    <string name="settings_dyslexia_reading">ディスレクシア向けの読みやすさ</string>
+    <string name="settings_reading_background">読書用の背景色</string>
+    <string name="settings_background_cream">クリーム</string>
+    <string name="settings_background_gray">薄いグレー</string>
+    <string name="settings_background_yellow">淡い黄色</string>
+    <string name="settings_read_aloud">読み上げ（テキストを長押し）</string>
+    <string name="settings_read_aloud_unavailable">この端末では読み上げを利用できません</string>
     <string name="settings_close">閉じる</string>
     <string name="login_welcome">ようこそ！</string>
     <string name="login_select_role">会社での役割を\n選択してください</string>
