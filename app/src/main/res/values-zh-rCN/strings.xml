@@ -288,6 +288,13 @@
     <string name="settings_high_contrast">高对比度</string>
     <string name="settings_dark_blue">深蓝模式</string>
     <string name="settings_large_text">放大文字</string>
+    <string name="settings_dyslexia_reading">阅读障碍友好模式</string>
+    <string name="settings_reading_background">阅读背景颜色</string>
+    <string name="settings_background_cream">奶油色</string>
+    <string name="settings_background_gray">浅灰色</string>
+    <string name="settings_background_yellow">柔和黄色</string>
+    <string name="settings_read_aloud">朗读（长按文字）</string>
+    <string name="settings_read_aloud_unavailable">此设备不支持语音朗读</string>
     <string name="settings_close">关闭</string>
     <string name="login_welcome">欢迎！</string>
     <string name="login_select_role">请选择您在\n公司的角色</string>

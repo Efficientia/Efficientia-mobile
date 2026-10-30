@@ -3,19 +3,28 @@ package com.inter.efficientia_mobile;
 import android.app.Activity;
 import android.app.Application;
 import android.media.MediaPlayer;
+import android.speech.tts.TextToSpeech;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.inter.efficientia_mobile.main.DriverPreferences;
 
+import java.util.Locale;
+
 /** Plays the brand sound only when the user taps a bull logo. */
 public class EfficientiaApplication extends Application implements Application.ActivityLifecycleCallbacks {
 
     private MediaPlayer mooPlayer;
+    private TextToSpeech speech;
+    private String pendingSpeech;
+    private Locale pendingLocale;
 
     @Override
     public void onCreate() {
@@ -66,10 +75,53 @@ public class EfficientiaApplication extends Application implements Application.A
         }
     }
 
-    @Override public void onActivityPaused(Activity activity) { stopMoo(); }
+    public void speak(String value, Locale locale) {
+        if (value == null || value.isBlank()) return;
+        if (speech != null) {
+            int language = speech.setLanguage(locale);
+            if (language == TextToSpeech.LANG_MISSING_DATA
+                    || language == TextToSpeech.LANG_NOT_SUPPORTED) {
+                Toast.makeText(this, R.string.settings_read_aloud_unavailable,
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                speech.speak(value, TextToSpeech.QUEUE_FLUSH, null, "efficientia-reading");
+            }
+            return;
+        }
+        pendingSpeech = value;
+        pendingLocale = locale;
+        speech = new TextToSpeech(this, status -> new Handler(Looper.getMainLooper()).post(() -> {
+            if (status == TextToSpeech.SUCCESS && speech != null && pendingSpeech != null) {
+                int language = speech.setLanguage(pendingLocale);
+                if (language != TextToSpeech.LANG_MISSING_DATA
+                        && language != TextToSpeech.LANG_NOT_SUPPORTED) {
+                    speech.speak(pendingSpeech, TextToSpeech.QUEUE_FLUSH, null,
+                            "efficientia-reading");
+                } else {
+                    Toast.makeText(this, R.string.settings_read_aloud_unavailable,
+                            Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, R.string.settings_read_aloud_unavailable,
+                        Toast.LENGTH_SHORT).show();
+            }
+            pendingSpeech = null;
+            pendingLocale = null;
+        }));
+    }
+
+    @Override public void onActivityPaused(Activity activity) {
+        stopMoo();
+        if (speech != null) speech.stop();
+    }
     @Override public void onActivityStopped(Activity activity) { }
     @Override public void onActivityDestroyed(Activity activity) { }
     @Override public void onActivityStarted(Activity activity) { }
     @Override public void onActivityCreated(Activity activity, Bundle state) { }
     @Override public void onActivitySaveInstanceState(Activity activity, Bundle state) { }
+
+    @Override public void onTerminate() {
+        if (speech != null) speech.shutdown();
+        super.onTerminate();
+    }
 }

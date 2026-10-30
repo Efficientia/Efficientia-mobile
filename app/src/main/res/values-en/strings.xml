@@ -288,6 +288,13 @@
     <string name="settings_high_contrast">High contrast</string>
     <string name="settings_dark_blue">Dark blue mode</string>
     <string name="settings_large_text">Larger text</string>
+    <string name="settings_dyslexia_reading">Dyslexia-friendly reading</string>
+    <string name="settings_reading_background">Reading background color</string>
+    <string name="settings_background_cream">Cream</string>
+    <string name="settings_background_gray">Light gray</string>
+    <string name="settings_background_yellow">Soft yellow</string>
+    <string name="settings_read_aloud">Read aloud (touch and hold text)</string>
+    <string name="settings_read_aloud_unavailable">Text to speech is unavailable on this device</string>
     <string name="settings_close">Close</string>
     <string name="login_welcome">Welcome!</string>
     <string name="login_select_role">Select your role at\nyour company</string>

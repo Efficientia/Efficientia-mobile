@@ -176,21 +176,44 @@ public class DriverSettingsActivity extends AppCompatActivity {
 
     private void showAccessibilityOptions() {
         boolean[] selected = {DriverPreferences.highContrast(this), DriverPreferences.darkBlue(this),
-                DriverPreferences.largeText(this)};
+                DriverPreferences.largeText(this), DriverPreferences.dyslexiaReading(this),
+                DriverPreferences.readAloud(this)};
         new AlertDialog.Builder(this)
                 .setTitle(R.string.settings_accessibility)
                 .setMultiChoiceItems(new String[]{getString(R.string.settings_high_contrast),
-                        getString(R.string.settings_dark_blue), getString(R.string.settings_large_text)},
+                        getString(R.string.settings_dark_blue), getString(R.string.settings_large_text),
+                        getString(R.string.settings_dyslexia_reading),
+                        getString(R.string.settings_read_aloud)},
                         selected, (dialog, index, checked) -> selected[index] = checked)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     boolean nightChanged = DriverPreferences.darkBlue(this) != selected[1];
                     DriverPreferences.setHighContrast(this, selected[0]);
                     DriverPreferences.setDarkBlue(this, selected[1]);
                     DriverPreferences.setLargeText(this, selected[2]);
+                    DriverPreferences.setDyslexiaReading(this, selected[3]);
+                    DriverPreferences.setReadAloud(this, selected[4]);
                     AppCompatDelegate.setDefaultNightMode(selected[1]
                             ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
                     if (!nightChanged) recreate();
                 })
+                .setNeutralButton(R.string.settings_reading_background,
+                        (dialog, which) -> showReadingBackgroundOptions())
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void showReadingBackgroundOptions() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.settings_reading_background)
+                .setSingleChoiceItems(new String[]{getString(R.string.settings_background_cream),
+                        getString(R.string.settings_background_gray),
+                        getString(R.string.settings_background_yellow)},
+                        DriverPreferences.dyslexiaBackground(this), (dialog, choice) -> {
+                            DriverPreferences.setDyslexiaBackground(this, choice);
+                            DriverPreferences.setDyslexiaReading(this, true);
+                            dialog.dismiss();
+                            recreate();
+                        })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
     }

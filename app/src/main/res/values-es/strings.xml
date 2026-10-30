@@ -288,6 +288,13 @@
     <string name="settings_high_contrast">Alto contraste</string>
     <string name="settings_dark_blue">Modo azul oscuro</string>
     <string name="settings_large_text">Texto más grande</string>
+    <string name="settings_dyslexia_reading">Lectura para dislexia</string>
+    <string name="settings_reading_background">Color de fondo de lectura</string>
+    <string name="settings_background_cream">Crema</string>
+    <string name="settings_background_gray">Gris claro</string>
+    <string name="settings_background_yellow">Amarillo suave</string>
+    <string name="settings_read_aloud">Leer en voz alta (mantén pulsado el texto)</string>
+    <string name="settings_read_aloud_unavailable">La lectura en voz alta no está disponible</string>
     <string name="settings_close">Cerrar</string>
     <string name="login_welcome">¡Bienvenido!</string>
     <string name="login_select_role">Selecciona tu función en\ntu empresa</string>
