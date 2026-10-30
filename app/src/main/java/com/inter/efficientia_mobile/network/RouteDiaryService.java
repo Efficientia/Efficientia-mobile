@@ -16,6 +16,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
 import retrofit2.http.Streaming;
+import retrofit2.http.Url;
 
 public interface RouteDiaryService {
     @GET("api/v1/relatorios-viagem/me")
@@ -34,8 +35,9 @@ public interface RouteDiaryService {
                                  @Path("id") int id, @Path("papel") String role);
 
     @Streaming
-    @GET("api/v1/usuarios/me/assinatura/conteudo")
-    Call<ResponseBody> driverSignature(@Header("Authorization") String authorization);
+    @GET
+    Call<ResponseBody> signatureContent(@Header("Authorization") String authorization,
+                                        @Url String path);
 
     @POST("api/v1/relatorios-viagem")
     Call<JsonObject> create(@Header("Authorization") String authorization, @Body JsonObject body);
