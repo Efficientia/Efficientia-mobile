@@ -2,56 +2,66 @@ package com.inter.efficientia_mobile.main;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import androidx.core.content.FileProvider;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/** Builds a readable PDF from the server report, including available signature PNGs. */
+/** Downloads available report signatures and opens the formatted route report PDF. */
 final class RouteReportPdf {
     private static final String[] ROLES = {"pecuarista", "motorista", "manobrista", "curraleiro"};
-    private static final String[] LABELS = {"Pecuarista", "Motorista", "Manobrista", "Curraleiro"};
 
     private RouteReportPdf() { }
 
     static void open(Activity activity, JsonObject report, String authorization) {
         Toast.makeText(activity, R.string.pdf_preparing, Toast.LENGTH_SHORT).show();
         RouteDiaryService api = RetrofitClient.getInstance().create(RouteDiaryService.class);
-        Map<String, Bitmap> signatures = new HashMap<>();
-        fetchSignature(activity, api, report, authorization, signatures, 0);
+        fetchSignature(activity, api, report, authorization, new HashMap<>(), new ArrayList<>(), 0);
     }
 
     private static void fetchSignature(Activity activity, RouteDiaryService api, JsonObject report,
-                                       String authorization, Map<String, Bitmap> images, int index) {
+                                       String authorization, Map<String, Bitmap> images,
+                                       List<String> missing, int index) {
         if (index == ROLES.length) {
+            if (!missing.isEmpty()) {
+                if (!activity.isFinishing()) new AlertDialog.Builder(activity)
+                        .setTitle("Assinaturas indisponíveis")
+                        .setMessage("Não foi possível carregar as assinaturas registradas: "
+                                + String.join(", ", missing) + ". Tente novamente antes de baixar o PDF.")
+                        .setPositiveButton(R.string.dialog_understood, null).show();
+                for (Bitmap bitmap : images.values()) bitmap.recycle();
+                return;
+            }
             try {
-                File pdf = create(activity, report, images);
-                Uri uri = FileProvider.getUriForFile(activity,
-                        activity.getPackageName() + ".profilephotos", pdf);
+                File pdf = RouteReportFormPdf.create(activity, report, images);
+                Uri uri = saveToDownloads(activity, pdf);
                 Intent view = new Intent(Intent.ACTION_VIEW);
                 view.setDataAndType(uri, "application/pdf");
                 view.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -68,207 +78,104 @@ final class RouteReportPdf {
         }
         String role = ROLES[index];
         String field = "urlAssinatura" + Character.toUpperCase(role.charAt(0)) + role.substring(1);
-        if (value(report, field).isEmpty()) {
-            fetchSignature(activity, api, report, authorization, images, index + 1);
-            return;
-        }
+        String url = report.has(field) && !report.get(field).isJsonNull()
+                ? report.get(field).getAsString().trim() : "";
         int id = report.get("id").getAsInt();
-        Call<ResponseBody> call = "motorista".equals(role)
-                ? api.driverSignature(authorization) : api.signature(authorization, id, role);
+        // The API can point to a document or to the driver's saved signature.
+        // Only same-origin API paths are accepted, so the token cannot be sent elsewhere.
+        String path = url.startsWith("/api/v1/") && !url.contains("?") && !url.contains("#")
+                ? url.substring(1) : "";
+        Call<ResponseBody> call = path.isEmpty()
+                ? api.signature(authorization, id, role)
+                : api.signatureContent(authorization, path);
         call.enqueue(new Callback<ResponseBody>() {
             @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (activity.isFinishing() || activity.isDestroyed()) return;
+                Bitmap bitmap = null;
                 if (response.isSuccessful() && response.body() != null) {
                     try (ResponseBody body = response.body()) {
-                        Bitmap bitmap = BitmapFactory.decodeStream(body.byteStream());
-                        if (bitmap != null) images.put(role, bitmap);
+                        bitmap = BitmapFactory.decodeStream(body.byteStream());
                     }
                 }
-                fetchSignature(activity, api, report, authorization, images, index + 1);
+                if (bitmap != null) {
+                    images.put(role, bitmap);
+                } else if (!path.isEmpty()) {
+                    // Older report links can be stale; the report endpoint resolves current content.
+                    fetchFromReport(activity, api, report, authorization, images, missing, index, true);
+                    return;
+                } else if (!url.isEmpty()) {
+                    missing.add(role);
+                }
+                fetchSignature(activity, api, report, authorization, images, missing, index + 1);
             }
             @Override public void onFailure(Call<ResponseBody> call, Throwable error) {
-                if (!activity.isFinishing() && !activity.isDestroyed())
-                    fetchSignature(activity, api, report, authorization, images, index + 1);
+                if (activity.isFinishing() || activity.isDestroyed()) return;
+                if (!path.isEmpty()) {
+                    fetchFromReport(activity, api, report, authorization, images, missing, index, true);
+                } else {
+                    if (!url.isEmpty()) missing.add(role);
+                    fetchSignature(activity, api, report, authorization, images, missing, index + 1);
+                }
             }
         });
     }
 
-    private static File create(Activity activity, JsonObject report, Map<String, Bitmap> images)
-            throws IOException {
-        File directory = new File(activity.getCacheDir(), "route_reports");
-        if (!directory.isDirectory() && !directory.mkdirs()) throw new IOException("Pasta de PDF indisponível.");
-        File output = new File(directory, "diario-rota-" + report.get("id").getAsInt() + ".pdf");
-        boolean english = "en".equals(activity.getResources().getConfiguration()
-                .getLocales().get(0).getLanguage());
-        PdfDocument pdf = new PdfDocument();
+    private static void fetchFromReport(Activity activity, RouteDiaryService api, JsonObject report,
+                                        String authorization, Map<String, Bitmap> images,
+                                        List<String> missing, int index, boolean expected) {
+        String role = ROLES[index];
+        api.signature(authorization, report.get("id").getAsInt(), role)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        if (activity.isFinishing() || activity.isDestroyed()) return;
+                        Bitmap bitmap = null;
+                        if (response.isSuccessful() && response.body() != null) {
+                            try (ResponseBody body = response.body()) {
+                                bitmap = BitmapFactory.decodeStream(body.byteStream());
+                            }
+                        }
+                        if (bitmap != null) images.put(role, bitmap);
+                        else if (expected) missing.add(role);
+                        fetchSignature(activity, api, report, authorization, images, missing, index + 1);
+                    }
+                    @Override public void onFailure(Call<ResponseBody> call, Throwable error) {
+                        if (activity.isFinishing() || activity.isDestroyed()) return;
+                        if (expected) missing.add(role);
+                        fetchSignature(activity, api, report, authorization, images, missing, index + 1);
+                    }
+                });
+    }
+
+    private static Uri saveToDownloads(Activity activity, File pdf) throws IOException {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+            return FileProvider.getUriForFile(activity,
+                    activity.getPackageName() + ".profilephotos", pdf);
+        }
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, pdf.getName());
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH,
+                Environment.DIRECTORY_DOWNLOADS + "/Efficientia");
+        values.put(MediaStore.MediaColumns.IS_PENDING, 1);
+        Uri uri = activity.getContentResolver().insert(
+                MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+        if (uri == null) throw new IOException("Não foi possível salvar o PDF em Downloads.");
         try {
-            Writer writer = new Writer(pdf, report.get("id").getAsInt(), english);
-            writer.section(tr(english, "Dados da viagem", "Trip details"));
-            writer.row(tr(english, "Situação", "Status"), value(report, "status"));
-            writer.row(tr(english, "Origem", "Origin"), value(report, "nomeOrigem"));
-            writer.row(tr(english, "Destino", "Destination"), value(report, "nomeDestino"));
-            writer.row("GTA", value(report, "numeroGta"));
-            writer.row(tr(english, "Nota fiscal", "Invoice"), value(report, "numeroNotaFiscal"));
-            writer.row(tr(english, "Data de embarque", "Loading date"), value(report, "dataEmbarque"));
-            writer.row(tr(english, "Horário de embarque", "Loading time"), value(report, "horarioEmbarque"));
-            writer.row(tr(english, "Saída da propriedade", "Departure from property"), value(report, "horarioSaidaPropriedade"));
-            writer.row(tr(english, "Quilometragem de saída", "Km at departure"), value(report, "kmSaidaEmbarcadouro"));
-            writer.row(tr(english, "Data de chegada", "Arrival date"), value(report, "dataChegadaUnidade"));
-            writer.row(tr(english, "Horário de chegada", "Arrival time"), value(report, "horarioChegadaUnidade"));
-            writer.row(tr(english, "Desembarque", "Unloading"), value(report, "horarioDesembarque"));
-            writer.row(tr(english, "Quilometragem de chegada", "Km at arrival"), value(report, "kmChegadaDesembarcadouro"));
-            writer.row(tr(english, "Curral", "Corral"), value(report, "numeroCurral"));
-            writer.row(tr(english, "Sirene de ré funcionou", "Reverse alarm worked"), bool(report, "sireneReFuncionou", english));
-            writer.section(tr(english, "Animais", "Animals"));
-            writer.row(tr(english, "Machos", "Males"), value(report, "quantidadeMachos"));
-            writer.row(tr(english, "Fêmeas", "Females"), value(report, "quantidadeFemeas"));
-            writer.row(tr(english, "Marrucos", "Breeding bulls"), value(report, "quantidadeMarrucos"));
-            writer.row(tr(english, "Em pé", "Standing"), value(report, "quantidadeEmPe"));
-            writer.row(tr(english, "Deitados", "Lying down"), value(report, "quantidadeDeitado"));
-            writer.row(tr(english, "Mortos", "Dead"), value(report, "quantidadeMorto"));
-            writer.row(tr(english, "Emergência", "Emergency"), value(report, "quantidadeEmergencia"));
-            writer.row(tr(english, "Motivo de emergência", "Emergency reason"), value(report, "motivoEmergencia"));
-            writer.section(tr(english, "Ocorrências", "Occurrences"));
-            JsonArray stops = array(report, "paradasImprevistas");
-            for (int i = 0; i < stops.size(); i++) {
-                JsonObject stop = stops.get(i).getAsJsonObject();
-                writer.row(tr(english, "Parada ", "Stop ") + (i + 1), first(value(stop, "descricaoMotivo"), value(stop, "motivo")));
-                writer.row(tr(english, "Início / fim", "Start / end"), value(stop, "dataHoraInicio") + " / " + value(stop, "dataHoraFim"));
+            try (InputStream input = new FileInputStream(pdf);
+                 OutputStream output = activity.getContentResolver().openOutputStream(uri)) {
+                if (output == null) throw new IOException("Destino do PDF indisponível.");
+                byte[] buffer = new byte[8192];
+                int count;
+                while ((count = input.read(buffer)) != -1) output.write(buffer, 0, count);
             }
-            JsonArray embark = array(report, "anomaliasEmbarque");
-            for (int i = 0; i < embark.size(); i++) {
-                JsonObject item = embark.get(i).getAsJsonObject();
-                writer.row(tr(english, "Anomalia no embarque ", "Loading anomaly ") + (i + 1),
-                        first(value(item, "descricaoOutros"), value(item, "anomalia"))
-                                + " - " + value(item, "quantidadeAnimais") + tr(english, " animais", " animals"));
-            }
-            JsonArray unloading = array(report, "anomaliasDesembarque");
-            for (int i = 0; i < unloading.size(); i++) {
-                JsonObject item = unloading.get(i).getAsJsonObject();
-                writer.row(tr(english, "Anomalia no desembarque ", "Unloading anomaly ") + (i + 1),
-                        first(value(item, "descricaoOutros"), value(item, "anomalia"))
-                                + " - " + value(item, "quantidadeAnimais") + tr(english, " animais", " animals"));
-            }
-            writer.row(tr(english, "Comentários", "Comments"), value(report, "comentarios"));
-            writer.section(tr(english, "Assinaturas", "Signatures"));
-            String[] englishRoles = {"Rancher", "Driver", "Yard driver", "Corral worker"};
-            for (int i = 0; i < ROLES.length; i++) {
-                String role = ROLES[i];
-                String field = "urlAssinatura" + Character.toUpperCase(role.charAt(0)) + role.substring(1);
-                writer.signature(english ? englishRoles[i] : LABELS[i], value(report, field), images.get(role));
-            }
-            writer.finish();
-            try (FileOutputStream stream = new FileOutputStream(output)) { pdf.writeTo(stream); }
-        } finally {
-            pdf.close();
+            values.clear();
+            values.put(MediaStore.MediaColumns.IS_PENDING, 0);
+            if (activity.getContentResolver().update(uri, values, null, null) != 1)
+                throw new IOException("Não foi possível concluir o download do PDF.");
+            return uri;
+        } catch (IOException | RuntimeException error) {
+            activity.getContentResolver().delete(uri, null, null);
+            throw error;
         }
-        return output;
-    }
-
-    private static String value(JsonObject object, String key) {
-        return object.has(key) && !object.get(key).isJsonNull() ? object.get(key).getAsString() : "";
-    }
-    private static String first(String value, String fallback) { return value.isEmpty() ? fallback : value; }
-    private static JsonArray array(JsonObject object, String key) {
-        return object.has(key) && object.get(key).isJsonArray() ? object.getAsJsonArray(key) : new JsonArray();
-    }
-    private static String bool(JsonObject object, String key, boolean english) {
-        if (!object.has(key) || object.get(key).isJsonNull()) return "";
-        return object.get(key).getAsBoolean() ? tr(english, "Sim", "Yes") : tr(english, "Não", "No");
-    }
-
-    private static String tr(boolean english, String portuguese, String translation) {
-        return english ? translation : portuguese;
-    }
-
-    private static final class Writer {
-        private final PdfDocument document;
-        private final int reportId;
-        private final boolean english;
-        private PdfDocument.Page page;
-        private Canvas canvas;
-        private int number;
-        private float y;
-        private final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
-        Writer(PdfDocument document, int reportId, boolean english) {
-            this.document = document;
-            this.reportId = reportId;
-            this.english = english;
-            newPage();
-        }
-
-        void section(String title) {
-            ensure(44);
-            y += 16;
-            paint.setColor(Color.rgb(9, 58, 133));
-            paint.setTypeface(android.graphics.Typeface.create("sans-serif-medium", 0));
-            paint.setTextSize(14);
-            canvas.drawText(title, 40, y, paint);
-            y += 19;
-            paint.setColor(Color.LTGRAY);
-            canvas.drawLine(40, y, 555, y, paint);
-            y += 15;
-        }
-
-        void row(String label, String value) {
-            if (value == null || value.isBlank()) return;
-            line(label + ": " + value);
-        }
-
-        void signature(String label, String url, Bitmap bitmap) {
-            ensure(112);
-            line(label + (url.isBlank() ? tr(english, ": não registrada", ": not recorded") : ":"));
-            if (bitmap != null) {
-                float scale = Math.min(160f / bitmap.getWidth(), 72f / bitmap.getHeight());
-                float width = bitmap.getWidth() * scale;
-                float height = bitmap.getHeight() * scale;
-                canvas.drawBitmap(bitmap, null,
-                        new android.graphics.RectF(47, y, 47 + width, y + height), paint);
-                y += height + 13;
-            } else if (!url.isBlank()) {
-                line(tr(english, "Imagem indisponível para visualização offline.",
-                        "Image unavailable for offline viewing."));
-            }
-        }
-
-        private void line(String value) {
-            paint.setColor(Color.rgb(32, 46, 69));
-            paint.setTypeface(android.graphics.Typeface.create("sans-serif", 0));
-            paint.setTextSize(10.5f);
-            String remaining = value.replace('\n', ' ');
-            while (!remaining.isEmpty()) {
-                int count = paint.breakText(remaining, true, 510, null);
-                if (count <= 0) break;
-                if (count < remaining.length()) {
-                    int space = remaining.lastIndexOf(' ', count);
-                    if (space > 0) count = space;
-                }
-                ensure(17);
-                canvas.drawText(remaining.substring(0, count).trim(), 44, y, paint);
-                y += 17;
-                remaining = remaining.substring(count).trim();
-            }
-        }
-
-        private void ensure(float height) { if (y + height > 780) newPage(); }
-
-        private void newPage() {
-            if (page != null) document.finishPage(page);
-            number++;
-            page = document.startPage(new PdfDocument.PageInfo.Builder(595, 842, number).create());
-            canvas = page.getCanvas();
-            canvas.drawColor(Color.WHITE);
-            paint.setColor(Color.rgb(8, 52, 123));
-            paint.setTypeface(android.graphics.Typeface.create("sans-serif-bold", 0));
-            paint.setTextSize(18);
-            canvas.drawText(tr(english, "Efficientia - Diário de rota", "Efficientia - Route diary"), 40, 47, paint);
-            paint.setTextSize(9);
-            canvas.drawText(tr(english, "Relatório #", "Report #") + reportId + "  |  "
-                    + tr(english, "Página ", "Page ") + number, 40, 815, paint);
-            y = 72;
-        }
-
-        void finish() { document.finishPage(page); }
     }
 }
