@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             TextView gpsDestination = findViewById(R.id.txtMainHomeGpsDestination);
             String lastDestination = DriverPreferences.gpsLastDestination(this);
             boolean showGpsDestination = DriverPreferences.gpsShortcutVisible(this)
-                    && !lastDestination.isBlank();
+                    && !lastDestination.trim().isEmpty();
             gpsDestination.setVisibility(showGpsDestination ? View.VISIBLE : View.GONE);
             if (showGpsDestination) {
                 gpsDestination.setText(getString(R.string.gps_home_last_destination, lastDestination));
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         String userName = SessionManager.userName(this);
-        if (userName.isBlank()) {
+        if (userName.trim().isEmpty()) {
             userName = "Motorista";
         }
         TextView greeting = findViewById(R.id.txtMainHomeGreeting);

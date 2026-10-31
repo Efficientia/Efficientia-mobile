@@ -50,9 +50,9 @@ public final class SessionManager {
         SharedPreferences preferences = context.getSharedPreferences(
                 PREFERENCES, Context.MODE_PRIVATE);
         String token = preferences.getString("token", "");
-        if (token == null || token.isBlank()) return null;
+        if (token == null || token.trim().isEmpty()) return null;
         String tokenType = preferences.getString("token_type", "Bearer");
-        return (tokenType == null || tokenType.isBlank() ? "Bearer" : tokenType) + " " + token;
+        return (tokenType == null || tokenType.trim().isEmpty() ? "Bearer" : tokenType) + " " + token;
     }
 
     public static String userName(Context context) {
@@ -135,7 +135,7 @@ public final class SessionManager {
 
     public static String firstName(Context context) {
         String name = userName(context);
-        if (name.isBlank()) return "Motorista";
+        if (name.trim().isEmpty()) return "Motorista";
         int separator = name.indexOf(' ');
         return separator > 0 ? name.substring(0, separator) : name;
     }

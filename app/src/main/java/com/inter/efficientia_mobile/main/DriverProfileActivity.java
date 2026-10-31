@@ -78,16 +78,16 @@ public class DriverProfileActivity extends AppCompatActivity {
         String name = SessionManager.userName(this);
         ((TextView) findViewById(R.id.txtDriverProfileGreeting))
                 .setText(getString(R.string.main_home_greeting,
-                        name.isBlank() ? getString(R.string.profile_driver) : name));
+                        name.trim().isEmpty() ? getString(R.string.profile_driver) : name));
         String category = SessionManager.userCnhCategory(this);
         ((TextView) findViewById(R.id.txtDriverProfileSubtitle))
-                .setText(category.isBlank() ? getString(R.string.profile_driver)
+                .setText(category.trim().isEmpty() ? getString(R.string.profile_driver)
                         : getString(R.string.profile_driver_category, category));
 
         bindField(R.id.profileCpfField, R.string.profile_cpf,
                 formatCpf(SessionManager.userCpf(this)));
         String cnh = SessionManager.userCnhNumber(this);
-        if (!cnh.isBlank() && !category.isBlank()) {
+        if (!cnh.trim().isEmpty() && !category.trim().isEmpty()) {
             cnh = getString(R.string.profile_cnh_value, cnh, category);
         }
         bindField(R.id.profileCnhField, R.string.profile_cnh, cnh);
@@ -219,7 +219,7 @@ public class DriverProfileActivity extends AppCompatActivity {
         View field = findViewById(containerId);
         ((TextView) field.findViewById(R.id.profileFieldLabel)).setText(labelId);
         ((TextView) field.findViewById(R.id.profileFieldValue)).setText(
-                value == null || value.isBlank() ? getString(R.string.profile_not_informed) : value);
+                value == null || value.trim().isEmpty() ? getString(R.string.profile_not_informed) : value);
     }
 
     private void loadCompany() {

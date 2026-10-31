@@ -16,8 +16,8 @@ public interface CompanyService {
         private String razaoSocial;
 
         public String displayName() {
-            if (nomeFantasia != null && !nomeFantasia.isBlank()) return nomeFantasia.trim();
-            if (nomeEmpresa != null && !nomeEmpresa.isBlank()) return nomeEmpresa.trim();
+            if (nomeFantasia != null && !nomeFantasia.trim().isEmpty()) return nomeFantasia.trim();
+            if (nomeEmpresa != null && !nomeEmpresa.trim().isEmpty()) return nomeEmpresa.trim();
             return razaoSocial == null ? "" : razaoSocial.trim();
         }
     }

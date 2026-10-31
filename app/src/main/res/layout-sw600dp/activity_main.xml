@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_home_background"
+    tools:context=".main.MainActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/homeScrollContent"
+        android:layout_width="540dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="104dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="22dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="24dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:foregroundGravity="center_vertical">
+
+                <ImageButton
+                    android:id="@+id/btnHomeNotifications"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/notification_icon_description"
+                    android:padding="10dp"
+                    android:src="@drawable/ic_home_notification" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:text="@string/main_home_brand_blue"
+                        android:textColor="#1552A1"
+                        android:textSize="25sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:text="@string/main_home_brand_green"
+                        android:textColor="#4DDB70"
+                        android:textSize="25sp" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/btnHomeProfile"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="@drawable/main_home_profile_background"
+                    android:contentDescription="@string/main_home_profile_description"
+                    android:padding="7dp"
+                    android:src="@drawable/ic_profile_placeholder" />
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="210dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/main_home_welcome_card"
+                android:elevation="10dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingStart="18dp"
+                android:paddingTop="18dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="14dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                    android:gravity="top" android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/txtMainHomeGreeting"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:maxLines="2"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        tools:text="Olá, Ygona Mendes!" />
+                    <LinearLayout android:id="@+id/btnHomeGps" android:layout_width="54dp"
+                        android:layout_height="wrap_content" android:layout_marginStart="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:contentDescription="@string/gps_open"
+                        android:focusable="true"
+                        android:gravity="center" android:orientation="vertical"
+                        android:padding="4dp">
+                        <ImageView android:layout_width="24dp" android:layout_height="24dp"
+                            android:src="@drawable/ic_home_gps" app:tint="#FFFFFF" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:fontFamily="@font/ibm_plex_sans_semibold"
+                            android:text="@string/gps_label" android:textColor="#FFFFFF"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/txtMainHomeCurrentRoute"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="@string/main_home_current_route"
+                    android:textColor="#72E892"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/txtMainHomeGpsDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="Último destino no GPS: Fazenda do Norte" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btnMainReports"
+                    android:layout_width="190dp"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/main_home_action_green"
+                    android:fontFamily="@font/ibm_plex_sans_semibold"
+                    android:minHeight="0dp"
+                    android:text="@string/main_home_reports"
+                    android:textAllCaps="false"
+                    android:textColor="#002060"
+                    android:textSize="11sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="6dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnMainFeedback"
+                        android:layout_width="112dp"
+                        android:layout_height="34dp"
+                        android:background="@drawable/main_home_action_blue"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:minHeight="0dp"
+                        android:text="@string/main_home_feedback"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10sp" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnMainTruck"
+                        android:layout_width="112dp"
+                        android:layout_height="34dp"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/main_home_action_blue"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:minHeight="0dp"
+                        android:text="@string/main_home_truck"
+                        android:textAllCaps="false"
+                        android:textColor="#FFFFFF"
+                        android:textSize="10sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:text="@string/main_home_recent_routes"
+                android:textColor="#062A68"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/cardRouteOne"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/main_home_route_card"
+                android:elevation="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtRouteOneDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/main_home_route_one_date"
+                        android:textColor="#D8ECFF"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/txtRouteOneCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:text="@string/main_home_route_one_city"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnRouteOneMore"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/main_home_more_options"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="•••"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardRouteTwo"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/main_home_route_card"
+                android:elevation="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtRouteTwoDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/main_home_route_two_date"
+                        android:textColor="#D8ECFF"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/txtRouteTwoCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:text="@string/main_home_route_two_city"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnRouteTwoMore"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/main_home_more_options"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="•••"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardRouteThree"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/main_home_route_card"
+                android:elevation="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtRouteThreeDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/main_home_route_three_date"
+                        android:textColor="#D8ECFF"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/txtRouteThreeCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:text="@string/main_home_route_three_city"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnRouteThreeMore"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/main_home_more_options"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="•••"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/cardRouteFour"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="72dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/main_home_route_card"
+                android:elevation="5dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtRouteFourDate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/main_home_route_four_date"
+                        android:textColor="#D8ECFF"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/txtRouteFourCity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ibm_plex_sans_semibold"
+                        android:text="@string/main_home_route_four_city"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnRouteFourMore"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:contentDescription="@string/main_home_more_options"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="•••"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp" />
+            </LinearLayout>
+            <TextView
+                android:id="@+id/txtHomeReportsState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="@string/reports_loading"
+                android:textColor="#36557D"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnMainAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="88dp"
+        android:contentDescription="@string/main_home_add_report"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="#55DD71"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/homeScrollContent"
+        app:maxImageSize="25dp"
+        app:tint="#063277" />
+
+    <LinearLayout
+        android:id="@+id/mainBottomToolbar"
+        android:layout_width="540dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/main_home_bottom_bar"
+        android:elevation="14dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <FrameLayout
+            android:id="@+id/navMainHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:background="@drawable/main_home_nav_selected"
+                android:contentDescription="@string/home_icon_description"
+                android:padding="11dp"
+                android:src="@drawable/ic_nav_home" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/navMainProfile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/main_home_profile_description"
+                android:src="@drawable/ic_nav_profile" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/navMainDocuments"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/main_home_documents_description"
+                android:src="@drawable/ic_nav_document" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/navMainAssistant"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/main_home_assistant_description"
+                android:src="@drawable/ic_nav_assistant" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/navMainSettings"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:foreground="?attr/selectableItemBackgroundBorderless">
+
+            <ImageView
+                android:layout_width="29dp"
+                android:layout_height="29dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/main_home_settings_description"
+                android:src="@drawable/ic_nav_settings" />
+        </FrameLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
