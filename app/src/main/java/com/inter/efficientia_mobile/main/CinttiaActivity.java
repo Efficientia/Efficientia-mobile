@@ -180,7 +180,7 @@ public class CinttiaActivity extends AppCompatActivity {
                     status.setText(getString(R.string.cinttia_http_error, response.code()));
                     prepareRetry(message);
                 } else if (envelope == null || envelope.response == null
-                        || envelope.response.resposta == null || envelope.response.resposta.isBlank()) {
+                        || envelope.response.resposta == null || envelope.response.resposta.trim().isEmpty()) {
                     status.setText(R.string.cinttia_invalid_response);
                     prepareRetry(message);
                 } else {

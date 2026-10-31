@@ -89,7 +89,7 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
         String fullName = SessionManager.userName(this);
         greeting.setText(getString(
                 R.string.authenticated_splash_greeting,
-                fullName.isBlank() ? SessionManager.firstName(this) : fullName
+                fullName.trim().isEmpty() ? SessionManager.firstName(this) : fullName
         ));
 
         ObjectAnimator animator = ObjectAnimator.ofInt(progress, "progress", 0, 100);

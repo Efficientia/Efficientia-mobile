@@ -126,7 +126,7 @@ public class DriverNotificationsActivity extends AppCompatActivity {
             else if ("welcome".equals(type)) message = getString(R.string.notifications_welcome_message);
             else if ("success".equals(type)) {
                 String route = item.optString("route");
-                message = route.isBlank() ? getString(R.string.notification_sent_generic)
+                message = route.trim().isEmpty() ? getString(R.string.notification_sent_generic)
                         : getString(R.string.notification_sent_route, route);
             }
             ((TextView) card.findViewById(R.id.txtNotificationMessage)).setText(message);

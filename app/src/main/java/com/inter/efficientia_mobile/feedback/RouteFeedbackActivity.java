@@ -126,7 +126,7 @@ public class RouteFeedbackActivity extends AppCompatActivity {
     private void saveFeedback(String firebaseUid) {
         int userId = SessionManager.userId(this);
         String userName = SessionManager.userName(this);
-        if (userName.isBlank()) {
+        if (userName.trim().isEmpty()) {
             userName = "Motorista";
         }
 

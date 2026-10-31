@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -166,8 +167,13 @@ public class DriverSettingsActivity extends AppCompatActivity {
 
     private String versionName() {
         try {
-            String name = getPackageManager().getPackageInfo(getPackageName(),
-                    PackageManager.PackageInfoFlags.of(0)).versionName;
+            String name;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                name = getPackageManager().getPackageInfo(getPackageName(),
+                        PackageManager.PackageInfoFlags.of(0)).versionName;
+            } else {
+                name = getPackageManager().getPackageInfo(getPackageName(), 0).versionName;
+            }
             return name == null ? "" : name;
         } catch (PackageManager.NameNotFoundException ignored) {
             return "";

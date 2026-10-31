@@ -52,13 +52,13 @@ public final class DriverNotificationStore {
 
     public static void reportSent(Context context, String route) {
         add(context, "success", context.getString(R.string.notification_sent_title),
-                route.isBlank() ? context.getString(R.string.notification_sent_generic)
+                route.trim().isEmpty() ? context.getString(R.string.notification_sent_generic)
                         : context.getString(R.string.notification_sent_route, route), route);
     }
 
     public static void reportFailed(Context context, String message) {
         add(context, "error", context.getString(R.string.notification_failed_title),
-                message == null || message.isBlank() ? context.getString(R.string.notification_failed_generic)
+                message == null || message.trim().isEmpty() ? context.getString(R.string.notification_failed_generic)
                         : message);
     }
 
@@ -73,8 +73,8 @@ public final class DriverNotificationStore {
 
     private static void add(Context context, String type, String title, String message, String route) {
         if (!DriverPreferences.notificationsEnabled(context)) return;
-        if (SessionManager.userId(context) <= 0 || title == null || title.isBlank()
-                || message == null || message.isBlank()) return;
+        if (SessionManager.userId(context) <= 0 || title == null || title.trim().isEmpty()
+                || message == null || message.trim().isEmpty()) return;
         JSONArray existing = list(context);
         JSONArray updated = new JSONArray();
         try {

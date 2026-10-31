@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/documentsRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/main_home_background">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/tabletDocumentsScroll"
+        android:layout_width="540dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:paddingBottom="104dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="24dp"
+            android:paddingTop="22dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="24dp">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/btnDocumentsTopHome"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/home_icon_description"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_nav_home"
+                        app:tint="#1552A1" />
+
+                    <ImageButton
+                        android:id="@+id/btnDocumentsNotifications"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/notification_icon_description"
+                        android:padding="10dp"
+                        android:src="@drawable/ic_home_notification" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/imgDocumentsProfile"
+                    android:layout_width="54dp"
+                    android:layout_height="54dp"
+                    android:layout_gravity="end|center_vertical"
+                    android:background="@drawable/main_home_profile_background"
+                    android:contentDescription="@string/main_home_profile_description"
+                    android:padding="6dp"
+                    android:src="@drawable/ic_profile_placeholder" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:text="@string/documents_title"
+                android:textColor="#062A68"
+                android:textSize="23sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/documents_subtitle"
+                android:textColor="#36557D"
+                android:textSize="11sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnDocumentsNew"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/main_home_action_green"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:text="@string/main_home_reports"
+                android:textAllCaps="false"
+                android:textColor="#002060"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:text="@string/documents_history"
+                android:textColor="#062A68"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/txtDocumentsState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:textColor="#36557D"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:id="@+id/documentsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnDocumentsAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="88dp"
+        android:contentDescription="@string/main_home_add_report"
+        android:src="@drawable/ic_add"
+        app:backgroundTint="#55DD71"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/tabletDocumentsScroll"
+        app:maxImageSize="25dp"
+        app:tint="#063277" />
+
+    <LinearLayout
+        android:layout_width="540dp"
+        android:layout_height="68dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/main_home_bottom_bar"
+        android:elevation="14dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <FrameLayout android:id="@+id/navDocumentsHome" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:foreground="?attr/selectableItemBackgroundBorderless">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:layout_gravity="center" android:contentDescription="@string/home_icon_description" android:src="@drawable/ic_nav_home" />
+        </FrameLayout>
+        <FrameLayout android:id="@+id/navDocumentsProfile" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:foreground="?attr/selectableItemBackgroundBorderless">
+            <ImageView android:layout_width="28dp" android:layout_height="28dp" android:layout_gravity="center" android:contentDescription="@string/main_home_profile_description" android:src="@drawable/ic_nav_profile" />
+        </FrameLayout>
+        <FrameLayout android:id="@+id/navDocumentsDocuments" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:foreground="?attr/selectableItemBackgroundBorderless">
+            <ImageView android:layout_width="48dp" android:layout_height="48dp" android:layout_gravity="center" android:background="@drawable/main_home_nav_selected" android:contentDescription="@string/main_home_documents_description" android:padding="11dp" android:src="@drawable/ic_nav_document" />
+        </FrameLayout>
+        <FrameLayout android:id="@+id/navDocumentsAssistant" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:foreground="?attr/selectableItemBackgroundBorderless">
+            <ImageView android:layout_width="30dp" android:layout_height="30dp" android:layout_gravity="center" android:contentDescription="@string/main_home_assistant_description" android:src="@drawable/ic_nav_assistant" />
+        </FrameLayout>
+        <FrameLayout android:id="@+id/navDocumentsSettings" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:foreground="?attr/selectableItemBackgroundBorderless">
+            <ImageView android:layout_width="29dp" android:layout_height="29dp" android:layout_gravity="center" android:contentDescription="@string/main_home_settings_description" android:src="@drawable/ic_nav_settings" />
+        </FrameLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -100,7 +100,7 @@ final class RouteDiarySync {
                         for (String key : new String[]{"detail", "message", "title", "error"}) {
                             if (problem.has(key) && problem.get(key).isJsonPrimitive()) {
                                 String value = problem.get(key).getAsString();
-                                if (!value.isBlank() && readable.indexOf(value) < 0)
+                                if (!value.trim().isEmpty() && readable.indexOf(value) < 0)
                                     readable.append("\n").append(value);
                             }
                         }

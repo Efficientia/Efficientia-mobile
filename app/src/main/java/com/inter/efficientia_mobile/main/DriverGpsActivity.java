@@ -101,7 +101,7 @@ public class DriverGpsActivity extends AppCompatActivity implements OnMapReadyCa
         findViewById(R.id.btnGpsMyLocation).setOnClickListener(view -> requestCurrentLocation());
         findViewById(R.id.btnGpsDirections).setOnClickListener(view -> openDirections());
 
-        if (BuildConfig.MAPS_API_KEY.isBlank()) {
+        if (BuildConfig.MAPS_API_KEY.trim().isEmpty()) {
             showStatus(R.string.gps_key_missing);
             return;
         }
@@ -163,7 +163,7 @@ public class DriverGpsActivity extends AppCompatActivity implements OnMapReadyCa
                                    List<String> attributions) {
         selectedLocation = point;
         if (selectedMarker != null) selectedMarker.remove();
-        String title = name == null || name.isBlank() ? getString(R.string.gps_selected_point) : name;
+        String title = name == null || name.trim().isEmpty() ? getString(R.string.gps_selected_point) : name;
         selectedName = title;
         selectedAddress = address;
         selectedAttributions = attributions == null ? null : new ArrayList<>(attributions);
