@@ -8,6 +8,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonElement;
 import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.TechnicalDetails;
+import com.inter.efficientia_mobile.FriendlyHttpError;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
@@ -59,7 +61,8 @@ final class RouteDiarySync {
                                 .setNegativeButton(R.string.main_home_delete_cancel, null)
                                 .show();
                     } else {
-                        syncError(activity, error(activity, response, id > 0),
+                        syncError(activity, FriendlyHttpError.message(activity, response.code()),
+                                error(activity, response, id > 0),
                                 () -> saveAndContinue(activity, draft, button, continueFlow));
                     }
                 }
@@ -69,17 +72,24 @@ final class RouteDiarySync {
                 if (!activity.isFinishing() && !activity.isDestroyed())
                     syncError(activity,
                             activity.getString(R.string.draft_offline),
+                            failure.toString(),
                             () -> saveAndContinue(activity, draft, button, continueFlow));
             }
         });
     }
 
     private static void syncError(Activity activity, String message, Runnable retry) {
-        new AlertDialog.Builder(activity).setTitle(R.string.draft_not_synced_title)
+        syncError(activity, message, null, retry);
+    }
+
+    private static void syncError(Activity activity, String message, String details, Runnable retry) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity).setTitle(R.string.draft_not_synced_title)
                 .setMessage(message + "\n\n" + activity.getString(R.string.draft_cannot_advance))
                 .setPositiveButton(R.string.draft_try_again, (dialog, which) -> retry.run())
-                .setNegativeButton(R.string.draft_back_to_form, null)
-                .show();
+                .setNegativeButton(R.string.draft_back_to_form, null);
+        if (details != null) builder.setNeutralButton(R.string.technical_details,
+                (dialog, which) -> TechnicalDetails.show(activity, details));
+        builder.show();
     }
 
     private static String error(Activity activity, Response<?> response, boolean updating) {

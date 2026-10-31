@@ -24,6 +24,8 @@ import com.inter.efficientia_mobile.models.LoginRequest;
 import com.inter.efficientia_mobile.models.LoginResponse;
 import com.inter.efficientia_mobile.network.AuthService;
 import com.inter.efficientia_mobile.network.RetrofitClient;
+import com.inter.efficientia_mobile.TechnicalDetails;
+import com.inter.efficientia_mobile.FriendlyHttpError;
 import com.inter.efficientia_mobile.splash.AuthenticatedSplashActivity;
 
 import org.json.JSONObject;
@@ -246,19 +248,32 @@ public class LoginMotoristaActivity extends AppCompatActivity {
                         } catch (Exception ignored) {
                         }
                     }
-                    mostrarErro(errorMessage);
+                    mostrarErro(response.code() == 401
+                                    ? getString(R.string.login_invalid_credentials)
+                                    : FriendlyHttpError.message(LoginMotoristaActivity.this, response.code()),
+                            "HTTP " + response.code() + "\n" + errorMessage);
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 if (isFinishing() || isDestroyed()) return;
-                mostrarErro(getString(R.string.login_connection_error));
+                mostrarErro(getString(R.string.login_connection_error), t.toString());
             }
 
             private void mostrarErro(String msg) {
                 setLoginEmAndamento(false);
                 Toast.makeText(LoginMotoristaActivity.this, msg, Toast.LENGTH_LONG).show();
+            }
+
+            private void mostrarErro(String msg, String details) {
+                setLoginEmAndamento(false);
+                new android.app.AlertDialog.Builder(LoginMotoristaActivity.this)
+                        .setMessage(msg)
+                        .setPositiveButton(R.string.dialog_understood, null)
+                        .setNeutralButton(R.string.technical_details, (dialog, which) ->
+                                TechnicalDetails.show(LoginMotoristaActivity.this, details))
+                        .show();
             }
         });
     }

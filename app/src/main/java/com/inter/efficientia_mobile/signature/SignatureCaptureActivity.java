@@ -1,6 +1,8 @@
 package com.inter.efficientia_mobile.signature;
 
 import android.app.AlertDialog;
+import com.inter.efficientia_mobile.TechnicalDetails;
+import com.inter.efficientia_mobile.FriendlyHttpError;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
@@ -184,16 +186,20 @@ public class SignatureCaptureActivity extends AppCompatActivity {
     private void showUploadError(String error) {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.signature_upload_error_title)
-                .setMessage(error)
+                .setMessage(error.startsWith("HTTP ")
+                        ? FriendlyHttpError.message(this, parseHttpStatus(error)) : error)
                 .setPositiveButton(R.string.signature_upload_error_close, (dialog, which) -> dialog.dismiss())
-                .setNeutralButton(R.string.signature_upload_error_copy, (dialog, which) -> {
-                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    if (clipboard != null) {
-                        clipboard.setPrimaryClip(ClipData.newPlainText("Erro ao salvar assinatura", error));
-                        Toast.makeText(this, R.string.signature_upload_error_copied, Toast.LENGTH_SHORT).show();
-                    }
-                })
+                .setNeutralButton(R.string.technical_details, (dialog, which) ->
+                        TechnicalDetails.show(this, error))
                 .show();
+    }
+
+    private int parseHttpStatus(String error) {
+        try {
+            return Integer.parseInt(error.substring(5).split("\\s", 2)[0]);
+        } catch (NumberFormatException ignored) {
+            return 0;
+        }
     }
 
     private Bitmap renderTypedSignature() {

@@ -22,6 +22,8 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.FriendlyHttpError;
+import com.inter.efficientia_mobile.TechnicalDetails;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.CinttiaClient;
 import com.inter.efficientia_mobile.network.CinttiaService;
@@ -177,7 +179,10 @@ public class CinttiaActivity extends AppCompatActivity {
                 send.setEnabled(true);
                 CinttiaService.ChatEnvelope envelope = response.body();
                 if (!response.isSuccessful()) {
-                    status.setText(getString(R.string.cinttia_http_error, response.code()));
+                    status.setText(FriendlyHttpError.message(CinttiaActivity.this, response.code()));
+                    TechnicalDetails.showError(CinttiaActivity.this,
+                            FriendlyHttpError.message(CinttiaActivity.this, response.code()),
+                            "CinttIA: HTTP " + response.code());
                     prepareRetry(message);
                 } else if (envelope == null || envelope.response == null
                         || envelope.response.resposta == null || envelope.response.resposta.trim().isEmpty()) {
@@ -196,6 +201,8 @@ public class CinttiaActivity extends AppCompatActivity {
                 activeCall = null;
                 send.setEnabled(true);
                 status.setText(R.string.cinttia_network_error);
+                TechnicalDetails.showError(CinttiaActivity.this,
+                        getString(R.string.cinttia_network_error), error.toString());
                 prepareRetry(message);
             }
         });
@@ -222,7 +229,7 @@ public class CinttiaActivity extends AppCompatActivity {
 
     private void addBubble(String text, boolean mine) {
         TextView bubble = new TextView(this);
-        bubble.setText(text);
+        bubble.setText(mine ? text : CinttiaMarkdown.render(text));
         bubble.setTextSize(15);
         bubble.setTextColor(mine ? Color.WHITE : Color.rgb(5, 39, 95));
         int pad = dp(14);

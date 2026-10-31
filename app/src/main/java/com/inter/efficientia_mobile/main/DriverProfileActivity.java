@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.EditText;
+import android.text.InputType;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -109,7 +111,7 @@ public class DriverProfileActivity extends AppCompatActivity {
             SessionManager.clear(this);
             returnToStart();
         });
-        findViewById(R.id.btnEditDriverProfile).setOnClickListener(view -> showPhotoDialog());
+        findViewById(R.id.btnEditDriverProfile).setOnClickListener(view -> showEditOptions());
         findViewById(R.id.imgDriverProfile).setOnClickListener(view -> showPhotoDialog());
         findViewById(R.id.btnDriverPreferences).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DriverSettingsActivity.class));
@@ -165,6 +167,45 @@ public class DriverProfileActivity extends AppCompatActivity {
             });
         });
         photoDialog.show();
+    }
+
+    private void showEditOptions() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.profile_edit)
+                .setItems(new String[]{getString(R.string.profile_edit_name),
+                        getString(R.string.profile_edit_photo)}, (dialog, choice) -> {
+                    if (choice == 0) showNameDialog();
+                    else showPhotoDialog();
+                }).show();
+    }
+
+    private void showNameDialog() {
+        EditText nameInput = new EditText(this);
+        int padding = (int) (24 * getResources().getDisplayMetrics().density);
+        nameInput.setPadding(padding, padding / 2, padding, padding / 2);
+        nameInput.setSingleLine(true);
+        nameInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        nameInput.setText(SessionManager.userName(this));
+        nameInput.selectAll();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.profile_edit_name)
+                .setView(nameInput)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.profile_save, null)
+                .create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(view -> {
+                    String name = nameInput.getText().toString().trim();
+                    if (name.isEmpty()) {
+                        nameInput.setError(getString(R.string.profile_name_required));
+                        return;
+                    }
+                    SessionManager.updateUserName(this, name);
+                    ((TextView) findViewById(R.id.txtDriverProfileGreeting))
+                            .setText(getString(R.string.main_home_greeting, name));
+                    dialog.dismiss();
+                }));
+        dialog.show();
     }
 
     private void openCamera() {

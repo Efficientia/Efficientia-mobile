@@ -155,7 +155,7 @@ public final class DriverSignatureRepository {
     }
 
     private static String uploadError(Context context, Response<ResponseBody> response) {
-        String prefix = context.getString(R.string.signature_upload_http_error, response.code());
+        String prefix = "HTTP " + response.code();
         if (response.errorBody() == null) return prefix;
         try {
             String body = response.errorBody().string();

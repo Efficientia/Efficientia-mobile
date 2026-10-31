@@ -56,9 +56,23 @@ public final class SessionManager {
     }
 
     public static String userName(Context context) {
+        int userId = userId(context);
+        if (userId > 0) {
+            String edited = context.getSharedPreferences("driver_profile_names", Context.MODE_PRIVATE)
+                    .getString("name_" + userId, null);
+            if (edited != null && !edited.trim().isEmpty()) return edited.trim();
+        }
         String name = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
                 .getString("usuario_nome", "");
         return name == null ? "" : name.trim();
+    }
+
+    public static void updateUserName(Context context, String name) {
+        int userId = userId(context);
+        if (userId > 0) {
+            context.getSharedPreferences("driver_profile_names", Context.MODE_PRIVATE)
+                    .edit().putString("name_" + userId, name.trim()).apply();
+        }
     }
 
     public static int userId(Context context) {
