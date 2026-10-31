@@ -97,7 +97,7 @@ final class RouteDiaryPayload {
     }
 
     private static boolean hasCompleteStop(RouteDiaryDraft draft) {
-        return !draft.get(R.id.inputRouteStopReason).isBlank()
+        return !draft.get(R.id.inputRouteStopReason).trim().isEmpty()
                 && draft.get(R.id.inputRouteStopReason).length() <= 255
                 && !isoDate(draft.get(R.id.inputRouteStopDate)).isEmpty()
                 && draft.get(R.id.inputRouteStopStart).matches("\\d{2}:\\d{2}")
@@ -109,7 +109,7 @@ final class RouteDiaryPayload {
         if (!count.matches("\\d+")) return false;
         try {
             return Integer.parseInt(count) > 0
-                    && !draft.get(R.id.inputRouteAnomalyDescription).isBlank()
+                    && !draft.get(R.id.inputRouteAnomalyDescription).trim().isEmpty()
                     && draft.get(R.id.inputRouteAnomalyDescription).length() <= 150;
         } catch (NumberFormatException ignored) {
             return false;
@@ -124,7 +124,7 @@ final class RouteDiaryPayload {
     }
 
     private static void string(JsonObject target, String name, String value) {
-        if (value != null && !value.isBlank()) target.addProperty(name, value.trim());
+        if (value != null && !value.trim().isEmpty()) target.addProperty(name, value.trim());
     }
 
     private static void integer(JsonObject target, String name, String value) {

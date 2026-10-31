@@ -51,9 +51,9 @@ final class RouteDiarySubmitter {
             explain(activity.getString(R.string.submit_session_expired));
             return;
         }
-        if ((draft.get("fazenda_id").isEmpty() && draft.get(R.id.inputRouteOrigin).isBlank())
+        if ((draft.get("fazenda_id").isEmpty() && draft.get(R.id.inputRouteOrigin).trim().isEmpty())
                 || (draft.get("unidade_frigorifica_id").isEmpty()
-                && draft.get(R.id.inputRouteDestination).isBlank())) {
+                && draft.get(R.id.inputRouteDestination).trim().isEmpty())) {
             explain(activity.getString(R.string.submit_missing_locations));
             return;
         }
