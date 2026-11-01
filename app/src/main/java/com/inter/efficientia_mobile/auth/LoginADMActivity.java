@@ -2,6 +2,10 @@ package com.inter.efficientia_mobile.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -38,11 +42,13 @@ public class LoginADMActivity extends AppCompatActivity {
                 this, findViewById(R.id.main), true);
 
         cnpjField = findViewById(R.id.et_cnpj);
+        configurarMascaraCnpj();
         passwordField = findViewById(R.id.et_senha);
         advanceButton = findViewById(R.id.btn_avancar);
         findViewById(R.id.btn_voltar).setOnClickListener(v -> finish());
         findViewById(R.id.tv_esqueci_senha).setOnClickListener(v ->
-                startActivity(new Intent(this, SelecaoRecuperarActivity.class)));
+                startActivity(new Intent(this, SelecaoRecuperarActivity.class)
+                        .putExtra(CodigoCampoActivity.EXTRA_PERFIL, CodigoCampoActivity.PERFIL_ADMIN)));
         ImageView toggle = findViewById(R.id.btn_toggle_senha);
         toggle.setOnClickListener(v -> {
             int selection = passwordField.getSelectionStart();
@@ -54,6 +60,52 @@ public class LoginADMActivity extends AppCompatActivity {
             passwordField.setSelection(Math.max(0, selection));
         });
         advanceButton.setOnClickListener(v -> login());
+    }
+
+    private void configurarMascaraCnpj() {
+        cnpjField.setKeyListener(DigitsKeyListener.getInstance("0123456789./-"));
+        cnpjField.setRawInputType(InputType.TYPE_CLASS_NUMBER);
+        cnpjField.addTextChangedListener(new TextWatcher() {
+            private boolean formatando;
+            private int separadorApagado = -1;
+
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (!formatando && count == 1 && after == 0
+                        && (s.charAt(start) == '.' || s.charAt(start) == '/' || s.charAt(start) == '-')) {
+                    separadorApagado = start;
+                } else separadorApagado = -1;
+            }
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { }
+            @Override public void afterTextChanged(Editable editable) {
+                if (formatando) return;
+                int cursor = Math.max(0, cnpjField.getSelectionStart());
+                int digitsBefore = editable.subSequence(0, cursor).toString().replaceAll("[^0-9]", "").length();
+                String digits = editable.toString().replaceAll("[^0-9]", "");
+                if (separadorApagado >= 0 && digitsBefore > 0) {
+                    digits = digits.substring(0, digitsBefore - 1) + digits.substring(digitsBefore);
+                    digitsBefore--;
+                }
+                if (digits.length() > 14) digits = digits.substring(0, 14);
+                StringBuilder masked = new StringBuilder();
+                for (int i = 0; i < digits.length(); i++) {
+                    if (i == 2 || i == 5) masked.append('.');
+                    if (i == 8) masked.append('/');
+                    if (i == 12) masked.append('-');
+                    masked.append(digits.charAt(i));
+                }
+                String value = masked.toString();
+                if (value.contentEquals(editable)) return;
+                int position = 0, seen = 0;
+                while (position < value.length() && seen < digitsBefore) {
+                    if (Character.isDigit(value.charAt(position))) seen++;
+                    position++;
+                }
+                formatando = true;
+                editable.replace(0, editable.length(), value);
+                cnpjField.setSelection(position);
+                formatando = false;
+            }
+        });
     }
 
     private void login() {

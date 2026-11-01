@@ -255,10 +255,10 @@
     <string name="route_summary_arrival_format">%1$d de pie • %2$d tumbados • %3$d muertos • %4$d emergencias</string>
     <string name="route_summary_duration_format">%1$dh %2$02dmin</string>
     <string name="route_collected_signatures">Firmas recogidas</string>
-    <string name="route_submit">Finalizar ruta y enviar diario</string>
-    <string name="route_submit_front_only">Pantalla completada. El envío estará disponible pronto.</string>
+    <string name="route_submit">Finalizar ruta</string>
+    <string name="route_submit_front_only">Pantalla completada.</string>
     <string name="route_launch_title">¡Diario de ruta completado!</string>
-    <string name="route_launch_pending_api">El envío estará disponible pronto.</string>
+    <string name="route_launch_pending_api">El diario de ruta se envió correctamente.</string>
     <string name="route_launch_check_description">Etapa completada</string>
     <string name="vehicles_back">Volver al inicio</string>
     <string name="vehicles_title">Mis vehículos</string>

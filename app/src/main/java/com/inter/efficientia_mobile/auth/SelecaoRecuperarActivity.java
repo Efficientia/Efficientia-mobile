@@ -21,6 +21,8 @@ public class SelecaoRecuperarActivity extends AppCompatActivity {
         // Enviar código único
         findViewById(R.id.btnEnviarCodigo).setOnClickListener(v -> {
             Intent intent = new Intent(SelecaoRecuperarActivity.this, CodigoCampoActivity.class);
+            intent.putExtra(CodigoCampoActivity.EXTRA_PERFIL,
+                    getIntent().getStringExtra(CodigoCampoActivity.EXTRA_PERFIL));
             startActivity(intent);
         });
     }

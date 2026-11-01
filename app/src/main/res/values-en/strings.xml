@@ -255,10 +255,10 @@
     <string name="route_summary_arrival_format">%1$d standing • %2$d lying down • %3$d dead • %4$d emergencies</string>
     <string name="route_summary_duration_format">%1$dh %2$02dmin</string>
     <string name="route_collected_signatures">Collected signatures</string>
-    <string name="route_submit">End route and submit diary</string>
-    <string name="route_submit_front_only">Screen complete. Sending will be available soon.</string>
+    <string name="route_submit">End route</string>
+    <string name="route_submit_front_only">Screen complete.</string>
     <string name="route_launch_title">Route diary completed!</string>
-    <string name="route_launch_pending_api">Sending will be available soon.</string>
+    <string name="route_launch_pending_api">Your route diary was sent successfully.</string>
     <string name="route_launch_check_description">Step completed</string>
     <string name="vehicles_back">Back to home</string>
     <string name="vehicles_title">My vehicles</string>

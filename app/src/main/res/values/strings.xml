@@ -246,10 +246,10 @@
     <string name="route_summary_arrival_format">%1$d em pé • %2$d deitados • %3$d mortos • %4$d emergências</string>
     <string name="route_summary_duration_format">%1$dh %2$02dmin</string>
     <string name="route_collected_signatures">Assinaturas coletadas</string>
-    <string name="route_submit">Encerrar rota e lançar diário</string>
-    <string name="route_submit_front_only">Tela concluída. O envio estará disponível em breve.</string>
+    <string name="route_submit">Encerrar rota</string>
+    <string name="route_submit_front_only">Tela concluída.</string>
     <string name="route_launch_title">Diário de rota concluído!</string>
-    <string name="route_launch_pending_api">O envio estará disponível em breve.</string>
+    <string name="route_launch_pending_api">Seu diário foi enviado com sucesso.</string>
     <string name="route_launch_check_description">Etapa concluída</string>
     <string name="vehicles_back">Voltar para a home</string>
     <string name="vehicles_title">Meus veículos</string>

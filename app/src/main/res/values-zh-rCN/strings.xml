@@ -255,10 +255,10 @@
     <string name="route_summary_arrival_format">站立 %1$d • 躺卧 %2$d • 死亡 %3$d • 紧急 %4$d</string>
     <string name="route_summary_duration_format">%1$dh %2$02dmin</string>
     <string name="route_collected_signatures">已收集的签名</string>
-    <string name="route_submit">结束路线并提交日志</string>
-    <string name="route_submit_front_only">页面已完成。发送功能即将推出。</string>
+    <string name="route_submit">结束路线</string>
+    <string name="route_submit_front_only">页面已完成。</string>
     <string name="route_launch_title">行程日志已完成！</string>
-    <string name="route_launch_pending_api">发送功能即将推出。</string>
+    <string name="route_launch_pending_api">路线日志已成功发送。</string>
     <string name="route_launch_check_description">步骤已完成</string>
     <string name="vehicles_back">返回主页</string>
     <string name="vehicles_title">我的车辆</string>

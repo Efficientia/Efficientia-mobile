@@ -71,7 +71,8 @@ public class LoginMotoristaActivity extends AppCompatActivity {
 
         // Link "Esqueci minha senha"
         txtEsqueciSenha.setOnClickListener(v ->
-                startActivity(new Intent(LoginMotoristaActivity.this, SelecaoRecuperarActivity.class)));
+                startActivity(new Intent(LoginMotoristaActivity.this, SelecaoRecuperarActivity.class)
+                        .putExtra(CodigoCampoActivity.EXTRA_PERFIL, CodigoCampoActivity.PERFIL_MOTORISTA)));
     }
 
     private void configurarCampos() {

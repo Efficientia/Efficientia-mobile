@@ -42,12 +42,12 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         findViewById(R.id.btnSearchRouteOrigin).setOnClickListener(view -> RouteLocationPicker.show(this, true, (id, name) -> {
             origin.setText(name);
             draft.put(R.id.inputRouteOrigin, name);
-            draft.put("fazenda_id", String.valueOf(id));
+            draft.put("fazenda_id", id > 0 ? String.valueOf(id) : "");
         }));
         findViewById(R.id.btnSearchRouteDestination).setOnClickListener(view -> RouteLocationPicker.show(this, false, (id, name) -> {
             destination.setText(name);
             draft.put(R.id.inputRouteDestination, name);
-            draft.put("unidade_frigorifica_id", String.valueOf(id));
+            draft.put("unidade_frigorifica_id", id > 0 ? String.valueOf(id) : "");
         }));
 
         com.inter.efficientia_mobile.FormKeyboardInsets.install(

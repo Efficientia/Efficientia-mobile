@@ -255,10 +255,10 @@
     <string name="route_summary_arrival_format">立位 %1$d • 横臥 %2$d • 死亡 %3$d • 緊急 %4$d</string>
     <string name="route_summary_duration_format">%1$dh %2$02dmin</string>
     <string name="route_collected_signatures">収集した署名</string>
-    <string name="route_submit">運行を終了して日誌を送信</string>
-    <string name="route_submit_front_only">画面は完了しました。送信は近日利用可能になります。</string>
+    <string name="route_submit">運行を終了</string>
+    <string name="route_submit_front_only">画面が完了しました。</string>
     <string name="route_launch_title">運行日誌が完成しました！</string>
-    <string name="route_launch_pending_api">送信は近日利用可能になります。</string>
+    <string name="route_launch_pending_api">運行日誌を送信しました。</string>
     <string name="route_launch_check_description">ステップ完了</string>
     <string name="vehicles_back">ホームに戻る</string>
     <string name="vehicles_title">車両一覧</string>
