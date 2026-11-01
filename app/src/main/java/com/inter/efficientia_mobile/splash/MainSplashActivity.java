@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.LoginGeralActivity;
 import com.inter.efficientia_mobile.auth.SessionManager;
+import com.inter.efficientia_mobile.main.MainADMActivity;
 
 @SuppressLint("CustomSplashScreen")
 public class MainSplashActivity extends AppCompatActivity {
@@ -24,7 +25,8 @@ public class MainSplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Class<?> destination = SessionManager.authorizationHeader(MainSplashActivity.this) == null
-                        ? LoginGeralActivity.class : AuthenticatedSplashActivity.class;
+                        ? LoginGeralActivity.class : SessionManager.isAdmin(MainSplashActivity.this)
+                        ? MainADMActivity.class : AuthenticatedSplashActivity.class;
                 startActivity(new Intent(MainSplashActivity.this, destination));
                 finish();
             }

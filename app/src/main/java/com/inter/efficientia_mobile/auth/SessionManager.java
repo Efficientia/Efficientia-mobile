@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 
 import com.inter.efficientia_mobile.models.LoginResponse;
+import com.inter.efficientia_mobile.models.AdminLoginResponse;
 import com.inter.efficientia_mobile.models.Usuario;
 
 import org.json.JSONObject;
@@ -45,6 +46,33 @@ public final class SessionManager {
         }
         editor.apply();
     }
+
+    public static void saveAdmin(Context context, AdminLoginResponse response) {
+        driverSignatureVerifiedThisProcess = false;
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .edit().clear()
+                .putString("token", response.getToken())
+                .putString("token_type", response.getTokenType() == null
+                        || response.getTokenType().trim().isEmpty() ? "Bearer" : response.getTokenType())
+                .putString("usuario_tipo", "ADMIN");
+        if (response.getAdmin() != null) {
+            editor.putString("usuario_nome", response.getAdmin().getNome())
+                    .putString("usuario_email", response.getAdmin().getEmail())
+                    .putString("usuario_telefone", response.getAdmin().getTelefone())
+                    .putString("admin_cargo", response.getAdmin().getCargo());
+        }
+        if (response.getEmpresa() != null)
+            editor.putString("admin_empresa", response.getEmpresa().getNomeEmpresa());
+        editor.apply();
+    }
+
+    public static boolean isAdmin(Context context) {
+        return "ADMIN".equals(context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .getString("usuario_tipo", ""));
+    }
+
+    public static String adminRole(Context context) { return userField(context, "admin_cargo"); }
+    public static String adminCompany(Context context) { return userField(context, "admin_empresa"); }
 
     public static String authorizationHeader(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(

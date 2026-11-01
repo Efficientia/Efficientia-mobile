@@ -19,6 +19,10 @@ import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
 public interface RouteDiaryService {
+    @GET("api/v1/relatorios-viagem")
+    Call<JsonObject> listAll(@Header("Authorization") String authorization,
+                             @Query("pagina") int page, @Query("tamanho") int size);
+
     @GET("api/v1/relatorios-viagem/me")
     Call<JsonObject> listMine(@Header("Authorization") String authorization,
                               @Query("pagina") int page, @Query("tamanho") int size);
