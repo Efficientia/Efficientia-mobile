@@ -6,29 +6,15 @@
     android:layout_marginEnd="10dp"
     android:background="@drawable/main_home_welcome_card"
     android:elevation="10dp"
-    android:minHeight="142dp"
+    android:minHeight="104dp"
     android:orientation="vertical"
-    android:padding="20dp">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ibm_plex_sans_semibold"
-        android:text="@string/admin_home_title"
-        android:textColor="#FFFFFF"
-        android:textSize="20sp" />
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/admin_home_subtitle"
-        android:textColor="#D8ECFF"
-        android:textSize="13sp" />
+        android:gravity="center_vertical"
+        android:padding="20dp">
     <TextView
         android:id="@+id/adminSummaryCount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
         android:fontFamily="@font/ibm_plex_sans_semibold"
         android:textColor="#72E892"
-        android:textSize="14sp" />
+        android:textSize="19sp" />
 </LinearLayout>

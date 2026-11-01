@@ -84,6 +84,12 @@ public final class SessionManager {
     }
 
     public static String userName(Context context) {
+        if (isAdmin(context)) {
+            String email = userEmail(context);
+            String edited = context.getSharedPreferences("admin_profile_names", Context.MODE_PRIVATE)
+                    .getString("name_" + email.toLowerCase(java.util.Locale.ROOT), null);
+            if (edited != null && !edited.trim().isEmpty()) return edited.trim();
+        }
         int userId = userId(context);
         if (userId > 0) {
             String edited = context.getSharedPreferences("driver_profile_names", Context.MODE_PRIVATE)
@@ -96,6 +102,12 @@ public final class SessionManager {
     }
 
     public static void updateUserName(Context context, String name) {
+        if (isAdmin(context)) {
+            String email = userEmail(context);
+            context.getSharedPreferences("admin_profile_names", Context.MODE_PRIVATE)
+                    .edit().putString("name_" + email.toLowerCase(java.util.Locale.ROOT), name.trim()).apply();
+            return;
+        }
         int userId = userId(context);
         if (userId > 0) {
             context.getSharedPreferences("driver_profile_names", Context.MODE_PRIVATE)

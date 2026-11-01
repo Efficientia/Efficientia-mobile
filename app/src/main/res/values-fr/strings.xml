@@ -486,4 +486,5 @@
     <string name="admin_help">Aide et assistance</string>
     <string name="admin_help_summary">Centre d’aide</string>
     <string name="admin_help_pending">L’assistance administrative sera ajoutée plus tard.</string>
+    <string name="admin_help_subject">Aide sur l’application Efficientia</string>
 </resources>

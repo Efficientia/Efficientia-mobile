@@ -2,6 +2,8 @@ package com.inter.efficientia_mobile.main;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -9,6 +11,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -33,6 +37,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,6 +60,8 @@ public class CinttiaActivity extends AppCompatActivity {
     private String retryMessage;
     private JSONArray history = new JSONArray();
     private Call<CinttiaService.ChatEnvelope> activeCall;
+    private View typingIndicator;
+    private final List<ObjectAnimator> typingAnimations = new ArrayList<>();
 
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,6 +149,7 @@ public class CinttiaActivity extends AppCompatActivity {
             activeCall = null;
         }
         send.setEnabled(true);
+        hideTypingIndicator();
         input.setText("");
         status.setText("");
         retryMessage = null;
@@ -167,8 +176,9 @@ public class CinttiaActivity extends AppCompatActivity {
             remember(message, true);
         }
         retryMessage = null;
-        status.setText(R.string.cinttia_thinking);
+        status.setText("");
         send.setEnabled(false);
+        showTypingIndicator();
         activeCall = CinttiaClient.service().chat(new CinttiaService.ChatPayload(
                 String.valueOf(SessionManager.userId(this)), sessionId, message));
         activeCall.enqueue(new Callback<CinttiaService.ChatEnvelope>() {
@@ -177,6 +187,7 @@ public class CinttiaActivity extends AppCompatActivity {
                 if (isFinishing() || isDestroyed() || call.isCanceled()) return;
                 activeCall = null;
                 send.setEnabled(true);
+                hideTypingIndicator();
                 CinttiaService.ChatEnvelope envelope = response.body();
                 if (!response.isSuccessful()) {
                     status.setText(FriendlyHttpError.message(CinttiaActivity.this, response.code()));
@@ -200,6 +211,7 @@ public class CinttiaActivity extends AppCompatActivity {
                 if (isFinishing() || isDestroyed() || call.isCanceled()) return;
                 activeCall = null;
                 send.setEnabled(true);
+                hideTypingIndicator();
                 status.setText(R.string.cinttia_network_error);
                 TechnicalDetails.showError(CinttiaActivity.this,
                         getString(R.string.cinttia_network_error), error.toString());
@@ -246,12 +258,75 @@ public class CinttiaActivity extends AppCompatActivity {
         scroll.post(() -> scroll.fullScroll(View.FOCUS_DOWN));
     }
 
+    private void showTypingIndicator() {
+        hideTypingIndicator();
+        LinearLayout bubble = new LinearLayout(this);
+        bubble.setGravity(Gravity.CENTER_VERTICAL);
+        bubble.setOrientation(LinearLayout.HORIZONTAL);
+        bubble.setPadding(dp(10), dp(7), dp(13), dp(7));
+        bubble.setContentDescription(getString(R.string.cinttia_thinking));
+        bubble.setFocusable(true);
+        GradientDrawable background = new GradientDrawable();
+        background.setColor(Color.rgb(213, 238, 251));
+        background.setCornerRadius(dp(18));
+        bubble.setBackground(background);
+
+        FrameLayout robotBadge = new FrameLayout(this);
+        GradientDrawable badgeBackground = new GradientDrawable();
+        badgeBackground.setColor(Color.rgb(21, 82, 161));
+        badgeBackground.setShape(GradientDrawable.OVAL);
+        robotBadge.setBackground(badgeBackground);
+        ImageView robot = new ImageView(this);
+        robot.setImageResource(R.drawable.ic_nav_assistant);
+        FrameLayout.LayoutParams robotParams = new FrameLayout.LayoutParams(dp(19), dp(19), Gravity.CENTER);
+        robotBadge.addView(robot, robotParams);
+        bubble.addView(robotBadge, new LinearLayout.LayoutParams(dp(28), dp(28)));
+
+        LinearLayout dots = new LinearLayout(this);
+        dots.setGravity(Gravity.CENTER_VERTICAL);
+        dots.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams dotsParams = new LinearLayout.LayoutParams(-2, dp(28));
+        dotsParams.setMarginStart(dp(7));
+        bubble.addView(dots, dotsParams);
+        for (int index = 0; index < 3; index++) {
+            TextView dot = new TextView(this);
+            dot.setText("•");
+            dot.setTextColor(Color.rgb(5, 39, 95));
+            dot.setTextSize(22);
+            dot.setGravity(Gravity.CENTER);
+            dots.addView(dot, new LinearLayout.LayoutParams(dp(11), dp(25)));
+            ObjectAnimator animation = ObjectAnimator.ofFloat(dot, View.ALPHA, .25f, 1f, .25f);
+            animation.setDuration(850L);
+            animation.setStartDelay(index * 170L);
+            animation.setRepeatCount(ValueAnimator.INFINITE);
+            animation.start();
+            typingAnimations.add(animation);
+        }
+
+        LinearLayout.LayoutParams bubbleParams = new LinearLayout.LayoutParams(-2, -2);
+        bubbleParams.gravity = Gravity.START;
+        bubbleParams.setMargins(0, dp(8), dp(54), 0);
+        messages.addView(bubble, bubbleParams);
+        typingIndicator = bubble;
+        scroll.post(() -> scroll.fullScroll(View.FOCUS_DOWN));
+    }
+
+    private void hideTypingIndicator() {
+        for (ObjectAnimator animation : typingAnimations) animation.cancel();
+        typingAnimations.clear();
+        if (typingIndicator != null) {
+            messages.removeView(typingIndicator);
+            typingIndicator = null;
+        }
+    }
+
     private int dp(int value) {
         return (int) (value * getResources().getDisplayMetrics().density + .5f);
     }
 
     @Override protected void onDestroy() {
         if (activeCall != null) activeCall.cancel();
+        hideTypingIndicator();
         super.onDestroy();
     }
 }

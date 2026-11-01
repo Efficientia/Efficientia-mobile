@@ -486,4 +486,5 @@
     <string name="admin_help">帮助与支持</string>
     <string name="admin_help_summary">帮助中心</string>
     <string name="admin_help_pending">管理员支持将在后续版本提供。</string>
+    <string name="admin_help_subject">Efficientia 应用帮助</string>
 </resources>

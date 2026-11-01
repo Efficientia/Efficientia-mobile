@@ -8,16 +8,22 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.core.content.FileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.os.LocaleListCompat;
 import androidx.core.view.ViewCompat;
@@ -33,6 +39,8 @@ import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +57,21 @@ public class MainADMActivity extends AppCompatActivity {
     private int requestGeneration;
     private boolean loaded;
     private String loadError = "";
+    private Uri pendingCameraUri;
+    private File pendingCameraFile;
+    private AlertDialog photoDialog;
+    private ImageView dialogPhoto;
+    private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
+            new ActivityResultContracts.TakePicture(), saved -> {
+                if (saved && pendingCameraUri != null) saveAdminPhoto(pendingCameraUri);
+                if (pendingCameraFile != null) pendingCameraFile.delete();
+                pendingCameraFile = null;
+                pendingCameraUri = null;
+            });
+    private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(), selected -> {
+                if (selected != null) saveAdminPhoto(selected);
+            });
     private final Handler refreshHandler = new Handler(Looper.getMainLooper());
     private final Runnable refreshReports = new Runnable() {
         @Override public void run() {
@@ -59,6 +82,12 @@ public class MainADMActivity extends AppCompatActivity {
 
     @Override protected void onCreate(Bundle state) {
         super.onCreate(state);
+        if (state != null) {
+            String uri = state.getString("admin_pending_camera_uri");
+            String path = state.getString("admin_pending_camera_path");
+            if (uri != null) pendingCameraUri = Uri.parse(uri);
+            if (path != null) pendingCameraFile = new File(path);
+        }
         if (!validAdminSession()) {
             returnToLogin();
             return;
@@ -90,6 +119,7 @@ public class MainADMActivity extends AppCompatActivity {
                 return;
             }
             if (section == HOME || section == NOTIFICATIONS) loadReports();
+            ProfilePhotoStore.show(this, findViewById(R.id.adminAvatar));
             refreshHandler.postDelayed(refreshReports, 60_000L);
         }
     }
@@ -101,6 +131,8 @@ public class MainADMActivity extends AppCompatActivity {
 
     @Override protected void onSaveInstanceState(Bundle state) {
         state.putInt("admin_section", section);
+        if (pendingCameraUri != null) state.putString("admin_pending_camera_uri", pendingCameraUri.toString());
+        if (pendingCameraFile != null) state.putString("admin_pending_camera_path", pendingCameraFile.getAbsolutePath());
         super.onSaveInstanceState(state);
     }
 
@@ -324,6 +356,32 @@ public class MainADMActivity extends AppCompatActivity {
     }
 
     private void renderProfile(LinearLayout content) {
+        LinearLayout identity = new LinearLayout(this);
+        identity.setGravity(android.view.Gravity.CENTER_VERTICAL);
+        identity.setOrientation(LinearLayout.HORIZONTAL);
+        ImageView avatar = new ImageView(this);
+        avatar.setId(View.generateViewId());
+        LinearLayout.LayoutParams avatarParams = new LinearLayout.LayoutParams(dp(76), dp(76));
+        avatarParams.setMarginEnd(dp(14));
+        identity.addView(avatar, avatarParams);
+        dialogPhoto = null;
+        ProfilePhotoStore.show(this, avatar);
+        avatar.setOnClickListener(v -> showPhotoDialog());
+        LinearLayout details = new LinearLayout(this);
+        details.setOrientation(LinearLayout.VERTICAL);
+        TextView name = new TextView(this);
+        name.setText(SessionManager.userName(this));
+        name.setTextColor(0xff062a68);
+        name.setTextSize(18);
+        name.setTypeface(getResources().getFont(R.font.ibm_plex_sans_semibold));
+        details.addView(name);
+        AppCompatButton edit = new AppCompatButton(this);
+        edit.setText(R.string.profile_edit);
+        edit.setAllCaps(false);
+        edit.setOnClickListener(v -> showEditOptions());
+        details.addView(edit, new LinearLayout.LayoutParams(-1, dp(42)));
+        identity.addView(details, new LinearLayout.LayoutParams(0, -2, 1));
+        content.addView(identity);
         button(content, R.string.profile_preferences, () -> showSection(SETTINGS));
         heading(content, R.string.profile_my_data);
         field(content, R.string.admin_field_role, SessionManager.adminRole(this));
@@ -347,9 +405,6 @@ public class MainADMActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                     showSection(SETTINGS);
                                 }).show());
-        option(content, R.string.admin_manage_drivers, R.string.admin_manage_drivers_summary,
-                () -> new AlertDialog.Builder(this).setMessage(R.string.admin_manage_drivers_pending)
-                        .setPositiveButton(android.R.string.ok, null).show());
         option(content, R.string.settings_language, R.string.settings_portuguese, this::chooseLanguage);
         option(content, R.string.settings_privacy, R.string.settings_permissions,
                 () -> startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
@@ -361,8 +416,7 @@ public class MainADMActivity extends AppCompatActivity {
         option(content, R.string.settings_accessibility, R.string.settings_accessibility_summary,
                 this::chooseAccessibility);
         option(content, R.string.admin_help, R.string.admin_help_summary,
-                () -> new AlertDialog.Builder(this).setMessage(R.string.admin_help_pending)
-                        .setPositiveButton(android.R.string.ok, null).show());
+                this::contactSupport);
         button(content, R.string.admin_logout, this::logout);
     }
 
@@ -380,19 +434,134 @@ public class MainADMActivity extends AppCompatActivity {
 
     private void chooseAccessibility() {
         boolean[] values = {DriverPreferences.highContrast(this),
-                DriverPreferences.darkBlue(this), DriverPreferences.largeText(this)};
+                DriverPreferences.darkBlue(this), DriverPreferences.largeText(this),
+                DriverPreferences.dyslexiaReading(this), DriverPreferences.readAloud(this)};
         new AlertDialog.Builder(this).setTitle(R.string.settings_accessibility)
                 .setMultiChoiceItems(new String[]{getString(R.string.settings_high_contrast),
-                        getString(R.string.settings_dark_blue), getString(R.string.settings_large_text)},
+                        getString(R.string.settings_dark_blue), getString(R.string.settings_large_text),
+                        getString(R.string.settings_dyslexia_reading),
+                        getString(R.string.settings_read_aloud)},
                         values, (dialog, index, checked) -> values[index] = checked)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> {
                     DriverPreferences.setHighContrast(this, values[0]);
                     DriverPreferences.setDarkBlue(this, values[1]);
                     DriverPreferences.setLargeText(this, values[2]);
+                    DriverPreferences.setDyslexiaReading(this, values[3]);
+                    DriverPreferences.setReadAloud(this, values[4]);
                     AppCompatDelegate.setDefaultNightMode(values[1]
                             ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
                     recreate();
-                }).setNegativeButton(android.R.string.cancel, null).show();
+                }).setNeutralButton(R.string.settings_reading_background,
+                        (dialog, which) -> chooseReadingBackground())
+                .setNegativeButton(android.R.string.cancel, null).show();
+    }
+
+    private void chooseReadingBackground() {
+        new AlertDialog.Builder(this).setTitle(R.string.settings_reading_background)
+                .setSingleChoiceItems(new String[]{getString(R.string.settings_background_cream),
+                                getString(R.string.settings_background_gray),
+                                getString(R.string.settings_background_yellow)},
+                        DriverPreferences.dyslexiaBackground(this), (dialog, choice) -> {
+                            DriverPreferences.setDyslexiaBackground(this, choice);
+                            DriverPreferences.setDyslexiaReading(this, true);
+                            dialog.dismiss();
+                            recreate();
+                        }).setNegativeButton(R.string.settings_close, null).show();
+    }
+
+    private void contactSupport() {
+        Intent email = new Intent(Intent.ACTION_SENDTO,
+                Uri.parse("mailto:efficientia.inter@gmail.com"));
+        email.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.admin_help_subject));
+        try {
+            startActivity(Intent.createChooser(email, getString(R.string.admin_help)));
+        } catch (RuntimeException unavailable) {
+            new AlertDialog.Builder(this).setTitle(R.string.admin_help)
+                    .setMessage("efficientia.inter@gmail.com")
+                    .setPositiveButton(R.string.settings_close, null).show();
+        }
+    }
+
+    private void showEditOptions() {
+        new AlertDialog.Builder(this).setTitle(R.string.profile_edit)
+                .setItems(new String[]{getString(R.string.profile_edit_name),
+                        getString(R.string.profile_edit_photo)}, (dialog, choice) -> {
+                    if (choice == 0) showNameDialog(); else showPhotoDialog();
+                }).show();
+    }
+
+    private void showNameDialog() {
+        EditText input = new EditText(this);
+        int padding = dp(24);
+        input.setPadding(padding, padding / 2, padding, padding / 2);
+        input.setSingleLine(true);
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        input.setText(SessionManager.userName(this));
+        input.selectAll();
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle(R.string.profile_edit_name)
+                .setView(input).setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.profile_save, null).create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(v -> {
+                    String updated = input.getText().toString().trim();
+                    if (updated.isEmpty()) {
+                        input.setError(getString(R.string.profile_name_required));
+                        return;
+                    }
+                    SessionManager.updateUserName(this, updated);
+                    dialog.dismiss();
+                    showSection(PROFILE);
+                }));
+        dialog.show();
+    }
+
+    private void showPhotoDialog() {
+        View content = getLayoutInflater().inflate(R.layout.dialog_edit_profile_photo, null);
+        dialogPhoto = content.findViewById(R.id.imgCurrentProfilePhoto);
+        ProfilePhotoStore.show(this, dialogPhoto);
+        photoDialog = new AlertDialog.Builder(this).setView(content).create();
+        content.findViewById(R.id.btnChangeProfilePhoto).setOnClickListener(v ->
+                new AlertDialog.Builder(this).setItems(new String[]{
+                                getString(R.string.profile_photo_camera),
+                                getString(R.string.profile_photo_gallery)}, (dialog, choice) -> {
+                            if (choice == 0) openAdminCamera(); else galleryLauncher.launch("image/*");
+                        }).show());
+        content.findViewById(R.id.btnRemoveProfilePhoto).setOnClickListener(v -> {
+            ProfilePhotoStore.remove(this);
+            updateAdminPhotos();
+            photoDialog.dismiss();
+        });
+        photoDialog.show();
+    }
+
+    private void openAdminCamera() {
+        try {
+            File directory = new File(getCacheDir(), "profile_camera");
+            if (!directory.exists() && !directory.mkdirs()) throw new IOException("Camera cache unavailable");
+            pendingCameraFile = File.createTempFile("admin_", ".jpg", directory);
+            pendingCameraUri = FileProvider.getUriForFile(this,
+                    getPackageName() + ".profilephotos", pendingCameraFile);
+            cameraLauncher.launch(pendingCameraUri);
+        } catch (IOException | IllegalArgumentException error) {
+            Toast.makeText(this, R.string.profile_photo_camera_unavailable, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void saveAdminPhoto(Uri source) {
+        try {
+            ProfilePhotoStore.saveBytes(this, ProfilePhotoStore.prepare(this, source));
+            updateAdminPhotos();
+            if (photoDialog != null) photoDialog.dismiss();
+        } catch (IOException | RuntimeException error) {
+            Toast.makeText(this, R.string.profile_photo_error, Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void updateAdminPhotos() {
+        ImageView toolbarPhoto = findViewById(R.id.adminAvatar);
+        if (toolbarPhoto != null) ProfilePhotoStore.show(this, toolbarPhoto);
+        if (dialogPhoto != null) ProfilePhotoStore.show(this, dialogPhoto);
+        if (section == PROFILE) showSection(PROFILE);
     }
 
     private void logout() {
