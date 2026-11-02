@@ -26,6 +26,11 @@ final class ProfilePhotoStore {
     private ProfilePhotoStore() { }
 
     static File photoFile(Context context) {
+        if (SessionManager.isAdmin(context)) {
+            String identity = SessionManager.userEmail(context).toLowerCase(java.util.Locale.ROOT);
+            return new File(context.getFilesDir(), "admin_profile_"
+                    + Integer.toHexString(identity.hashCode()) + ".jpg");
+        }
         return new File(context.getFilesDir(), "driver_profile_" + SessionManager.userId(context) + ".jpg");
     }
 
@@ -45,6 +50,7 @@ final class ProfilePhotoStore {
                 Bitmap circularPhoto = circularCrop(bitmap);
                 bitmap.recycle();
                 imageView.setBackground(null);
+                imageView.setImageTintList(null);
                 imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                 imageView.setPadding(0, 0, 0, 0);
                 imageView.setImageBitmap(circularPhoto);

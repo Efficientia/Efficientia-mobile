@@ -10,6 +10,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -19,7 +21,14 @@ import androidx.core.view.WindowInsetsCompat;
 import com.inter.efficientia_mobile.R;
 
 public class RouteDiaryStepTwoActivity extends AppCompatActivity {
+    private static final String CORRAL_WORKER = RouteStepSignature.CORRAL_WORKER;
     private RouteDiaryDraft draft;
+    private final ActivityResultLauncher<Intent> signatureLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK
+                        && RouteStepSignature.saveResult(this, draft, result.getData(), CORRAL_WORKER))
+                    renderCorralWorkerSignature();
+            });
     private static final int[] FIELDS = {R.id.inputRouteArrivalDate, R.id.inputRouteArrivalTime,
             R.id.inputRouteUnloadingTime, R.id.inputRouteArrivalKm, R.id.inputRouteCorral};
     @Override
@@ -30,6 +39,7 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
                 .setAppearanceLightStatusBars(false);
         setContentView(R.layout.activity_route_diary_step_two);
         draft = RouteDiaryDraft.open(this, savedInstanceState);
+        renderCorralWorkerSignature();
         draft.restoreText(this, FIELDS);
         String alarm = draft.get("reverse_alarm");
         if ("yes".equals(alarm)) findViewById(R.id.btnAlarmYes).performClick();
@@ -42,6 +52,17 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
         configureTimePicker(findViewById(R.id.inputRouteUnloadingTime));
         findViewById(R.id.btnRouteStepTwoContinue).setOnClickListener(view -> {
             saveForm();
+            String validation = RouteDiaryPayload.validationError(draft);
+            if (!validation.isEmpty()) {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle(R.string.route_check_form_title).setMessage(validation)
+                        .setPositiveButton(R.string.dialog_understood, null).show();
+                return;
+            }
+            if (!RouteStepSignature.isSigned(this, draft, CORRAL_WORKER)) {
+                RouteStepSignature.launchCapture(this, CORRAL_WORKER, signatureLauncher);
+                return;
+            }
             RouteDiarySync.saveAndContinue(this, draft, view,
                     () -> startActivity(draft.next(this, RouteDiaryArrivalConditionActivity.class)));
         });
@@ -49,7 +70,10 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
 
     @Override protected void onResume() {
         super.onResume();
-        if (draft != null) draft.put("current_stage", "4");
+        if (draft != null) {
+            draft.put("current_stage", "4");
+            renderCorralWorkerSignature();
+        }
     }
 
     @Override protected void onPause() {
@@ -87,5 +111,11 @@ public class RouteDiaryStepTwoActivity extends AppCompatActivity {
                     input.setText(String.format(Locale.getDefault(), "%02d:%02d", hour, minute)),
                     now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true).show();
         });
+    }
+
+    private void renderCorralWorkerSignature() {
+        if (draft != null && findViewById(R.id.signatureCorralWorker) != null)
+            RouteStepSignature.bindCapture(this, draft, R.id.signatureCorralWorker,
+                    R.string.route_corral_worker, CORRAL_WORKER, signatureLauncher);
     }
 }

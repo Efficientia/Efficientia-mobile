@@ -129,10 +129,11 @@ final class RouteReportFormPdf {
     private void loadingInformation() {
         sectionTitle("INFORMAÇÕES EMBARQUE", 239, 255);
         JsonArray anomalies = array(report, "anomaliasEmbarque");
-        checkboxRow(255, anomalies, "Animal sangrando", "sangr", "Excesso de magreza", "magrez", "Cutucões fortes", "cutuc");
-        checkboxRow(274, anomalies, "Animal mancando", "manc", "Animal sujo / pisoteio", "pisote", "Quebra da cauda", "cauda");
-        checkboxRow(293, anomalies, "Gaiola muito cheia", "gaiola", "Chute / paulada / ferrão", "chute", "Arraste", "arraste");
-        checkboxRow(312, anomalies, "Nenhum", "__empty__", "Outro", "outro", "", "");
+        String notes = value(report, "comentarios");
+        checkboxRow(255, anomalies, notes, "Animal sangrando", "sangr", "Excesso de magreza", "magrez", "Cutucões fortes", "cutuc");
+        checkboxRow(274, anomalies, notes, "Animal mancando", "manc", "Animal sujo / pisoteio", "pisote", "Quebra da cauda", "cauda");
+        checkboxRow(293, anomalies, notes, "Gaiola muito cheia", "gaiola", "Chute / paulada / ferrão", "chute", "Arraste", "arraste");
+        checkboxRow(312, anomalies, notes, "Nenhum", "__empty__", "Outro", "outro", "", "");
     }
 
     private void tripInformation() {
@@ -151,8 +152,9 @@ final class RouteReportFormPdf {
     private void unloadingInformation() {
         sectionTitle("INFORMAÇÕES DESEMBARQUE", 454, 470);
         JsonArray anomalies = array(report, "anomaliasDesembarque");
-        checkboxRow(470, anomalies, "Gaiola danificada", "gaiola", "Porteiras não abrem", "porteira", "Uso abusivo de choque", "choque");
-        checkboxRow(489, anomalies, "Problema no veículo", "veiculo", "Outros atos de abuso", "abuso", "Nenhum", "__empty__");
+        String notes = value(report, "comentarios");
+        checkboxRow(470, anomalies, notes, "Gaiola danificada", "gaiola", "Porteiras não abrem", "porteira", "Uso abusivo de choque", "choque");
+        checkboxRow(489, anomalies, notes, "Problema no veículo", "veiculo", "Outros atos de abuso", "abuso", "Nenhum", "__empty__");
         field(LEFT, 508, 170, "Nº curral", value(report, "numeroCurral"));
         field(LEFT + 170, 508, RIGHT - LEFT - 170, "Sirene de ré funcionou?",
                 bool(value(report, "sireneReFuncionou")));
@@ -255,13 +257,13 @@ final class RouteReportFormPdf {
         fitted(display(value), x + 4, top + 16, width - 8, 8.4f, INK, false);
     }
 
-    private void checkboxRow(float top, JsonArray values,
+    private void checkboxRow(float top, JsonArray values, String notes,
                              String label1, String token1, String label2, String token2,
                              String label3, String token3) {
         float width = (RIGHT - LEFT) / 3;
-        checkbox(LEFT, top, width, label1, contains(values, token1));
-        checkbox(LEFT + width, top, width, label2, contains(values, token2));
-        checkbox(LEFT + 2 * width, top, width, label3, contains(values, token3));
+        checkbox(LEFT, top, width, label1, contains(values, notes, token1));
+        checkbox(LEFT + width, top, width, label2, contains(values, notes, token2));
+        checkbox(LEFT + 2 * width, top, width, label3, contains(values, notes, token3));
     }
 
     private void checkbox(float x, float top, float width, String label, boolean checked) {
@@ -353,8 +355,8 @@ final class RouteReportFormPdf {
                 ? object.get(key).getAsString() : "";
     }
 
-    private static String first(String value, String fallback) { return value.isBlank() ? fallback : value; }
-    private static String display(String value) { return value == null || value.isBlank() ? "-" : value; }
+    private static String first(String value, String fallback) { return value.trim().isEmpty() ? fallback : value; }
+    private static String display(String value) { return value == null || value.trim().isEmpty() ? "-" : value; }
     private static String bool(String value) { return "true".equals(value) ? "Sim" : "false".equals(value) ? "Não" : ""; }
     private static String time(String value) { return value.length() >= 5 ? value.substring(0, 5) : value; }
     private static String date(String value) {
@@ -364,13 +366,27 @@ final class RouteReportFormPdf {
     private static JsonArray array(JsonObject object, String key) {
         return object.has(key) && object.get(key).isJsonArray() ? object.getAsJsonArray(key) : new JsonArray();
     }
-    private static boolean contains(JsonArray array, String token) {
-        if ("__empty__".equals(token)) return array.size() == 0;
+    private static boolean contains(JsonArray array, String notes, String token) {
+        if ("__empty__".equals(token)) return array.size() == 0 && !mentionsOccurrence(notes);
         if (token.isEmpty()) return false;
         for (JsonElement element : array) {
             if (!element.isJsonObject()) continue;
             String content = element.toString().toLowerCase(Locale.ROOT);
             if (content.contains(token)) return true;
+        }
+        String text = notes.toLowerCase(Locale.ROOT);
+        if ("abuso".equals(token))
+            return text.contains("outros atos de abuso") || text.contains("outro abuso");
+        if ("outro".equals(token)) return false;
+        return text.contains(token);
+    }
+
+    private static boolean mentionsOccurrence(String notes) {
+        String text = notes.toLowerCase(Locale.ROOT);
+        for (String token : new String[]{"sangr", "magrez", "cutuc", "manc", "pisote",
+                "cauda", "gaiola", "chute", "arraste", "porteira", "choque", "veículo",
+                "veiculo", "abuso"}) {
+            if (text.contains(token)) return true;
         }
         return false;
     }
@@ -380,7 +396,7 @@ final class RouteReportFormPdf {
             if (!element.isJsonObject()) continue;
             JsonObject item = element.getAsJsonObject();
             String description = first(value(item, "descricaoOutros"), value(item, "anomalia"));
-            if (description.isBlank()) continue;
+            if (description.trim().isEmpty()) continue;
             if (result.length() > 0) result.append("; ");
             result.append(description);
         }

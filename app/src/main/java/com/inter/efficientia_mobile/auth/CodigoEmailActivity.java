@@ -1,6 +1,7 @@
 package com.inter.efficientia_mobile.auth;
 
 import android.os.Bundle;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -11,6 +12,20 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.main.MainADMActivity;
+import com.inter.efficientia_mobile.models.AdminLoginResponse;
+import com.inter.efficientia_mobile.models.LoginResponse;
+import com.inter.efficientia_mobile.network.AuthService;
+import com.inter.efficientia_mobile.network.RetrofitClient;
+import com.inter.efficientia_mobile.splash.AuthenticatedSplashActivity;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CodigoEmailActivity extends AppCompatActivity {
     public static final String EXTRA_EMAIL = "email";
@@ -62,8 +77,7 @@ public class CodigoEmailActivity extends AppCompatActivity {
             return false;
         });
         findViewById(R.id.btnFazerLogin).setOnClickListener(v -> validarCodigo());
-        findViewById(R.id.btnReenviarCodigo).setOnClickListener(v ->
-                Toast.makeText(this, R.string.codigo_servico_indisponivel, Toast.LENGTH_SHORT).show());
+        findViewById(R.id.btnReenviarCodigo).setOnClickListener(v -> reenviarCodigo());
     }
 
     private void validarCodigo() {
@@ -74,6 +88,81 @@ public class CodigoEmailActivity extends AppCompatActivity {
                 return;
             }
         }
-        Toast.makeText(this, R.string.codigo_servico_indisponivel, Toast.LENGTH_SHORT).show();
+        StringBuilder codigo = new StringBuilder(6);
+        for (EditText campo : campos) codigo.append(campo.getText());
+        findViewById(R.id.btnFazerLogin).setEnabled(false);
+        Map<String, String> request = codigoRequest();
+        request.put("codigo", codigo.toString());
+        AuthService service = RetrofitClient.getInstance().create(AuthService.class);
+        if (CodigoCampoActivity.PERFIL_ADMIN.equals(perfil())) {
+            service.validarCodigoAdmin(request).enqueue(new Callback<AdminLoginResponse>() {
+                @Override public void onResponse(Call<AdminLoginResponse> call, Response<AdminLoginResponse> response) {
+                    findViewById(R.id.btnFazerLogin).setEnabled(true);
+                    AdminLoginResponse body = response.body();
+                    if (!response.isSuccessful() || body == null || body.getToken() == null) {
+                        erroCodigo(response.code()); return;
+                    }
+                    SessionManager.saveAdmin(CodigoEmailActivity.this, body);
+                    entrar(MainADMActivity.class);
+                }
+                @Override public void onFailure(Call<AdminLoginResponse> call, Throwable error) { falhaConexao(); }
+            });
+        } else {
+            service.validarCodigoMotorista(request).enqueue(new Callback<LoginResponse>() {
+                @Override public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    findViewById(R.id.btnFazerLogin).setEnabled(true);
+                    LoginResponse body = response.body();
+                    if (!response.isSuccessful() || body == null || body.getToken() == null) {
+                        erroCodigo(response.code()); return;
+                    }
+                    SessionManager.save(CodigoEmailActivity.this, body);
+                    entrar(AuthenticatedSplashActivity.class);
+                }
+                @Override public void onFailure(Call<LoginResponse> call, Throwable error) { falhaConexao(); }
+            });
+        }
+    }
+
+    private String email() { return getIntent().getStringExtra(EXTRA_EMAIL); }
+    private Map<String, String> codigoRequest() {
+        Map<String, String> request = new HashMap<>();
+        request.put("email", email());
+        request.put("perfil", perfil());
+        return request;
+    }
+    private String perfil() {
+        return CodigoCampoActivity.PERFIL_ADMIN.equals(getIntent().getStringExtra(CodigoCampoActivity.EXTRA_PERFIL))
+                ? CodigoCampoActivity.PERFIL_ADMIN : CodigoCampoActivity.PERFIL_MOTORISTA;
+    }
+    private void entrar(Class<?> destino) {
+        Intent intent = new Intent(this, destino);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+    private void erroCodigo(int status) {
+        Toast.makeText(this, status == 401 ? "Código inválido ou expirado. Peça outro código."
+                : "Não foi possível confirmar o código. Tente novamente.", Toast.LENGTH_LONG).show();
+    }
+    private void falhaConexao() {
+        findViewById(R.id.btnFazerLogin).setEnabled(true);
+        Toast.makeText(this, "Sem conexão. Tente novamente.", Toast.LENGTH_LONG).show();
+    }
+    private void reenviarCodigo() {
+        findViewById(R.id.btnReenviarCodigo).setEnabled(false);
+        RetrofitClient.getInstance().create(AuthService.class)
+                .solicitarCodigo(codigoRequest())
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        findViewById(R.id.btnReenviarCodigo).setEnabled(true);
+                        Toast.makeText(CodigoEmailActivity.this,
+                                response.isSuccessful() ? "Código enviado. Confira seu e-mail."
+                                        : response.code() == 429 ? "Aguarde um minuto para pedir outro código."
+                                        : "Não foi possível reenviar o código.", Toast.LENGTH_LONG).show();
+                    }
+                    @Override public void onFailure(Call<ResponseBody> call, Throwable error) {
+                        findViewById(R.id.btnReenviarCodigo).setEnabled(true);
+                        Toast.makeText(CodigoEmailActivity.this, "Sem conexão. Tente novamente.", Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }

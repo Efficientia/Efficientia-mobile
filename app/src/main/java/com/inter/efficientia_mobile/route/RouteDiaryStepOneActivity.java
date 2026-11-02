@@ -42,12 +42,12 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         findViewById(R.id.btnSearchRouteOrigin).setOnClickListener(view -> RouteLocationPicker.show(this, true, (id, name) -> {
             origin.setText(name);
             draft.put(R.id.inputRouteOrigin, name);
-            draft.put("fazenda_id", String.valueOf(id));
+            draft.put("fazenda_id", id > 0 ? String.valueOf(id) : "");
         }));
         findViewById(R.id.btnSearchRouteDestination).setOnClickListener(view -> RouteLocationPicker.show(this, false, (id, name) -> {
             destination.setText(name);
             draft.put(R.id.inputRouteDestination, name);
-            draft.put("unidade_frigorifica_id", String.valueOf(id));
+            draft.put("unidade_frigorifica_id", id > 0 ? String.valueOf(id) : "");
         }));
 
         com.inter.efficientia_mobile.FormKeyboardInsets.install(
@@ -59,6 +59,13 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         configureTimePicker(findViewById(R.id.inputRouteDepartureTime));
         findViewById(R.id.btnRouteStepOneContinue).setOnClickListener(view -> {
             draft.saveText(this, FIELDS);
+            String validation = RouteDiaryPayload.validationError(draft);
+            if (!validation.isEmpty()) {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle(R.string.route_check_form_title).setMessage(validation)
+                        .setPositiveButton(R.string.dialog_understood, null).show();
+                return;
+            }
             RouteDiarySync.saveAndContinue(this, draft, view,
                     () -> startActivity(draft.next(this, RouteDiaryStepThreeActivity.class)));
         });

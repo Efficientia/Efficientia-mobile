@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.widget.Toast;
 
 import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.TechnicalDetails;
+import com.inter.efficientia_mobile.FriendlyHttpError;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
@@ -48,8 +50,10 @@ public final class RouteDiaryDeletion {
                             onDeleted.run();
                         } else {
                             new AlertDialog.Builder(activity)
-                                    .setMessage(activity.getString(
-                                            R.string.reports_delete_error, response.code()))
+                                    .setMessage(activity.getString(R.string.reports_delete_error)
+                                            + "\n\n" + FriendlyHttpError.message(activity, response.code()))
+                                    .setNeutralButton(R.string.technical_details, (dialog, which) ->
+                                            TechnicalDetails.show(activity, "HTTP " + response.code()))
                                     .setPositiveButton(R.string.dialog_understood, null).show();
                         }
                     }
@@ -58,6 +62,8 @@ public final class RouteDiaryDeletion {
                         if (!activity.isFinishing() && !activity.isDestroyed()) {
                             new AlertDialog.Builder(activity)
                                     .setMessage(R.string.reports_delete_offline)
+                                    .setNeutralButton(R.string.technical_details, (dialog, which) ->
+                                            TechnicalDetails.show(activity, error.toString()))
                                     .setPositiveButton(R.string.dialog_understood, null).show();
                         }
                     }

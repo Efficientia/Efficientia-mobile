@@ -76,7 +76,7 @@ public class EfficientiaApplication extends Application implements Application.A
     }
 
     public void speak(String value, Locale locale) {
-        if (value == null || value.isBlank()) return;
+        if (value == null || value.trim().isEmpty()) return;
         if (speech != null) {
             int language = speech.setLanguage(locale);
             if (language == TextToSpeech.LANG_MISSING_DATA

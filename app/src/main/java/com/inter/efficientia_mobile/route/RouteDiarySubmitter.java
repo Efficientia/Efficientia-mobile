@@ -9,6 +9,8 @@ import android.widget.TextView;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.TechnicalDetails;
+import com.inter.efficientia_mobile.FriendlyHttpError;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
@@ -59,6 +61,18 @@ final class RouteDiarySubmitter {
         }
         if (RouteDiaryPayload.hasIncompleteOccurrences(draft)) {
             explain(activity.getString(R.string.submit_incomplete_occurrences));
+            return;
+        }
+        String validation = RouteDiaryPayload.validationError(draft);
+        if (!validation.isEmpty()) {
+            explain(validation);
+            return;
+        }
+        if (!RouteStepSignature.isSigned(activity, draft, RouteStepSignature.RANCHER)
+                || !RouteStepSignature.isSigned(activity, draft, RouteStepSignature.MANEUVERER)
+                || !RouteStepSignature.isSigned(activity, draft, RouteStepSignature.CORRAL_WORKER)
+                || !RouteStepSignature.isSigned(activity, draft, RouteStepSignature.DRIVER)) {
+            explain(activity.getString(R.string.route_signatures_required));
             return;
         }
         button.setEnabled(false);
@@ -177,17 +191,21 @@ final class RouteDiarySubmitter {
                 if (error.has("fieldErrors")) message += "\n" + error.get("fieldErrors").toString();
             } catch (IOException | RuntimeException ignored) { }
         }
-        fail(message);
+        fail(FriendlyHttpError.message(activity, response.code()), message);
     }
 
     private void fail(Throwable error) {
-        fail(activity.getString(R.string.submit_offline));
+        fail(activity.getString(R.string.submit_offline), error.toString());
     }
 
     private void fail(String message) {
+        fail(message, null);
+    }
+
+    private void fail(String message, String details) {
         DriverNotificationStore.reportFailed(activity, message);
         restoreButton();
-        explain(message);
+        explain(message, details);
     }
 
     private void restoreButton() {
@@ -197,9 +215,18 @@ final class RouteDiarySubmitter {
     }
 
     private void explain(String message) {
-        if (!activity.isFinishing() && !activity.isDestroyed())
-            new AlertDialog.Builder(activity).setTitle(R.string.submit_failed_title)
-                    .setMessage(message).setPositiveButton(R.string.dialog_understood, null).show();
+        explain(message, null);
+    }
+
+    private void explain(String message, String details) {
+        if (!activity.isFinishing() && !activity.isDestroyed()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(activity)
+                    .setTitle(R.string.submit_failed_title).setMessage(message)
+                    .setPositiveButton(R.string.dialog_understood, null);
+            if (details != null) builder.setNeutralButton(R.string.technical_details,
+                    (dialog, which) -> TechnicalDetails.show(activity, details));
+            builder.show();
+        }
     }
 
     private static int number(String value) {

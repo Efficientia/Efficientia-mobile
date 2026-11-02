@@ -83,6 +83,11 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (SessionManager.isAdmin(this)) {
+            startActivity(new Intent(this, com.inter.efficientia_mobile.main.MainADMActivity.class));
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_authenticated_splash);
 
         TextView greeting = findViewById(R.id.txtAuthenticatedGreeting);

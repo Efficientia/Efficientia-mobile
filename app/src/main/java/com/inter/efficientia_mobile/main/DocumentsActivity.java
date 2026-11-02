@@ -24,6 +24,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.FriendlyHttpError;
+import com.inter.efficientia_mobile.TechnicalDetails;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.RetrofitClient;
 import com.inter.efficientia_mobile.network.RouteDiaryService;
@@ -254,8 +256,10 @@ public class DocumentsActivity extends AppCompatActivity {
                                 && (!fresh.has("motoristaId") || fresh.get("motoristaId").isJsonNull()
                                 || fresh.get("motoristaId").getAsInt() == SessionManager.userId(DocumentsActivity.this)))
                             action.accept(fresh);
-                        else Toast.makeText(DocumentsActivity.this,
-                                getString(R.string.reports_loading_error, response.code()), Toast.LENGTH_LONG).show();
+                        else TechnicalDetails.showError(DocumentsActivity.this,
+                                getString(R.string.reports_loading_error) + "\n\n"
+                                        + FriendlyHttpError.message(DocumentsActivity.this, response.code()),
+                                "Relatório: HTTP " + response.code());
                     }
                     @Override public void onFailure(Call<JsonObject> call, Throwable error) {
                         if (!isFinishing() && !isDestroyed()) Toast.makeText(DocumentsActivity.this,

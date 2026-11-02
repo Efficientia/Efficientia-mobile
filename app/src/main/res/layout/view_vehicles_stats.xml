@@ -9,16 +9,16 @@
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="38dp" android:background="@drawable/vehicles_stat_background" android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="12dp" android:paddingEnd="12dp">
         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/vehicles_trips_label" android:textColor="#45545B" android:textSize="11sp" />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/vehicles_trips_value" android:textColor="#45545B" android:textSize="11sp" />
+        <TextView android:id="@+id/txtVehiclesTrips" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="…" android:textColor="#45545B" android:textSize="11sp" />
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="38dp" android:layout_marginTop="20dp" android:background="@drawable/vehicles_stat_background" android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="12dp" android:paddingEnd="12dp">
         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/vehicles_heads_label" android:textColor="#45545B" android:textSize="11sp" />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/vehicles_heads_value" android:textColor="#45545B" android:textSize="11sp" />
+        <TextView android:id="@+id/txtVehiclesHeads" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="…" android:textColor="#45545B" android:textSize="11sp" />
     </LinearLayout>
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="38dp" android:layout_marginTop="20dp" android:background="@drawable/vehicles_stat_background" android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="12dp" android:paddingEnd="12dp">
         <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/vehicles_incidents_label" android:textColor="#45545B" android:textSize="11sp" />
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/vehicles_incidents_value" android:textColor="#45545B" android:textSize="11sp" />
+        <TextView android:id="@+id/txtVehiclesIncidents" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="…" android:textColor="#45545B" android:textSize="11sp" />
     </LinearLayout>
 </LinearLayout>

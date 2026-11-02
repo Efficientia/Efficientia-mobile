@@ -37,6 +37,8 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.inter.efficientia_mobile.R;
+import com.inter.efficientia_mobile.FriendlyHttpError;
+import com.inter.efficientia_mobile.TechnicalDetails;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.auth.LoginGeralActivity;
 import com.inter.efficientia_mobile.splash.AuthenticatedSplashActivity;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (findViewById(R.id.btnHomeProfile) != null) {
+            updateGreeting();
             findViewById(R.id.btnHomeGps).setVisibility(
                     DriverPreferences.gpsShortcutVisible(this) ? View.VISIBLE : View.GONE);
             ProfilePhotoStore.show(this, findViewById(R.id.btnHomeProfile));
@@ -116,12 +119,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        String userName = SessionManager.userName(this);
-        if (userName.trim().isEmpty()) {
-            userName = "Motorista";
-        }
-        TextView greeting = findViewById(R.id.txtMainHomeGreeting);
-        greeting.setText(getString(R.string.main_home_greeting, userName));
+        updateGreeting();
 
         findViewById(R.id.navMainAssistant).setOnClickListener(view ->
                 ToolbarNavigation.open(this, CinttiaActivity.class));
@@ -157,6 +155,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void updateGreeting() {
+        String userName = SessionManager.userName(this);
+        if (userName.trim().isEmpty()) userName = getString(R.string.profile_driver);
+        ((TextView) findViewById(R.id.txtMainHomeGreeting))
+                .setText(getString(R.string.main_home_greeting, userName));
     }
 
     private void showPendingFeature(View ignored) {
@@ -353,9 +358,10 @@ public class MainActivity extends AppCompatActivity {
                                 && fresh.has("motoristaId") && !fresh.get("motoristaId").isJsonNull()
                                 && fresh.get("motoristaId").getAsInt() == SessionManager.userId(MainActivity.this))
                             action.accept(fresh);
-                        else Toast.makeText(MainActivity.this,
-                                getString(R.string.reports_loading_error, response.code()),
-                                Toast.LENGTH_LONG).show();
+                        else TechnicalDetails.showError(MainActivity.this,
+                                getString(R.string.reports_loading_error) + "\n\n"
+                                        + FriendlyHttpError.message(MainActivity.this, response.code()),
+                                "Relatório: HTTP " + response.code());
                     }
                     @Override public void onFailure(Call<JsonObject> call, Throwable error) {
                         if (!isFinishing() && !isDestroyed()) Toast.makeText(MainActivity.this,

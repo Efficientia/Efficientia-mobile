@@ -1,0 +1,268 @@
+--- a/pom.xml
++++ b/pom.xml
+@@ -55,6 +55,10 @@
+ 		<dependency>
+ 			<groupId>org.springframework.boot</groupId>
+ 			<artifactId>spring-boot-starter-data-jpa</artifactId>
++		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-mail</artifactId>
+ 		</dependency>
+ 
+ 		<dependency>
+--- a/src/main/resources/application.properties
++++ b/src/main/resources/application.properties
+@@ -20,6 +20,17 @@
+ 
+ # A conexão real fica no perfil local/ambiente. Nunca versionar a senha.
+ spring.datasource.hikari.pool-name=efficientia-pool
++
++# Login por codigo de uso unico. Configure MAIL_* no ambiente de deploy.
++spring.mail.host=${MAIL_HOST:}
++spring.mail.port=${MAIL_PORT:587}
++spring.mail.username=${MAIL_USERNAME:}
++spring.mail.password=${MAIL_PASSWORD:}
++spring.mail.properties.mail.smtp.auth=true
++spring.mail.properties.mail.smtp.starttls.enable=true
++spring.mail.properties.mail.smtp.connectiontimeout=5000
++spring.mail.properties.mail.smtp.timeout=5000
++app.mail.from=${MAIL_FROM:}
+ 
+ # DTOs públicos rejeitam campos desconhecidos em vez de ignorá-los.
+ spring.jackson.deserialization.fail-on-unknown-properties=true
+--- a/src/main/java/com/example/efficientia/auth/service/AuthService.java
++++ b/src/main/java/com/example/efficientia/auth/service/AuthService.java
+@@ -139,4 +139,26 @@
+         UsuarioResponse usuarioResponse = UsuarioResponse.from(usuario, assinaturaFixaCadastrada, assinaturaFixaId);
+         return new LoginResponse(token, usuarioResponse);
+     }
++
++    @Transactional(readOnly = true)
++    public LoginResponse autenticarPorCodigo(UsuarioEntity usuario) {
++        if (usuario.getTipo() != TipoUsuario.motorista || !Boolean.TRUE.equals(usuario.getAtivo())) {
++            throw new AutenticacaoInvalidaException("Credenciais inválidas.");
++        }
++        Boolean temAssinatura = false;
++        UUID assinaturaId = null;
++        if (assinaturaMotoristaRepository != null) {
++            Optional<AssinaturaMotoristaEntity> assinatura = assinaturaMotoristaRepository
++                    .findByMotoristaIdAndAtivaTrue(usuario.getId());
++            if (assinatura.isPresent()) {
++                temAssinatura = true;
++                assinaturaId = assinatura.get().getId();
++                if (usuario.getUrlAssinaturaGeral() == null) {
++                    usuario.setUrlAssinaturaGeral("/api/v1/usuarios/me/assinatura/conteudo");
++                }
++            }
++        }
++        return new LoginResponse(jwtTokenService.gerarToken(usuario),
++                UsuarioResponse.from(usuario, temAssinatura, assinaturaId));
++    }
+ }
+--- a/src/main/java/com/example/efficientia/empresa/service/EmpresaAdminService.java
++++ b/src/main/java/com/example/efficientia/empresa/service/EmpresaAdminService.java
+@@ -237,6 +237,16 @@
+         return new LoginAdminResponse(token, AdminResponse.from(admin), toEmpresaResponse(empresa));
+     }
+ 
++    public LoginAdminResponse autenticarPorCodigo(EmpresaAdmin admin) {
++        if (!Boolean.TRUE.equals(admin.getAtivo())) {
++            throw new AutenticacaoInvalidaException("Credenciais inválidas.");
++        }
++        Empresa empresa = empresaRepository.buscarPorId(admin.getEmpresaId())
++                .orElseThrow(() -> new AutenticacaoInvalidaException("Credenciais inválidas."));
++        return new LoginAdminResponse(jwtTokenService.gerarTokenAdmin(admin, empresa),
++                AdminResponse.from(admin), toEmpresaResponse(empresa));
++    }
++
+     /**
+      * Cadastro de funcionários (motoristas, manobristas, analistas, curraleiros, pecuaristas)
+      * vinculados à empresa, realizado exclusivamente por um administrador autenticado da empresa.
+--- /dev/null
++++ b/src/main/resources/db/migration/V22__codigo_login_email.sql
+@@ -0,0 +1,9 @@
++CREATE TABLE IF NOT EXISTS sc_corporativo.tb_codigo_login_email (
++    email VARCHAR(150) NOT NULL,
++    perfil VARCHAR(20) NOT NULL,
++    codigo_hash VARCHAR(64) NOT NULL,
++    expira_em TIMESTAMPTZ NOT NULL,
++    proximo_envio_em TIMESTAMPTZ NOT NULL,
++    tentativas INTEGER NOT NULL DEFAULT 0,
++    PRIMARY KEY (email, perfil)
++);
+--- /dev/null
++++ b/src/main/java/com/example/efficientia/auth/api/CodigoLoginController.java
+@@ -0,0 +1,38 @@
++package com.example.efficientia.auth.api;
++
++import com.example.efficientia.auth.service.CodigoLoginService;
++import jakarta.validation.Valid;
++import jakarta.validation.constraints.Email;
++import jakarta.validation.constraints.NotBlank;
++import jakarta.validation.constraints.Pattern;
++import org.springframework.web.bind.annotation.PostMapping;
++import org.springframework.web.bind.annotation.RequestBody;
++import org.springframework.web.bind.annotation.RequestMapping;
++import org.springframework.web.bind.annotation.RestController;
++
++import java.util.Map;
++
++@RestController
++@RequestMapping("/api/v1/auth/codigo")
++public class CodigoLoginController {
++    private final CodigoLoginService service;
++
++    public CodigoLoginController(CodigoLoginService service) { this.service = service; }
++
++    public record SolicitarRequest(@NotBlank @Email String email,
++                                  @NotBlank @Pattern(regexp = "motorista|administrador") String perfil) { }
++    public record ValidarRequest(@NotBlank @Email String email,
++                                @NotBlank @Pattern(regexp = "motorista|administrador") String perfil,
++                                @NotBlank @Pattern(regexp = "[0-9]{6}") String codigo) { }
++
++    @PostMapping("/solicitar")
++    public Map<String, String> solicitar(@Valid @RequestBody SolicitarRequest request) {
++        service.solicitar(request.email(), request.perfil());
++        return Map.of("mensagem", "Se o e-mail estiver cadastrado, o código será enviado.");
++    }
++
++    @PostMapping("/validar")
++    public Object validar(@Valid @RequestBody ValidarRequest request) {
++        return service.validar(request.email(), request.perfil(), request.codigo());
++    }
++}
+--- /dev/null
++++ b/src/main/java/com/example/efficientia/auth/service/CodigoLoginService.java
+@@ -0,0 +1,131 @@
++package com.example.efficientia.auth.service;
++
++import com.example.efficientia.auth.api.AutenticacaoInvalidaException;
++import com.example.efficientia.cadastrobase.domain.TipoUsuario;
++import com.example.efficientia.cadastrobase.persistence.UsuarioEntity;
++import com.example.efficientia.cadastrobase.persistence.UsuarioRepository;
++import com.example.efficientia.empresa.domain.EmpresaAdmin;
++import com.example.efficientia.empresa.persistence.EmpresaAdminRepository;
++import com.example.efficientia.empresa.service.EmpresaAdminService;
++import org.springframework.beans.factory.annotation.Value;
++import org.springframework.http.HttpStatus;
++import org.springframework.jdbc.core.JdbcTemplate;
++import org.springframework.mail.SimpleMailMessage;
++import org.springframework.mail.javamail.JavaMailSender;
++import org.springframework.stereotype.Service;
++import org.springframework.transaction.annotation.Transactional;
++import org.springframework.web.server.ResponseStatusException;
++
++import java.nio.charset.StandardCharsets;
++import java.security.MessageDigest;
++import java.security.SecureRandom;
++import java.time.Instant;
++import java.util.HexFormat;
++import java.util.Locale;
++
++@Service
++public class CodigoLoginService {
++    private final JdbcTemplate jdbc;
++    private final JavaMailSender mail;
++    private final UsuarioRepository usuarios;
++    private final EmpresaAdminRepository admins;
++    private final AuthService authService;
++    private final EmpresaAdminService adminService;
++    private final String remetente;
++    private final String segredo;
++    private final SecureRandom random = new SecureRandom();
++
++    public CodigoLoginService(JdbcTemplate jdbc, JavaMailSender mail,
++                              UsuarioRepository usuarios, EmpresaAdminRepository admins,
++                              AuthService authService, EmpresaAdminService adminService,
++                              @Value("${app.mail.from:}") String remetente,
++                              @Value("${app.security.secret}") String segredo) {
++        this.jdbc = jdbc;
++        this.mail = mail;
++        this.usuarios = usuarios;
++        this.admins = admins;
++        this.authService = authService;
++        this.adminService = adminService;
++        this.remetente = remetente;
++        this.segredo = segredo;
++    }
++
++    @Transactional
++    public void solicitar(String emailInformado, String perfil) {
++        String email = emailInformado.trim().toLowerCase(Locale.ROOT);
++        if (remetente == null || remetente.isBlank()) {
++            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
++                    "Envio de e-mail não configurado.");
++        }
++        if (!existeContaAtiva(email, perfil)) return;
++
++        Boolean permitido = jdbc.query("SELECT proximo_envio_em <= now() FROM sc_corporativo.tb_codigo_login_email "
++                + "WHERE email = ? AND perfil = ?", rs -> rs.next() ? rs.getBoolean(1) : true, email, perfil);
++        if (!permitido) throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,
++                "Aguarde um minuto para solicitar outro código.");
++
++        String codigo = String.format(Locale.ROOT, "%06d", random.nextInt(1_000_000));
++        jdbc.update("INSERT INTO sc_corporativo.tb_codigo_login_email "
++                        + "(email, perfil, codigo_hash, expira_em, proximo_envio_em, tentativas) "
++                        + "VALUES (?, ?, ?, now() + interval '10 minutes', now() + interval '1 minute', 0) "
++                        + "ON CONFLICT (email, perfil) DO UPDATE SET codigo_hash = EXCLUDED.codigo_hash, "
++                        + "expira_em = EXCLUDED.expira_em, proximo_envio_em = EXCLUDED.proximo_envio_em, tentativas = 0",
++                email, perfil, hash(email, perfil, codigo));
++
++        SimpleMailMessage mensagem = new SimpleMailMessage();
++        mensagem.setFrom(remetente);
++        mensagem.setTo(email);
++        mensagem.setSubject("Seu código de acesso Efficientia");
++        mensagem.setText("Seu código de acesso é " + codigo + ". Ele expira em 10 minutos. "
++                + "Se você não solicitou este acesso, ignore esta mensagem.");
++        try { mail.send(mensagem); }
++        catch (RuntimeException erro) {
++            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,
++                    "Não foi possível enviar o e-mail agora.", erro);
++        }
++    }
++
++    @Transactional(noRollbackFor = AutenticacaoInvalidaException.class)
++    public Object validar(String emailInformado, String perfil, String codigo) {
++        String email = emailInformado.trim().toLowerCase(Locale.ROOT);
++        String esperado = jdbc.query("SELECT codigo_hash FROM sc_corporativo.tb_codigo_login_email "
++                + "WHERE email = ? AND perfil = ? AND expira_em > now() AND tentativas < 5 FOR UPDATE",
++                rs -> rs.next() ? rs.getString(1) : null, email, perfil);
++        if (esperado == null || !MessageDigest.isEqual(esperado.getBytes(StandardCharsets.UTF_8),
++                hash(email, perfil, codigo).getBytes(StandardCharsets.UTF_8))) {
++            jdbc.update("UPDATE sc_corporativo.tb_codigo_login_email SET tentativas = tentativas + 1 "
++                    + "WHERE email = ? AND perfil = ?", email, perfil);
++            throw new AutenticacaoInvalidaException("Código inválido ou expirado.");
++        }
++        Object resposta;
++        if ("motorista".equals(perfil)) {
++            UsuarioEntity usuario = usuarios.findByEmail(email)
++                    .filter(u -> u.getTipo() == TipoUsuario.motorista && Boolean.TRUE.equals(u.getAtivo()))
++                    .orElseThrow(() -> new AutenticacaoInvalidaException("Código inválido ou expirado."));
++            resposta = authService.autenticarPorCodigo(usuario);
++        } else if ("administrador".equals(perfil)) {
++            EmpresaAdmin admin = admins.buscarPorEmail(email)
++                    .filter(a -> Boolean.TRUE.equals(a.getAtivo()))
++                    .orElseThrow(() -> new AutenticacaoInvalidaException("Código inválido ou expirado."));
++            resposta = adminService.autenticarPorCodigo(admin);
++        } else throw new AutenticacaoInvalidaException("Código inválido ou expirado.");
++        jdbc.update("DELETE FROM sc_corporativo.tb_codigo_login_email WHERE email = ? AND perfil = ?", email, perfil);
++        return resposta;
++    }
++
++    private boolean existeContaAtiva(String email, String perfil) {
++        if ("motorista".equals(perfil)) return usuarios.findByEmail(email)
++                .map(u -> u.getTipo() == TipoUsuario.motorista && Boolean.TRUE.equals(u.getAtivo())).orElse(false);
++        if ("administrador".equals(perfil)) return admins.buscarPorEmail(email)
++                .map(a -> Boolean.TRUE.equals(a.getAtivo())).orElse(false);
++        return false;
++    }
++
++    private String hash(String email, String perfil, String codigo) {
++        try {
++            MessageDigest digest = MessageDigest.getInstance("SHA-256");
++            return HexFormat.of().formatHex(digest.digest(
++                    (segredo + ":" + email + ":" + perfil + ":" + codigo).getBytes(StandardCharsets.UTF_8)));
++        } catch (Exception erro) { throw new IllegalStateException("SHA-256 indisponível", erro); }
++    }
++}

@@ -2,10 +2,16 @@ package com.inter.efficientia_mobile.main;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.text.InputType;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +29,10 @@ import com.inter.efficientia_mobile.R;
 import com.inter.efficientia_mobile.auth.SessionManager;
 import com.inter.efficientia_mobile.network.CompanyService;
 import com.inter.efficientia_mobile.network.RetrofitClient;
+import com.inter.efficientia_mobile.signature.DriverSignatureRepository;
+import com.inter.efficientia_mobile.signature.SignatureCaptureActivity;
+import com.inter.efficientia_mobile.signature.SignatureImageStore;
+import com.inter.efficientia_mobile.signature.SignatureOptionsActivity;
 import com.inter.efficientia_mobile.splash.MainSplashActivity;
 
 import java.io.File;
@@ -39,6 +49,11 @@ public class DriverProfileActivity extends AppCompatActivity {
     private AlertDialog photoDialog;
     private ImageView dialogPhoto;
     private boolean photoBusy;
+
+    private final ActivityResultLauncher<Intent> signatureLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) showDriverSignature();
+            });
 
     private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.TakePicture(), saved -> {
@@ -109,7 +124,8 @@ public class DriverProfileActivity extends AppCompatActivity {
             SessionManager.clear(this);
             returnToStart();
         });
-        findViewById(R.id.btnEditDriverProfile).setOnClickListener(view -> showPhotoDialog());
+        findViewById(R.id.btnEditDriverProfile).setOnClickListener(view -> showEditOptions());
+        findViewById(R.id.btnViewDriverSignature).setOnClickListener(view -> showDriverSignature());
         findViewById(R.id.imgDriverProfile).setOnClickListener(view -> showPhotoDialog());
         findViewById(R.id.btnDriverPreferences).setOnClickListener(view ->
                 ToolbarNavigation.open(this, DriverSettingsActivity.class));
@@ -165,6 +181,111 @@ public class DriverProfileActivity extends AppCompatActivity {
             });
         });
         photoDialog.show();
+    }
+
+    private void showEditOptions() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.profile_edit)
+                .setItems(new String[]{getString(R.string.profile_edit_name),
+                        getString(R.string.profile_edit_photo)}, (dialog, choice) -> {
+                    if (choice == 0) showNameDialog();
+                    else showPhotoDialog();
+                }).show();
+    }
+
+    private void showDriverSignature() {
+        int horizontal = dp(20);
+        LinearLayout content = new LinearLayout(this);
+        content.setOrientation(LinearLayout.VERTICAL);
+        content.setPadding(horizontal, dp(8), horizontal, dp(4));
+
+        TextView status = new TextView(this);
+        status.setText(R.string.profile_signature_loading);
+        status.setTextColor(Color.rgb(21, 82, 161));
+        status.setTextSize(14);
+        content.addView(status, new LinearLayout.LayoutParams(-1, -2));
+
+        ImageView preview = new ImageView(this);
+        preview.setContentDescription(getString(R.string.profile_signature_title));
+        preview.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        GradientDrawable previewBackground = new GradientDrawable();
+        previewBackground.setColor(Color.WHITE);
+        previewBackground.setCornerRadius(dp(14));
+        previewBackground.setStroke(dp(1), Color.rgb(211, 232, 225));
+        preview.setBackground(previewBackground);
+        preview.setPadding(dp(12), dp(12), dp(12), dp(12));
+        LinearLayout.LayoutParams previewParams = new LinearLayout.LayoutParams(-1, dp(112));
+        previewParams.topMargin = dp(12);
+        content.addView(preview, previewParams);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.profile_signature_title)
+                .setView(content)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.profile_signature_change, null)
+                .create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(view -> {
+                    dialog.dismiss();
+                    Intent intent = new Intent(this, SignatureOptionsActivity.class)
+                            .putExtra(SignatureCaptureActivity.EXTRA_SIGNER_ROLE, "MOTORISTA");
+                    signatureLauncher.launch(intent);
+                }));
+
+        Bitmap cached = SignatureImageStore.read(SignatureImageStore.driverPath(this));
+        if (cached != null) {
+            preview.setImageBitmap(cached);
+            status.setText(R.string.profile_signature_registered);
+        }
+
+        dialog.show();
+        DriverSignatureRepository.fetchWithStatus(this, (image, statusCode, error) -> {
+            if (isFinishing() || isDestroyed() || !dialog.isShowing()) return;
+            if (image != null) {
+                preview.setImageBitmap(image);
+                status.setText(R.string.profile_signature_registered);
+            } else if (statusCode == 404) {
+                preview.setImageDrawable(null);
+                status.setText(R.string.profile_signature_missing);
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setText(R.string.profile_signature_register);
+            } else if (cached == null) {
+                status.setText(R.string.profile_signature_load_error);
+            }
+        });
+    }
+
+    private int dp(int value) {
+        return Math.round(value * getResources().getDisplayMetrics().density);
+    }
+
+    private void showNameDialog() {
+        EditText nameInput = new EditText(this);
+        int padding = (int) (24 * getResources().getDisplayMetrics().density);
+        nameInput.setPadding(padding, padding / 2, padding, padding / 2);
+        nameInput.setSingleLine(true);
+        nameInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_WORDS);
+        nameInput.setText(SessionManager.userName(this));
+        nameInput.selectAll();
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.profile_edit_name)
+                .setView(nameInput)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.profile_save, null)
+                .create();
+        dialog.setOnShowListener(ignored -> dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                .setOnClickListener(view -> {
+                    String name = nameInput.getText().toString().trim();
+                    if (name.isEmpty()) {
+                        nameInput.setError(getString(R.string.profile_name_required));
+                        return;
+                    }
+                    SessionManager.updateUserName(this, name);
+                    ((TextView) findViewById(R.id.txtDriverProfileGreeting))
+                            .setText(getString(R.string.main_home_greeting, name));
+                    dialog.dismiss();
+                }));
+        dialog.show();
     }
 
     private void openCamera() {

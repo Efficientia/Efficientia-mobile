@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.util.Base64;
 
 import com.inter.efficientia_mobile.models.LoginResponse;
+import com.inter.efficientia_mobile.models.AdminLoginResponse;
 import com.inter.efficientia_mobile.models.Usuario;
 
 import org.json.JSONObject;
@@ -46,6 +47,33 @@ public final class SessionManager {
         editor.apply();
     }
 
+    public static void saveAdmin(Context context, AdminLoginResponse response) {
+        driverSignatureVerifiedThisProcess = false;
+        SharedPreferences.Editor editor = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .edit().clear()
+                .putString("token", response.getToken())
+                .putString("token_type", response.getTokenType() == null
+                        || response.getTokenType().trim().isEmpty() ? "Bearer" : response.getTokenType())
+                .putString("usuario_tipo", "ADMIN");
+        if (response.getAdmin() != null) {
+            editor.putString("usuario_nome", response.getAdmin().getNome())
+                    .putString("usuario_email", response.getAdmin().getEmail())
+                    .putString("usuario_telefone", response.getAdmin().getTelefone())
+                    .putString("admin_cargo", response.getAdmin().getCargo());
+        }
+        if (response.getEmpresa() != null)
+            editor.putString("admin_empresa", response.getEmpresa().getNomeEmpresa());
+        editor.apply();
+    }
+
+    public static boolean isAdmin(Context context) {
+        return "ADMIN".equals(context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
+                .getString("usuario_tipo", ""));
+    }
+
+    public static String adminRole(Context context) { return userField(context, "admin_cargo"); }
+    public static String adminCompany(Context context) { return userField(context, "admin_empresa"); }
+
     public static String authorizationHeader(Context context) {
         SharedPreferences preferences = context.getSharedPreferences(
                 PREFERENCES, Context.MODE_PRIVATE);
@@ -56,9 +84,35 @@ public final class SessionManager {
     }
 
     public static String userName(Context context) {
+        if (isAdmin(context)) {
+            String email = userEmail(context);
+            String edited = context.getSharedPreferences("admin_profile_names", Context.MODE_PRIVATE)
+                    .getString("name_" + email.toLowerCase(java.util.Locale.ROOT), null);
+            if (edited != null && !edited.trim().isEmpty()) return edited.trim();
+        }
+        int userId = userId(context);
+        if (userId > 0) {
+            String edited = context.getSharedPreferences("driver_profile_names", Context.MODE_PRIVATE)
+                    .getString("name_" + userId, null);
+            if (edited != null && !edited.trim().isEmpty()) return edited.trim();
+        }
         String name = context.getSharedPreferences(PREFERENCES, Context.MODE_PRIVATE)
                 .getString("usuario_nome", "");
         return name == null ? "" : name.trim();
+    }
+
+    public static void updateUserName(Context context, String name) {
+        if (isAdmin(context)) {
+            String email = userEmail(context);
+            context.getSharedPreferences("admin_profile_names", Context.MODE_PRIVATE)
+                    .edit().putString("name_" + email.toLowerCase(java.util.Locale.ROOT), name.trim()).apply();
+            return;
+        }
+        int userId = userId(context);
+        if (userId > 0) {
+            context.getSharedPreferences("driver_profile_names", Context.MODE_PRIVATE)
+                    .edit().putString("name_" + userId, name.trim()).apply();
+        }
     }
 
     public static int userId(Context context) {
