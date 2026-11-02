@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -15,7 +17,14 @@ import androidx.core.view.WindowInsetsCompat;
 import com.inter.efficientia_mobile.R;
 
 public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
+    private static final String MANEUVERER = RouteStepSignature.MANEUVERER;
     private RouteDiaryDraft draft;
+    private final ActivityResultLauncher<Intent> signatureLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK
+                        && RouteStepSignature.saveResult(this, draft, result.getData(), MANEUVERER))
+                    renderManeuvererSignature();
+            });
     private static final int[] FIELDS = {R.id.inputRouteIncidentReason, R.id.inputRouteArrivalComments};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +34,7 @@ public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
                 .setAppearanceLightStatusBars(false);
         setContentView(R.layout.activity_route_diary_arrival_condition);
         draft = RouteDiaryDraft.open(this, savedInstanceState);
+        renderManeuvererSignature();
         draft.restoreText(this, FIELDS);
         com.inter.efficientia_mobile.FormKeyboardInsets.install(
                 this, findViewById(R.id.routeArrivalConditionRoot), true);
@@ -38,15 +48,28 @@ public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
                 R.id.counterDead, R.id.counterEmergency}) draft.restoreCounter(this, id);
         findViewById(R.id.btnRouteArrivalConditionContinue).setOnClickListener(view -> {
             saveForm();
+            String validation = RouteDiaryPayload.validationError(draft);
+            if (!validation.isEmpty()) {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle(R.string.route_check_form_title).setMessage(validation)
+                        .setPositiveButton(R.string.dialog_understood, null).show();
+                return;
+            }
+            if (!RouteStepSignature.isSigned(this, draft, MANEUVERER)) {
+                RouteStepSignature.launchCapture(this, MANEUVERER, signatureLauncher);
+                return;
+            }
             RouteDiarySync.saveAndContinue(this, draft, view,
-                    () -> startActivity(draft.next(this, "1".equals(draft.get("edit_pending"))
-                            ? RouteDiaryStepSixActivity.class : RouteDiaryStepFiveActivity.class)));
+                    () -> startActivity(draft.next(this, RouteDiaryStepFiveActivity.class)));
         });
     }
 
     @Override protected void onResume() {
         super.onResume();
-        if (draft != null) draft.put("current_stage", "5");
+        if (draft != null) {
+            draft.put("current_stage", "5");
+            renderManeuvererSignature();
+        }
     }
 
     @Override protected void onPause() {
@@ -78,5 +101,11 @@ public class RouteDiaryArrivalConditionActivity extends AppCompatActivity {
             int current = Integer.parseInt(value.getText().toString());
             value.setText(String.valueOf(current + 1));
         });
+    }
+
+    private void renderManeuvererSignature() {
+        if (draft != null && findViewById(R.id.signatureManeuverer) != null)
+            RouteStepSignature.bindCapture(this, draft, R.id.signatureManeuverer,
+                    R.string.route_maneuverer, MANEUVERER, signatureLauncher);
     }
 }

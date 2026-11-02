@@ -82,6 +82,13 @@
     <string name="signature_check_retry">Try again</string>
     <string name="signature_check_login">Log in again</string>
     <string name="signature_pen_description">Draw signature</string>
+    <string name="profile_signature_title">Driver signature</string>
+    <string name="profile_signature_loading">Loading signature…</string>
+    <string name="profile_signature_registered">Signature registered</string>
+    <string name="profile_signature_missing">No signature registered. You can add one now.</string>
+    <string name="profile_signature_load_error">Could not load the signature. Check your connection and try again.</string>
+    <string name="profile_signature_change">Change signature</string>
+    <string name="profile_signature_register">Add signature</string>
     <string name="main_home_greeting">Hello, %1$s!</string>
     <string name="main_home_brand_blue">Efficient</string>
     <string name="main_home_brand_green">ia</string>
@@ -116,6 +123,7 @@
     <string name="profile_phone">Phone</string>
     <string name="profile_company">Company</string>
     <string name="profile_email">Email</string>
+    <string name="profile_view_signature">View signature</string>
     <string name="profile_logout">Log out</string>
     <string name="profile_not_informed">Not provided</string>
     <string name="profile_loading">Loading…</string>

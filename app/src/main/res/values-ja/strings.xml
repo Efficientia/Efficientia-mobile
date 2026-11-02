@@ -82,6 +82,13 @@
     <string name="signature_check_retry">再試行</string>
     <string name="signature_check_login">再ログイン</string>
     <string name="signature_pen_description">署名を描く</string>
+    <string name="profile_signature_title">ドライバーの署名</string>
+    <string name="profile_signature_loading">署名を読み込み中…</string>
+    <string name="profile_signature_registered">署名が登録されています</string>
+    <string name="profile_signature_missing">登録された署名はありません。今すぐ登録できます。</string>
+    <string name="profile_signature_load_error">署名を読み込めませんでした。接続を確認して再試行してください。</string>
+    <string name="profile_signature_change">署名を変更</string>
+    <string name="profile_signature_register">署名を登録</string>
     <string name="main_home_greeting">こんにちは、%1$s さん！</string>
     <string name="main_home_brand_blue">Efficient</string>
     <string name="main_home_brand_green">ia</string>
@@ -116,6 +123,7 @@
     <string name="profile_phone">電話</string>
     <string name="profile_company">会社</string>
     <string name="profile_email">メール</string>
+    <string name="profile_view_signature">署名を表示</string>
     <string name="profile_logout">ログアウト</string>
     <string name="profile_not_informed">未入力</string>
     <string name="profile_loading">読み込み中…</string>

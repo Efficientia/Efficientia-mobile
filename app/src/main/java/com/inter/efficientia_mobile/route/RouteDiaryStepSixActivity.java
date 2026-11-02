@@ -14,7 +14,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import com.inter.efficientia_mobile.R;
-import com.inter.efficientia_mobile.signature.SignatureImageStore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -95,13 +94,13 @@ public class RouteDiaryStepSixActivity extends AppCompatActivity {
         addDetail(details, R.string.route_comments, draft.get(R.id.inputRouteArrivalComments));
 
         ArrayList<String> signatures = new ArrayList<>();
-        if (SignatureImageStore.read(draft.get("signature_PECUARISTA")) != null)
+        if (RouteStepSignature.isSigned(this, draft, RouteStepSignature.RANCHER))
             signatures.add(getString(R.string.route_rancher));
-        if (SignatureImageStore.read(SignatureImageStore.driverPath(this)) != null)
+        if (RouteStepSignature.isSigned(this, draft, RouteStepSignature.DRIVER))
             signatures.add(getString(R.string.route_driver));
-        if (SignatureImageStore.read(draft.get("signature_MANOBRISTA")) != null)
+        if (RouteStepSignature.isSigned(this, draft, RouteStepSignature.MANEUVERER))
             signatures.add(getString(R.string.route_maneuverer));
-        if (SignatureImageStore.read(draft.get("signature_CURRALEIRO")) != null)
+        if (RouteStepSignature.isSigned(this, draft, RouteStepSignature.CORRAL_WORKER))
             signatures.add(getString(R.string.route_corral_worker));
         ((TextView) findViewById(R.id.summarySignatureStatus)).setText(
                 signatures.isEmpty() ? getString(R.string.route_summary_not_informed)

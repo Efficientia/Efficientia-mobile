@@ -44,9 +44,10 @@ public class RouteDiaryStepFourActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.route_stop_added, Toast.LENGTH_SHORT).show());
         findViewById(R.id.btnRouteStepFourContinue).setOnClickListener(view -> {
             draft.saveText(this, FIELDS);
-            if (RouteDiaryPayload.hasIncompleteOccurrences(draft)) {
+            String validation = RouteDiaryPayload.validationError(draft);
+            if (!validation.isEmpty()) {
                 new androidx.appcompat.app.AlertDialog.Builder(this)
-                        .setMessage(R.string.route_occurrences_incomplete)
+                        .setTitle(R.string.route_check_form_title).setMessage(validation)
                         .setPositiveButton(R.string.dialog_understood, null).show();
                 return;
             }

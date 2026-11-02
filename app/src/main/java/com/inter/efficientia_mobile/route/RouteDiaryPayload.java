@@ -6,6 +6,10 @@ import com.google.gson.JsonParser;
 import com.inter.efficientia_mobile.R;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 /** Maps the local form to the names and date formats accepted by the route API. */
 final class RouteDiaryPayload {
@@ -94,6 +98,61 @@ final class RouteDiaryPayload {
         boolean anyAnomaly = !draft.get(R.id.inputRouteAnomalyAnimals).isEmpty()
                 || !draft.get(R.id.inputRouteAnomalyDescription).isEmpty();
         return (anyStop && !hasCompleteStop(draft)) || (anyAnomaly && !hasCompleteAnomaly(draft));
+    }
+
+    static String validationError(RouteDiaryDraft draft) {
+        String[] timeKeys = {"horarioEmbarque", "horarioSaidaPropriedade", "horarioChegadaUnidade", "horarioDesembarque"};
+        int[] timeIds = {R.id.inputRouteBoardingTime, R.id.inputRouteDepartureTime,
+                R.id.inputRouteArrivalTime, R.id.inputRouteUnloadingTime};
+        String[] timeLabels = {"embarque", "saída da propriedade", "chegada", "desembarque"};
+        LocalDate boarding = parseDate(draft.get(R.id.inputRouteBoardingDate));
+        LocalDate arrival = parseDate(draft.get(R.id.inputRouteArrivalDate));
+        LocalDateTime previous = null;
+        LocalDate previousDate = null;
+        for (int i = 0; i < timeIds.length; i++) {
+            String raw = draft.get(timeIds[i]).trim();
+            if (raw.isEmpty()) continue;
+            LocalTime time = parseTime(raw);
+            if (time == null) return "Confira o horário de " + timeLabels[i] + ". Use o formato HH:mm.";
+            LocalDate date = (i < 2 ? boarding : arrival);
+            if (date == null) date = previousDate;
+            if (date == null) date = LocalDate.of(2000, 1, 1);
+            if (previous != null && date.isBefore(previous.toLocalDate())) date = date.plusDays(1);
+            LocalDateTime current = LocalDateTime.of(date, time);
+            if (previous != null && current.isBefore(previous))
+                return "O horário de " + timeLabels[i] + " precisa ser igual ou posterior ao horário anterior.";
+            previous = current;
+            previousDate = date;
+        }
+
+        int loaded = count(draft, R.id.counterMales) + count(draft, R.id.counterFemales)
+                + count(draft, R.id.counterMarrucos);
+        int standing = count(draft, R.id.counterStanding);
+        int lying = count(draft, R.id.counterLying);
+        int dead = count(draft, R.id.counterDead);
+        int emergency = count(draft, R.id.counterEmergency);
+        if (loaded <= 0) return "Informe a quantidade de animais embarcados.";
+        if (standing + lying + dead + emergency > loaded)
+            return "A quantidade de animais no desembarque não pode ser maior que a quantidade embarcada.";
+        if (hasIncompleteOccurrences(draft))
+            return "Complete os dados da parada ou da anomalia, ou deixe os campos vazios se não houve ocorrência.";
+        return "";
+    }
+
+    private static int count(RouteDiaryDraft draft, int id) {
+        try { return Math.max(0, Integer.parseInt(draft.get(id))); }
+        catch (NumberFormatException ignored) { return 0; }
+    }
+
+    private static LocalDate parseDate(String raw) {
+        if (raw == null || !raw.matches("\\d{2}/\\d{2}/\\d{4}")) return null;
+        try { return LocalDate.parse(raw, DateTimeFormatter.ofPattern("dd/MM/uuuu")); }
+        catch (DateTimeParseException ignored) { return null; }
+    }
+
+    private static LocalTime parseTime(String raw) {
+        try { return LocalTime.parse(raw, DateTimeFormatter.ofPattern("HH:mm")); }
+        catch (DateTimeParseException ignored) { return null; }
     }
 
     private static boolean hasCompleteStop(RouteDiaryDraft draft) {

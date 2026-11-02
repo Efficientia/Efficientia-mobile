@@ -82,6 +82,13 @@
     <string name="signature_check_retry">Intentar de nuevo</string>
     <string name="signature_check_login">Iniciar sesión de nuevo</string>
     <string name="signature_pen_description">Dibujar firma</string>
+    <string name="profile_signature_title">Firma del conductor</string>
+    <string name="profile_signature_loading">Cargando firma…</string>
+    <string name="profile_signature_registered">Firma registrada</string>
+    <string name="profile_signature_missing">No hay ninguna firma registrada. Puedes añadir una ahora.</string>
+    <string name="profile_signature_load_error">No se pudo cargar la firma. Comprueba tu conexión e inténtalo de nuevo.</string>
+    <string name="profile_signature_change">Cambiar firma</string>
+    <string name="profile_signature_register">Registrar firma</string>
     <string name="main_home_greeting">¡Hola, %1$s!</string>
     <string name="main_home_brand_blue">Efficient</string>
     <string name="main_home_brand_green">ia</string>
@@ -116,6 +123,7 @@
     <string name="profile_phone">Teléfono</string>
     <string name="profile_company">Empresa</string>
     <string name="profile_email">Correo electrónico</string>
+    <string name="profile_view_signature">Ver firma</string>
     <string name="profile_logout">Cerrar sesión</string>
     <string name="profile_not_informed">No informado</string>
     <string name="profile_loading">Cargando…</string>

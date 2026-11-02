@@ -82,6 +82,13 @@
     <string name="signature_check_retry">Réessayer</string>
     <string name="signature_check_login">Se reconnecter</string>
     <string name="signature_pen_description">Dessiner la signature</string>
+    <string name="profile_signature_title">Signature du conducteur</string>
+    <string name="profile_signature_loading">Chargement de la signature…</string>
+    <string name="profile_signature_registered">Signature enregistrée</string>
+    <string name="profile_signature_missing">Aucune signature enregistrée. Vous pouvez en ajouter une maintenant.</string>
+    <string name="profile_signature_load_error">Impossible de charger la signature. Vérifiez votre connexion et réessayez.</string>
+    <string name="profile_signature_change">Modifier la signature</string>
+    <string name="profile_signature_register">Enregistrer une signature</string>
     <string name="main_home_greeting">Bonjour, %1$s !</string>
     <string name="main_home_brand_blue">Efficient</string>
     <string name="main_home_brand_green">ia</string>
@@ -116,6 +123,7 @@
     <string name="profile_phone">Téléphone</string>
     <string name="profile_company">Entreprise</string>
     <string name="profile_email">E-mail</string>
+    <string name="profile_view_signature">Voir la signature</string>
     <string name="profile_logout">Se déconnecter</string>
     <string name="profile_not_informed">Non renseigné</string>
     <string name="profile_loading">Chargement…</string>

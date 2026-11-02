@@ -59,6 +59,13 @@ public class RouteDiaryStepOneActivity extends AppCompatActivity {
         configureTimePicker(findViewById(R.id.inputRouteDepartureTime));
         findViewById(R.id.btnRouteStepOneContinue).setOnClickListener(view -> {
             draft.saveText(this, FIELDS);
+            String validation = RouteDiaryPayload.validationError(draft);
+            if (!validation.isEmpty()) {
+                new androidx.appcompat.app.AlertDialog.Builder(this)
+                        .setTitle(R.string.route_check_form_title).setMessage(validation)
+                        .setPositiveButton(R.string.dialog_understood, null).show();
+                return;
+            }
             RouteDiarySync.saveAndContinue(this, draft, view,
                     () -> startActivity(draft.next(this, RouteDiaryStepThreeActivity.class)));
         });

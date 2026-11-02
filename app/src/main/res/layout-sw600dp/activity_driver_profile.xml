@@ -163,10 +163,22 @@
                 android:layout_marginTop="10dp" />
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnViewDriverSignature"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_marginTop="18dp"
+                android:background="@drawable/main_home_action_blue"
+                android:fontFamily="@font/ibm_plex_sans_semibold"
+                android:text="@string/profile_view_signature"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDriverLogout"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginTop="22dp"
+                android:layout_marginTop="12dp"
                 android:background="@drawable/profile_logout_background"
                 android:text="@string/profile_logout"
                 android:textAllCaps="false"

@@ -298,21 +298,8 @@ public class MainADMActivity extends AppCompatActivity {
                                     .setPositiveButton(android.R.string.ok, null).show();
                             return;
                         }
-                        String details = getString(R.string.admin_report_document) + "\n\n"
-                                + getString(R.string.admin_field_driver) + ": " + display(report, "motoristaId") + "\n"
-                                + getString(R.string.admin_field_origin) + ": " + display(report, "nomeOrigem") + "\n"
-                                + getString(R.string.admin_field_destination) + ": " + display(report, "nomeDestino") + "\n"
-                                + getString(R.string.admin_field_date) + ": " + display(report, "dataEmbarque") + "\n"
-                                + getString(R.string.admin_field_gta) + ": " + display(report, "numeroGta") + "\n"
-                                + getString(R.string.admin_field_invoice) + ": " + display(report, "numeroNotaFiscal") + "\n"
-                                + getString(R.string.admin_field_status) + ": " + display(report, "status");
-                        new AlertDialog.Builder(MainADMActivity.this)
-                                .setTitle(reportTitle(report))
-                                .setMessage(details)
-                                .setPositiveButton(R.string.admin_open_pdf, (dialog, which) ->
-                                        RouteReportPdf.open(MainADMActivity.this, report,
-                                                SessionManager.authorizationHeader(MainADMActivity.this)))
-                                .setNegativeButton(R.string.settings_close, null).show();
+                        RouteReportPdf.open(MainADMActivity.this, report,
+                                SessionManager.authorizationHeader(MainADMActivity.this));
                     }
                     @Override public void onFailure(Call<JsonObject> call, Throwable error) {
                         if (!isFinishing() && !isDestroyed())

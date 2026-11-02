@@ -63,6 +63,18 @@ final class RouteDiarySubmitter {
             explain(activity.getString(R.string.submit_incomplete_occurrences));
             return;
         }
+        String validation = RouteDiaryPayload.validationError(draft);
+        if (!validation.isEmpty()) {
+            explain(validation);
+            return;
+        }
+        if (!RouteStepSignature.isSigned(activity, draft, RouteStepSignature.RANCHER)
+                || !RouteStepSignature.isSigned(activity, draft, RouteStepSignature.MANEUVERER)
+                || !RouteStepSignature.isSigned(activity, draft, RouteStepSignature.CORRAL_WORKER)
+                || !RouteStepSignature.isSigned(activity, draft, RouteStepSignature.DRIVER)) {
+            explain(activity.getString(R.string.route_signatures_required));
+            return;
+        }
         button.setEnabled(false);
         if (button instanceof TextView) ((TextView) button).setText(R.string.submit_sending);
         int reportId = number(draft.get("server_report_id"));
