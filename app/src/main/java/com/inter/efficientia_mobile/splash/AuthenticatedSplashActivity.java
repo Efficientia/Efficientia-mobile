@@ -21,6 +21,7 @@ import com.inter.efficientia_mobile.signature.DriverSignatureRepository;
 
 public class AuthenticatedSplashActivity extends AppCompatActivity {
 
+    public static final String EXTRA_VERIFY_SIGNATURE_AFTER_LOGIN = "verify_signature_after_login";
     private static final long SPLASH_DURATION_MS = 3_000L;
     private static final long SIGNATURE_CHECK_TIMEOUT_MS = 30_000L;
     private enum SignatureState { CHECKING, PRESENT, MISSING, SESSION_EXPIRED, ERROR }
@@ -109,9 +110,16 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
         final int attempt = ++checkAttempt;
         signatureState = SignatureState.CHECKING;
         checkError = null;
+        boolean afterLogin = getIntent().getBooleanExtra(EXTRA_VERIFY_SIGNATURE_AFTER_LOGIN, false);
+        if (afterLogin && !SessionManager.hasRegisteredDriverSignature(this)) {
+            signatureState = SignatureState.MISSING;
+            openDestinationIfReady();
+            return;
+        }
         // A assinatura já confirmada pertence à sessão salva. Não bloqueie cada abertura
         // do app esperando a rede; na primeira entrada, consulte a API normalmente.
-        if (SessionManager.hasRegisteredDriverSignature(this)
+        if (!afterLogin
+                && SessionManager.hasRegisteredDriverSignature(this)
                 && SessionManager.hasUnexpiredToken(this)) {
             SessionManager.markDriverSignatureVerifiedOffline();
             signatureState = SignatureState.PRESENT;
@@ -138,7 +146,12 @@ public class AuthenticatedSplashActivity extends AppCompatActivity {
                 SessionManager.markDriverSignatureMissing(this);
                 signatureState = SignatureState.MISSING;
             } else if (statusCode == 401 || statusCode == 403) {
-                signatureState = SignatureState.SESSION_EXPIRED;
+                if (!SessionManager.hasUnexpiredToken(this)) {
+                    signatureState = SignatureState.SESSION_EXPIRED;
+                } else {
+                    signatureState = SignatureState.ERROR;
+                    checkError = error;
+                }
             } else {
                 signatureState = SignatureState.ERROR;
                 checkError = error == null
