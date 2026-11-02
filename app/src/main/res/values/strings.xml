@@ -1,11 +1,4 @@
 <resources>
-    <string name="settings_dyslexia_reading">Leitura para dislexia</string>
-    <string name="settings_reading_background">Cor de fundo da leitura</string>
-    <string name="settings_background_cream">Creme</string>
-    <string name="settings_background_gray">Cinza claro</string>
-    <string name="settings_background_yellow">Amarelo suave</string>
-    <string name="settings_read_aloud">Ler em voz alta (toque e segure o texto)</string>
-    <string name="settings_read_aloud_unavailable">Leitura por voz indisponível neste aparelho</string>
     <string name="app_name">Efficientia</string>
     <string name="cow_logo_tag" translatable="false">cow_logo</string>
     <string name="cow_logo_sound_description">Logo Efficientia. Toque para ouvir o mugido.</string>

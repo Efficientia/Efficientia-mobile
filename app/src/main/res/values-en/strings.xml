@@ -1,11 +1,4 @@
 <resources>
-    <string name="settings_dyslexia_reading">Dyslexia-friendly reading</string>
-    <string name="settings_reading_background">Reading background color</string>
-    <string name="settings_background_cream">Cream</string>
-    <string name="settings_background_gray">Light gray</string>
-    <string name="settings_background_yellow">Soft yellow</string>
-    <string name="settings_read_aloud">Read aloud (touch and hold text)</string>
-    <string name="settings_read_aloud_unavailable">Text to speech is unavailable on this device</string>
     <string name="technical_details">Technical details</string>
     <string name="error_bad_request">Some entries need correcting. Check what you entered and try again.</string>
     <string name="error_session_expired">Your session has expired. Sign in again to continue.</string>
