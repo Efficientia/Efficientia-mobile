@@ -1,11 +1,4 @@
 <resources>
-    <string name="settings_dyslexia_reading">阅读障碍友好模式</string>
-    <string name="settings_reading_background">阅读背景颜色</string>
-    <string name="settings_background_cream">奶油色</string>
-    <string name="settings_background_gray">浅灰色</string>
-    <string name="settings_background_yellow">柔和黄色</string>
-    <string name="settings_read_aloud">朗读（长按文字）</string>
-    <string name="settings_read_aloud_unavailable">此设备不支持语音朗读</string>
     <string name="technical_details">技术详情</string>
     <string name="error_bad_request">部分内容需要修改。请检查填写内容后重试。</string>
     <string name="error_session_expired">登录已过期。请重新登录以继续。</string>

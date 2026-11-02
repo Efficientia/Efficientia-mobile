@@ -1,11 +1,4 @@
 <resources>
-    <string name="settings_dyslexia_reading">ディスレクシア向けの読みやすさ</string>
-    <string name="settings_reading_background">読書用の背景色</string>
-    <string name="settings_background_cream">クリーム</string>
-    <string name="settings_background_gray">薄いグレー</string>
-    <string name="settings_background_yellow">淡い黄色</string>
-    <string name="settings_read_aloud">読み上げ（テキストを長押し）</string>
-    <string name="settings_read_aloud_unavailable">この端末では読み上げを利用できません</string>
     <string name="technical_details">技術的な詳細</string>
     <string name="error_bad_request">入力内容を修正してください。確認して再試行してください。</string>
     <string name="error_session_expired">セッションの有効期限が切れました。再度ログインしてください。</string>

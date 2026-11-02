@@ -1,11 +1,4 @@
 <resources>
-    <string name="settings_dyslexia_reading">Lecture adaptée à la dyslexie</string>
-    <string name="settings_reading_background">Couleur de fond de lecture</string>
-    <string name="settings_background_cream">Crème</string>
-    <string name="settings_background_gray">Gris clair</string>
-    <string name="settings_background_yellow">Jaune doux</string>
-    <string name="settings_read_aloud">Lire à voix haute (appui long sur le texte)</string>
-    <string name="settings_read_aloud_unavailable">La lecture vocale est indisponible</string>
     <string name="technical_details">Détails techniques</string>
     <string name="error_bad_request">Certaines données doivent être corrigées. Vérifiez votre saisie et réessayez.</string>
     <string name="error_session_expired">Votre session a expiré. Connectez-vous de nouveau pour continuer.</string>
