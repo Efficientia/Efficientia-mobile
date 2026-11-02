@@ -101,7 +101,29 @@ final class RouteDiaryPayload {
     }
 
     static String validationError(RouteDiaryDraft draft) {
-        String[] timeKeys = {"horarioEmbarque", "horarioSaidaPropriedade", "horarioChegadaUnidade", "horarioDesembarque"};
+        String timeValidation = validateTimeSequence(draft, 4);
+        if (!timeValidation.isEmpty()) return timeValidation;
+
+        int loaded = count(draft, R.id.counterMales) + count(draft, R.id.counterFemales)
+                + count(draft, R.id.counterMarrucos);
+        int standing = count(draft, R.id.counterStanding);
+        int lying = count(draft, R.id.counterLying);
+        int dead = count(draft, R.id.counterDead);
+        int emergency = count(draft, R.id.counterEmergency);
+        if (loaded <= 0) return "Informe a quantidade de animais embarcados.";
+        if (standing + lying + dead + emergency > loaded)
+            return "A quantidade de animais no desembarque não pode ser maior que a quantidade embarcada.";
+        if (hasIncompleteOccurrences(draft))
+            return "Complete os dados da parada ou da anomalia, ou deixe os campos vazios se não houve ocorrência.";
+        return "";
+    }
+
+    /** Validates only the data displayed in the initial documents/boarding step. */
+    static String stepOneValidationError(RouteDiaryDraft draft) {
+        return validateTimeSequence(draft, 2);
+    }
+
+    private static String validateTimeSequence(RouteDiaryDraft draft, int fieldCount) {
         int[] timeIds = {R.id.inputRouteBoardingTime, R.id.inputRouteDepartureTime,
                 R.id.inputRouteArrivalTime, R.id.inputRouteUnloadingTime};
         String[] timeLabels = {"embarque", "saída da propriedade", "chegada", "desembarque"};
@@ -109,7 +131,7 @@ final class RouteDiaryPayload {
         LocalDate arrival = parseDate(draft.get(R.id.inputRouteArrivalDate));
         LocalDateTime previous = null;
         LocalDate previousDate = null;
-        for (int i = 0; i < timeIds.length; i++) {
+        for (int i = 0; i < fieldCount; i++) {
             String raw = draft.get(timeIds[i]).trim();
             if (raw.isEmpty()) continue;
             LocalTime time = parseTime(raw);
@@ -124,18 +146,6 @@ final class RouteDiaryPayload {
             previous = current;
             previousDate = date;
         }
-
-        int loaded = count(draft, R.id.counterMales) + count(draft, R.id.counterFemales)
-                + count(draft, R.id.counterMarrucos);
-        int standing = count(draft, R.id.counterStanding);
-        int lying = count(draft, R.id.counterLying);
-        int dead = count(draft, R.id.counterDead);
-        int emergency = count(draft, R.id.counterEmergency);
-        if (loaded <= 0) return "Informe a quantidade de animais embarcados.";
-        if (standing + lying + dead + emergency > loaded)
-            return "A quantidade de animais no desembarque não pode ser maior que a quantidade embarcada.";
-        if (hasIncompleteOccurrences(draft))
-            return "Complete os dados da parada ou da anomalia, ou deixe os campos vazios se não houve ocorrência.";
         return "";
     }
 
